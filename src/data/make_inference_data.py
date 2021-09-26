@@ -14,7 +14,7 @@ def make_inference_data(begin_date, end_date,
                         lat_lower, lat_upper, 
                         lon_left, lon_right,
                         window_size):
-    """
+    
     # integrate into daily and crop spatial dimension
     # -----------------------------------------------
     prepare_SMAP(input_path='/hard/lilu/SMAP_L4/SMAP_L4/',
@@ -35,7 +35,7 @@ def make_inference_data(begin_date, end_date,
                          input_preprocess_path='/hard/lilu/CLDAS_FORCING/CLDAS_FORCING_DD_PREP/', 
                          out_path='/hard/lilu/CLDAS_FORCING/CLDAS_FORCING_DD_PREP/', 
                          begin_date=begin_date, end_date=end_date)
-    """
+    
 
     # make inference data for DL models
     # ---------------------------------
