@@ -5,7 +5,7 @@
 # mail: lilu35@mail2.sysu.edu.cn
 # ==============================================================================
 
-from .prepare import prepare_SMAP, prepare_CLDAS_forcing
+from train import prepare_SMAP, prepare_CLDAS_forcing
 from .preprocess import preprocess_CLDAS
 from .slices import slices_inputs, make_train_input
 
