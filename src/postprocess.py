@@ -43,6 +43,8 @@ def postprocess(predict_path, out_path,
     # mask 
     # ----
 
+    
+
     # boundary fuzzification
     # ----------------------
     for i in np.arange(Mlon):

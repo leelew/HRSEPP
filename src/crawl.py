@@ -10,15 +10,7 @@ import os
 import numpy as np
 import requests
 import datetime
-
-
-# ------------------------------------------------------------------------------
-# Set username, password, and save path TODO: using parser 
-# ------------------------------------------------------------------------------
-DATA_DIR_L4 = "/hard/lilu/SMAP_L4/"
-
-USERNAME = 'sysulewlee1@gmail.com'
-PASSWORD = '941313Li'
+import time
 
 
 # ------------------------------------------------------------------------------
@@ -59,6 +51,14 @@ def get_SMAP_L4_path(year, month, day, hour):
 # download NRT SMAP L4 data near-real-time (~4-day before to ~2-day before).
 # ------------------------------------------------------------------------------
 def download_SMAP_L4_NRT():
+
+    # ------------------------------------------------------------------------------
+    # Set username, password, and save path TODO: using parser 
+    # ------------------------------------------------------------------------------
+    DATA_DIR_L4 = "/hard/lilu/SMAP_L4/SMAP_L4/"
+
+    USERNAME = 'sysulewlee1@gmail.com'
+    PASSWORD = '941313Li'
 
     # get real local time
     # --------------------
