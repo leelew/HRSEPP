@@ -1,10 +1,26 @@
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 import tqdm
 
 
-
 def keras_train(model, X, y, batch_size, epochs, save_folder):
+
+    #TODO: split spatiotemporal or temporal model modes
+
+    N_sample, Nt, Nlat, Nlon, Nf = X.shape
+    X = X.reshape(-1, Nt*Nf)
+    y = y.reshape(-1, 1)
+
+    # remove nan grids
+    idx_y = np.unique(np.where(~np.isnan(y))[0])
+    X = X[idx_y,:]
+    y = y[idx_y,:]
+
+    idx_nan_x = np.unique(np.where(np.isnan(X))[0])
+    X = np.delete(X, idx_nan_x, axis=0)
+    y = np.delete(y, idx_nan_x, axis=0)
+
+    X, y = X.reshape(-1, Nt, Nf), y.reshape(-1, 1)
 
     model.compile(loss='mse', optimizer='adam')
     model.fit(X, y, batch_size=batch_size, epochs=epochs, validation_split=0.2)
@@ -73,9 +89,6 @@ class trainer():
                     grad = tape.gradient(loss, model.trainable_variables)
                     self.optimizer.apply_gradients(zip(grad, model.trainable_variables))
 
-
-
-
         return model
 
 
@@ -90,9 +103,7 @@ class trainer():
     @staticmethod
     def select_subset(input, idx):
         if input.ndims == 4:
-            
-
-        return input[:, ]
+            pass
         
 
     @staticmethod

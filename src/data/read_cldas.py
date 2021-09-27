@@ -12,7 +12,7 @@ import h5py
 import netCDF4 as nc
 import numpy as np
 
-from utils import _get_date_array
+from data.utils import _get_date_array
 
 
 # ------------------------------------------------------------------------------

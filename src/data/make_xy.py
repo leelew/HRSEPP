@@ -71,4 +71,5 @@ def make_image_inputs(X,
                                 len_output=len_output, 
                                 window_size=window_size, 
                                 use_lag_y=use_lag_y)
+                                
     return X_f, y_f

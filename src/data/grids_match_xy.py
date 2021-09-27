@@ -10,7 +10,7 @@ import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler
 
-from utils import _get_date_array
+from data.utils import _get_date_array
 
 
 def read_daily_SMAP(input_path,begin_date, end_date):

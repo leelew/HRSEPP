@@ -6,11 +6,11 @@
 
 import numpy as np
 
-from grids_match_xy import grid_match_Xy
-from make_xy import make_image_inputs
-from preprocess_train_xy import preprocess_CLDAS
-from read_cldas import prepare_CLDAS_forcing, prepare_CLDAS_model
-from read_smap import prepare_SMAP
+from data.grids_match_xy import grid_match_Xy
+from data.make_xy import make_image_inputs
+from data.preprocess_train_xy import preprocess_CLDAS
+from data.read_cldas import prepare_CLDAS_forcing, prepare_CLDAS_model
+from data.read_smap import prepare_SMAP
 
 
 def make_train_data(raw_X_path, raw_y_path,
