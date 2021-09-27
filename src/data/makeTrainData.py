@@ -1,6 +1,6 @@
 from read_smap import prepare_SMAP
 from read_cldas import prepare_CLDAS_forcing, prepare_CLDAS_model
-from preprocess_xy import preprocess_CLDAS
+from preprocess_train_xy import preprocess_CLDAS
 from grids_match_xy import grid_match_Xy
 from make_xy import make_input
 import numpy as np
@@ -19,6 +19,8 @@ def make_train_data(raw_X_path, raw_y_path,
 
 
     print('1')
+
+    """
     # ----------------------------------------------------#
     # 1. read SMAP and CLDAS and processing to daily data.#
     # ----------------------------------------------------#
@@ -39,7 +41,7 @@ def make_train_data(raw_X_path, raw_y_path,
                           lat_upper=lat_upper, 
                           lon_left=lon_left, 
                           lon_right=lon_right)
-
+    
     # ----------------------------------------------------#
     # 2. preprocess CLDAS data
     # ----------------------------------------------------#
@@ -47,6 +49,7 @@ def make_train_data(raw_X_path, raw_y_path,
                      out_path=daily_X_path, 
                      begin_date=begin_date, 
                      end_date=end_date)
+    """
 
     # ----------------------------------------------------#
     # 3. grid matching 

@@ -98,7 +98,7 @@ def prepare_SMAP(input_path,
 
         # judge already exist file
         if os.path.exists(out_path + filename):
-            print('already exist')
+            print('SMAP of {} already exist'.format(date))
         else:
 
             # get shape
