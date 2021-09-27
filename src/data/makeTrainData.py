@@ -17,11 +17,13 @@ def make_train_data(raw_X_path, raw_y_path,
                     window_size=7, 
                     use_lag_y=True):
 
+
+    print('1')
     # ----------------------------------------------------#
     # 1. read SMAP and CLDAS and processing to daily data.#
     # ----------------------------------------------------#
-    prepare_SMAP(input_path=raw_X_path,
-                 out_path=daily_X_path,
+    prepare_SMAP(input_path=raw_y_path,
+                 out_path=daily_y_path,
                  begin_date=begin_date, 
                  end_date=end_date, 
                  lat_lower=lat_lower, 
@@ -29,8 +31,8 @@ def make_train_data(raw_X_path, raw_y_path,
                  lon_left=lon_left, 
                  lon_right=lon_right)
 
-    prepare_CLDAS_forcing(input_path=raw_y_path,
-                          out_path=daily_y_path,
+    prepare_CLDAS_forcing(input_path=raw_X_path,
+                          out_path=daily_X_path,
                           begin_date=begin_date, 
                           end_date=end_date, 
                           lat_lower=lat_lower, 
@@ -71,3 +73,19 @@ def make_train_data(raw_X_path, raw_y_path,
                                 use_lag_y=use_lag_y)
 
     return X_f, y_f
+
+
+if __name__ == "__main__":
+    
+    make_train_data(raw_X_path='/hard/lilu/CLDAS_FORCING/CLDAS_FORCING/', 
+            raw_y_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+                daily_X_path='/hard/lilu/CLDAS_FORCING/CLDAS_FORCING_DD/', 
+                daily_y_path='/hard/lilu/SMAP_L4/SMAP_L4_DD/',
+                begin_date='2015-03-31', end_date='2017-03-31',
+                lat_lower=22, lat_upper=33, 
+                lon_left=110, lon_right=123,
+                
+                len_input=5, 
+                len_output=1, 
+                window_size=3, 
+                use_lag_y=True)

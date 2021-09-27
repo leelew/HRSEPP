@@ -1,18 +1,20 @@
 # ==============================================================================
-# Read SMAP, CLDAS and other data. (provide for training and inference mode)
-#   and crop spatial dimension and integrate temporal dimension.
+# Read SMAP  and crop spatial dimension and integrate temporal dimension.
 #
-# author: Lu Li
-# mail: lilu35@mail2.sysu.edu.cn
-# ==============================================================================
+# author: Lu Li, 2021/09/27
+# ============================================================================== 
+
 
 import datetime as dt
 import glob
+import os
 
 import h5py
 import netCDF4 as nc
 import numpy as np
+
 from utils import _get_date_array
+
 
 # ------------------------------------------------------------------------------
 # 1. read single file of SMAP and crop spatial dimension
@@ -65,6 +67,8 @@ def prepare_SMAP(input_path,
                  out_path,
                  begin_date, 
                  end_date, 
+
+                 # TODO: only support -90-90, -180-180
                  lat_lower=-90, 
                  lat_upper=90, 
                  lon_left=-180, 
@@ -86,39 +90,45 @@ def prepare_SMAP(input_path,
         # file list in each folder
         l = glob.glob(input_path + foldername + 'SMAP_L4*.h5', recursive=True)
 
-        # get shape
-        _,_,_,_,Nlat,Nlon = read_single_SMAP(l[0], 
-                                             lat_lower, lat_upper, 
-                                             lon_left, lon_right)
-        
-        # integrate from 3-hour to daily
-        ssm_dd = np.full((Nlat, Nlon, len(l)), np.nan)
-
-        for i, path in enumerate(l):
-            ssm_dd[:,:,i], lat_matrix, lon_matrix,_,_,_ = \
-                read_single_SMAP(path, 
-                                 lat_lower, lat_upper, 
-                                 lon_left, lon_right)
-
-        ssm_dd = np.nanmean(ssm_dd, axis=-1)
-
         # save to nc files
         filename = 'SMAP_L4_SSM_{year}{month:02}{day:02}.nc'.\
             format(year=date.year,
                    month=date.month,
                    day=date.day)
 
-        f = nc.Dataset(out_path + filename, 'w', format='NETCDF4')
+        # judge already exist file
+        if os.path.exists(out_path + filename):
+            print('already exist')
+        else:
 
-        f.createDimension('longitude', size=Nlon)
-        f.createDimension('latitude', size=Nlat)
+            # get shape
+            _,_,_,_,Nlat,Nlon = read_single_SMAP(l[0], 
+                                                lat_lower, lat_upper, 
+                                                lon_left, lon_right)
+            
+            # integrate from 3-hour to daily
+            ssm_dd = np.full((Nlat, Nlon, len(l)), np.nan)
 
-        lon = f.createVariable('longitude', 'f4', dimensions='longitude')
-        lat = f.createVariable('latitude', 'f4', dimensions='latitude')
-        ssm = f.createVariable('ssm', 'f4', dimensions=('latitude', 'longitude'))
+            for i, path in enumerate(l):
+                ssm_dd[:,:,i], lat_matrix, lon_matrix,_,_,_ = \
+                    read_single_SMAP(path, 
+                                    lat_lower, lat_upper, 
+                                    lon_left, lon_right)
 
-        lon[:] = lon_matrix[0,:]
-        lat[:] = lat_matrix[:,0]
-        ssm[:] = ssm_dd
-        
-        f.close()
+            ssm_dd = np.nanmean(ssm_dd, axis=-1)
+
+            # save to nc
+            f = nc.Dataset(out_path + filename, 'w', format='NETCDF4')
+
+            f.createDimension('longitude', size=Nlon)
+            f.createDimension('latitude', size=Nlat)
+
+            lon = f.createVariable('longitude', 'f4', dimensions='longitude')
+            lat = f.createVariable('latitude', 'f4', dimensions='latitude')
+            ssm = f.createVariable('ssm', 'f4', dimensions=('latitude', 'longitude'))
+
+            lon[:] = lon_matrix[0,:]
+            lat[:] = lat_matrix[:,0]
+            ssm[:] = ssm_dd
+            
+            f.close()
