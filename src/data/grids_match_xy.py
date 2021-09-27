@@ -103,7 +103,6 @@ def grid_match(X, y, Xlat, Xlon, Xres, ylat, ylon, yres):
 
             # grid match index
             lat, lon = ylat[i], ylon[j]
-            print(lat, lon)
             lat_idx = np.where((Xlat < (lat + yres/2)) & (Xlat > (lat - yres/2)))[0]
             lon_idx = np.where((Xlon < (lon + yres/2)) & (Xlon > (lon - yres/2)))[0]
 
@@ -128,9 +127,6 @@ def grid_match_Xy(X_path, y_path, begin_date, end_date):
     assert y.shape[0] == X.shape[0]
 
     X, y = grid_match(X, y, Xlat, Xlon, 0.0625, ylat, ylon, 0.09) # 9km, 0.0625
-
-    print(X.shape)
-    print(y.shape)
 
     return X, y
 

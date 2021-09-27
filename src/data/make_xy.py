@@ -1,5 +1,10 @@
-import numpy as np
+# ==============================================================================
+# Make input for single grid or multi-grids (images)
+#
+# author: Lu Li, 2021/09/27
+# ============================================================================== 
 
+import numpy as np
 
 
 def make_input(inputs, 
@@ -38,3 +43,32 @@ def make_input(inputs,
                 outputs.shape[1])
     
     return inputs, outputs
+
+
+def make_image_inputs(X, 
+               y,
+               len_input, 
+               len_output, 
+               window_size,
+               use_lag_y=True):
+               
+    if use_lag_y:
+        Nf = X.shape[-1] + 1
+    else:
+        Nf = X.shape[-1]
+
+    N_sample = X.shape[0] - len_input - window_size - len_output
+
+    X_f = np.full((N_sample, len_input, X.shape[1], X.shape[2], Nf), np.nan)
+    y_f = np.full((N_sample, len_output, y.shape[1], y.shape[2], 1), np.nan)
+
+    for i in np.arange(X.shape[1]):
+        for j in np.arange(X.shape[2]):
+            X_f[:, :, i,j, :], y_f[:, :, i,j, :] = make_input(
+                                X[:, i, j, :], 
+                                y[:, i, j, :], 
+                                len_input=len_input, 
+                                len_output=len_output, 
+                                window_size=window_size, 
+                                use_lag_y=use_lag_y)
+    return X_f, y_f
