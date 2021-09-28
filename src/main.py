@@ -37,7 +37,7 @@ def main(mode):
 
         model = LSTM(n_feature=X.shape[-1], input_len=5)
 
-        keras_train(model, X, y, batch_size=256, epochs=100, save_folder='/hard/lilu/HRSEPP/')
+        keras_train(model, X, y, batch_size=128, epochs=10, save_folder='/hard/lilu/HRSEPP/')
 
 
     elif mode=='inference':
