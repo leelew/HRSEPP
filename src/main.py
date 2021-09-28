@@ -9,11 +9,17 @@
 from data.makeTrainData import make_train_data
 from trainer import keras_train
 from model.LSTM import LSTM
-
+import tensorflow as tf
 #from data.makeInferenceData import make_inference_data
 
+#import os
+#os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
+for gpu in gpus:
 
-
+    #tf.config.experimental.set_visible_devices(devices=gpus[1], device_type='GPU')
+    tf.config.experimental.set_memory_growth(device=gpu, enable=True)
+    
 def main(mode):
 
 

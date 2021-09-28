@@ -9,6 +9,8 @@ for gpu in gpus:
     #tf.config.experimental.set_visible_devices(devices=gpus[1], device_type='GPU')
     tf.config.experimental.set_memory_growth(device=gpu, enable=True)
 
+#import os
+#os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 def keras_train(model, X, y, batch_size, epochs, save_folder):
 
