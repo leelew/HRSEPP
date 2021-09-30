@@ -73,3 +73,15 @@ def make_image_inputs(X,
                                 use_lag_y=use_lag_y)
                                 
     return X_f, y_f
+
+
+
+def make_inference_inputs(
+               inputs, 
+               outputs,
+               len_input, 
+               len_output, 
+               window_size,
+               use_lag_y=True):
+    
+    pass

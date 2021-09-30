@@ -37,7 +37,8 @@ def keras_train(model, X, y, batch_size, epochs, save_folder):
 
     return model
 
-
+def load_model():
+    pass
 
 class trainer():
 
