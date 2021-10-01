@@ -2,17 +2,17 @@
 # Make input for single grid or multi-grids (images)
 #
 # author: Lu Li, 2021/09/27
-# ============================================================================== 
+# ==============================================================================
 
 import numpy as np
 
 
-def make_input(inputs, 
-               outputs,
-               len_input, 
-               len_output, 
-               window_size,
-               use_lag_y=True):
+def make_grid_train_xy(inputs,
+                       outputs,
+                       len_input,
+                       len_output,
+                       window_size,
+                       use_lag_y=True):
     """Generate inputs and outputs for LSTM."""
 
     if use_lag_y:
@@ -41,17 +41,17 @@ def make_input(inputs,
     outputs = np.take(outputs, output_batch_idx, axis=0). \
         reshape(batch_size,  len_output,
                 outputs.shape[1])
-    
+
     return inputs, outputs
 
 
-def make_image_inputs(X, 
-               y,
-               len_input, 
-               len_output, 
-               window_size,
-               use_lag_y=True):
-               
+def make_grids_train_xy(X,
+                        y,
+                        len_input,
+                        len_output,
+                        window_size,
+                        use_lag_y=True):
+
     if use_lag_y:
         Nf = X.shape[-1] + 1
     else:
@@ -64,24 +64,34 @@ def make_image_inputs(X,
 
     for i in np.arange(X.shape[1]):
         for j in np.arange(X.shape[2]):
-            X_f[:, :, i,j, :], y_f[:, :, i,j, :] = make_input(
-                                X[:, i, j, :], 
-                                y[:, i, j, :], 
-                                len_input=len_input, 
-                                len_output=len_output, 
-                                window_size=window_size, 
-                                use_lag_y=use_lag_y)
-                                
+            X_f[:, :, i, j, :], y_f[:, :, i, j, :] = make_grid_xy(
+                X[:, i, j, :],
+                y[:, i, j, :],
+                len_input=len_input,
+                len_output=len_output,
+                window_size=window_size,
+                use_lag_y=use_lag_y)
+
     return X_f, y_f
 
 
+def make_grid_inference_x(inputs,
+                          outputs,
+                          len_input,
+                          len_output,
+                          window_size,
+                          use_lag_y=True):
 
-def make_inference_inputs(
-               inputs, 
-               outputs,
-               len_input, 
-               len_output, 
-               window_size,
-               use_lag_y=True):
-    
+    if use_lag_y:
+        inputs = np.concatenate([inputs, outputs], axis=-1)
+
+    return inputs[np.newaxis]
+
+
+def make_grids_inference_x(inputs,
+                           outputs,
+                           len_input,
+                           len_output,
+                           window_size,
+                           use_lag_y=True):
     pass

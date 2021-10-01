@@ -1,15 +1,14 @@
 
 
-
 import tensorflow as tf
 
 
-
-def LSTM(n_feature, input_len):
+def lstm(n_feature, input_len):
 
     gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
     for gpu in gpus:
-        tf.config.experimental.set_visible_devices(devices=gpus[1], device_type='GPU')
+        tf.config.experimental.set_visible_devices(
+            devices=gpus[1], device_type='GPU')
         tf.config.experimental.set_memory_growth(device=gpu, enable=True)
 
     strategy = tf.distribute.MirroredStrategy()
@@ -23,7 +22,7 @@ def LSTM(n_feature, input_len):
 
         # build
         model = tf.keras.models.Model(inputs=inputs, outputs=x)
-        
+
         # summary
         model.summary()
 
