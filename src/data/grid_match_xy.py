@@ -10,7 +10,9 @@ import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler
 
-from data.utils import _get_date_array
+from data.utils import get_date_array
+from data.read_cldas import read_preprocessed_daily_cldas_forcing
+from data.read_smap import read_daily_smap
 
 
 def grid_match(X, y, Xlat, Xlon, Xres, ylat, ylon, yres):
@@ -41,11 +43,11 @@ def grid_match(X, y, Xlat, Xlon, Xres, ylat, ylon, yres):
 
 def grid_match_xy(X_path, y_path, begin_date, end_date):
 
-    y, ylat, ylon = read_daily_SMAP(input_path=y_path,
+    y, ylat, ylon = read_daily_smap(input_path=y_path,
                                     begin_date=begin_date,
                                     end_date=end_date)
 
-    X, Xlat, Xlon, _, _ = read_p_daily_CLDAS_forcing(
+    X, Xlat, Xlon, _, _ = read_preprocessed_daily_cldas_forcing(
         input_path=X_path,
         begin_date=begin_date,
         end_date=end_date)

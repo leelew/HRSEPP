@@ -140,7 +140,7 @@ def preprocess_train_daily_cldas_forcing(input_path, out_path, begin_date, end_d
 
         f.close()
 
-
+# TODO: complete preprocess_test_daily_data in utils.py
 def preprocess_test_daily_cldas_forcing(input_path,
                                   input_preprocess_path,
                                   out_path,

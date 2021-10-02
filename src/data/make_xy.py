@@ -44,7 +44,7 @@ def make_grid_train_xy(inputs,
 
     return inputs, outputs
 
-
+# NOTES: also adapted to make test xy
 def make_grids_train_xy(X,
                         y,
                         len_input,
@@ -64,7 +64,7 @@ def make_grids_train_xy(X,
 
     for i in np.arange(X.shape[1]):
         for j in np.arange(X.shape[2]):
-            X_f[:, :, i, j, :], y_f[:, :, i, j, :] = make_grid_xy(
+            X_f[:, :, i, j, :], y_f[:, :, i, j, :] = make_grid_train_xy(
                 X[:, i, j, :],
                 y[:, i, j, :],
                 len_input=len_input,
