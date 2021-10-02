@@ -7,7 +7,8 @@ import numpy as np
 from data.read_cldas import (read_daily_cldas_forcing,
                              read_preprocessed_daily_cldas_forcing,
                              read_single_cldas_forcing)
-from data.utils import get_date_array, preprocess_daily_data
+from data.utils import (get_date_array, preprocess_test_daily_data,
+                        preprocess_train_daily_data)
 
 
 # ------------------------------------------------------------------------------
@@ -51,10 +52,11 @@ def preprocess_raw_cldas_forcing(input_path,
 
         else:
             # get shape
-            _, LAT, LON, _, Nlat, Nlon = read_single_cldas_forcing(l[0],
-                                                                   'PRCP',
-                                                                   lat_lower, lat_upper,
-                                                                   lon_left, lon_right)
+            _, LAT, LON, _, Nlat, Nlon = read_single_cldas_forcing(
+                l[0],
+                'PRCP',
+                lat_lower, lat_upper,
+                lon_left, lon_right)
 
             # integrate from 3-hour to daily
             feature_dd = np.full((Nlat, Nlon, len(variables), len(l)), np.nan)
@@ -96,12 +98,15 @@ def preprocess_raw_cldas_forcing(input_path,
             f.close()
 
 
-def preprocess_train_daily_cldas_forcing(input_path, out_path, begin_date, end_date):
+def preprocess_train_daily_cldas_forcing(input_path,
+                                         out_path,
+                                         begin_date,
+                                         end_date):
 
     # read CLDAS and preprocess
     CLDAS, lat_, lon_ = read_daily_cldas_forcing(input_path,
                                                  begin_date, end_date)
-    CLDAS, min_, max_ = preprocess_daily_data(CLDAS)
+    CLDAS, min_, max_ = preprocess_train_daily_data(CLDAS)
 
     # get dates array according to begin/end dates
     dates = get_date_array(begin_date, end_date)
@@ -140,40 +145,19 @@ def preprocess_train_daily_cldas_forcing(input_path, out_path, begin_date, end_d
 
         f.close()
 
-# TODO: complete preprocess_test_daily_data in utils.py
+
 def preprocess_test_daily_cldas_forcing(input_path,
-                                  input_preprocess_path,
-                                  out_path,
-                                  begin_date,
-                                  end_date):
+                                        input_preprocess_path,
+                                        out_path,
+                                        begin_date,
+                                        end_date):
 
     # read CLDAS NRT (timestep, lat, lon, feature)
     CLDAS, lat_, lon_ = read_daily_cldas_forcing(
         input_path, begin_date, end_date)
 
-    # get shape
-    Nt, Nlat, Nlon, Nf = CLDAS.shape
-
-    # get min/max
-    _, _, _, min_, max_ = read_preprocessed_daily_cldas_forcing(
-        input_preprocess_path, '2015-03-31', '2015-04-01')
-
-    # preprocess according normalized parameters
-    for i in np.arange(Nlat):
-        for j in np.arange(Nlon):
-
-            try:
-                # interplot
-                imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-                CLDAS[:, i, j, :] = imp.fit_transform(CLDAS[:, i, j, :])
-
-                # min max scaler
-                for m in np.arange(Nf):
-                    CLDAS[:, i, j, m] = \
-                        (CLDAS[:, i, j, m]-min_[i, j, m]) / \
-                        (max_[i, j, m]-min_[i, j, m])
-            except:
-                print('all data is nan')
+    # preprocess test data
+    CLDAS = preprocess_test_daily_data(CLDAS, input_preprocess_path)
 
     # get dates array according to begin/end dates
     dates = get_date_array(begin_date, end_date)
@@ -199,13 +183,7 @@ def preprocess_test_daily_cldas_forcing(input_path,
         lat = f.createVariable('latitude', 'f4', dimensions='latitude')
         forcing = f.createVariable('forcing', 'f4',
                                    dimensions=('latitude', 'longitude', 'feature'))
-        min = f.createVariable('min', 'f4',
-                               dimensions=('latitude', 'longitude', 'feature'))
-        max = f.createVariable('max', 'f4',
-                               dimensions=('latitude', 'longitude', 'feature'))
 
-        min[:] = min_
-        max[:] = max_
         lon[:] = lon_
         lat[:] = lat_
         forcing[:] = CLDAS[i]

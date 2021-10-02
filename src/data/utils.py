@@ -3,9 +3,20 @@ import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler
 
+from data.read_cldas import read_preprocessed_daily_cldas_forcing
 
-# get array of date according to begin/end date used for select data range.
+
 def get_date_array(begin_date, end_date):
+    """get array of date according to begin/end date used for select data range.
+
+
+    Args:
+        begin_date ([type]): [description]
+        end_date ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
 
     # Initialize the list from begin_date to end_date
     dates = []
@@ -64,7 +75,10 @@ def preprocess_train_daily_data(inputs):
     return inputs, inputs_min, inputs_max
 
 
-def preprocess_test_daily_data(inputs):
+def preprocess_test_daily_data(inputs, input_preprocess_path):
+
+    # get shape
+    Nt, Nlat, Nlon, Nf = inputs.shape
 
     # get min/max
     _, _, _, min_, max_ = read_preprocessed_daily_cldas_forcing(
@@ -77,12 +91,14 @@ def preprocess_test_daily_data(inputs):
             try:
                 # interplot
                 imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-                CLDAS[:, i, j, :] = imp.fit_transform(CLDAS[:, i, j, :])
+                inputs[:, i, j, :] = imp.fit_transform(inputs[:, i, j, :])
 
                 # min max scaler
                 for m in np.arange(Nf):
-                    CLDAS[:, i, j, m] = \
-                        (CLDAS[:, i, j, m]-min_[i, j, m]) / \
+                    inputs[:, i, j, m] = \
+                        (inputs[:, i, j, m]-min_[i, j, m]) / \
                         (max_[i, j, m]-min_[i, j, m])
             except:
                 print('all data is nan')
+
+    return inputs

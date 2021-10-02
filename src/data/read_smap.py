@@ -6,8 +6,6 @@
 
 
 import datetime as dt
-import glob
-import os
 
 import h5py
 import netCDF4 as nc
