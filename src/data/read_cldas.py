@@ -111,6 +111,7 @@ def read_preprocessed_daily_cldas_forcing(input_path,
                month=dates[0].month,
                day=dates[0].day)
     f = nc.Dataset(input_path + filename, 'r')
+    print()
     Nlat, Nlon, Nf = f['forcing'][:].shape
     min_, max_ = f['min'][:], f['max'][:]
 

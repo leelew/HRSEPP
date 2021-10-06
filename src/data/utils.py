@@ -1,9 +1,9 @@
 import datetime as dt
+
+import netCDF4 as nc
 import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler
-
-from data.read_cldas import read_preprocessed_daily_cldas_forcing
 
 
 def get_date_array(begin_date, end_date):
@@ -81,8 +81,8 @@ def preprocess_test_daily_data(inputs, input_preprocess_path):
     Nt, Nlat, Nlon, Nf = inputs.shape
 
     # get min/max
-    _, _, _, min_, max_ = read_preprocessed_daily_cldas_forcing(
-        input_preprocess_path, '2015-03-31', '2015-04-01')
+    f = nc.Dataset(input_preprocess_path + 'CLDAS_force_P_20150331.nc', 'r')
+    min_, max_ = f['min'][:], f['max'][:]
 
     # preprocess according normalized parameters
     for i in np.arange(Nlat):
@@ -101,4 +101,4 @@ def preprocess_test_daily_data(inputs, input_preprocess_path):
             except:
                 print('all data is nan')
 
-    return inputs
+    return inputs, min_, max_

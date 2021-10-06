@@ -42,6 +42,10 @@ def preprocess_raw_cldas_forcing(input_path,
         # file list in each folder
         l = glob.glob(input_path + foldername + '*PRE*.nc', recursive=True)
 
+        if len(l) == 0:
+            print("Don't have corresponding CLDAS data")
+            raise IOError('Please download CLDAS on target day first')
+
         filename = 'CLDAS_force_{year}{month:02}{day:02}.nc'.\
             format(year=date.year,
                    month=date.month,
@@ -157,7 +161,8 @@ def preprocess_test_daily_cldas_forcing(input_path,
         input_path, begin_date, end_date)
 
     # preprocess test data
-    CLDAS = preprocess_test_daily_data(CLDAS, input_preprocess_path)
+    CLDAS, min_, max_ = preprocess_test_daily_data(
+        CLDAS, input_preprocess_path)
 
     # get dates array according to begin/end dates
     dates = get_date_array(begin_date, end_date)
@@ -183,9 +188,15 @@ def preprocess_test_daily_cldas_forcing(input_path,
         lat = f.createVariable('latitude', 'f4', dimensions='latitude')
         forcing = f.createVariable('forcing', 'f4',
                                    dimensions=('latitude', 'longitude', 'feature'))
+        min = f.createVariable('min', 'f4',
+                               dimensions=('latitude', 'longitude', 'feature'))
+        max = f.createVariable('max', 'f4',
+                               dimensions=('latitude', 'longitude', 'feature'))
 
         lon[:] = lon_
         lat[:] = lat_
         forcing[:] = CLDAS[i]
+        min[:] = min_
+        max[:] = max_
 
         f.close()

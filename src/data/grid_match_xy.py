@@ -4,13 +4,7 @@
 # author: Lu Li, 2021/09/27
 # ==============================================================================
 
-
-import netCDF4 as nc
 import numpy as np
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import MinMaxScaler
-
-from data.utils import get_date_array
 from data.read_cldas import read_preprocessed_daily_cldas_forcing
 from data.read_smap import read_daily_smap
 

@@ -65,11 +65,11 @@ def parse_args():
     parser.add_argument('--end_train_date', type=str, default='2017-03-31')
 
     parser.add_argument('--begin_test_date', type=str, default='2017-04-01')
-    parser.add_argument('--end_test_date', type=str, default='2018-04-01')
+    parser.add_argument('--end_test_date', type=str, default='2017-12-01')
 
     parser.add_argument('--begin_inference_date',
-                        type=str, default='2018-04-02')
-    parser.add_argument('--end_inference_date', type=str, default='2018-04-06')
+                        type=str, default='2017-12-02')
+    parser.add_argument('--end_inference_date', type=str, default='2017-12-06')
 
     parser.add_argument('--lat_lower', type=int, default=22)
     parser.add_argument('--lat_upper', type=int, default=33)

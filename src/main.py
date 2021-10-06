@@ -4,7 +4,8 @@
 # author: Lu Li
 # mail: lilu35@mail2.sysu.edu.cn
 # ==============================================================================
-
+# TODO: split train/test/inference data, give a parameter
+# to control restart train or test or inference
 
 import os
 
@@ -14,7 +15,7 @@ from data.make_inference_xy import make_inference_data
 from data.make_test_xy import make_test_data
 from data.make_train_xy import make_train_data
 from IO.trainer import keras_train, load_model
-from model.lstm import LSTM
+from model.lstm import lstm
 from utils.config import parse_args
 
 """GPU setting module
@@ -38,13 +39,13 @@ def main(mode):
         # 1. train mode (re-train once a month)
         # ----------------------------------------------------------------------
         X, y = make_train_data(
-            raw_X_path=os.join(
+            raw_X_path=os.path.join(
                 config.ROOT, config.x_path, config.raw_x_path),
-            raw_y_path=os.join(
+            raw_y_path=os.path.join(
                 config.ROOT, config.y_path, config.raw_y_path),
-            daily_X_path=os.join(
+            daily_X_path=os.path.join(
                 config.ROOT, config.x_path, config.daily_x_path),
-            daily_y_path=os.join(
+            daily_y_path=os.path.join(
                 config.ROOT, config.y_path, config.daily_y_path),
             begin_date=config.begin_train_date,
             end_date=config.end_train_date,
@@ -58,26 +59,26 @@ def main(mode):
             window_size=config.window_size,
             use_lag_y=config.use_lag_y)
 
-        model = LSTM(n_feature=X.shape[-1], input_len=config.len_input)
+        model = lstm(n_feature=X.shape[-1], input_len=config.len_input)
 
         keras_train(model,
                     X, y,
                     batch_size=config.batch_size,
-                    epochs=config.epochs,
-                    save_folder=os.join(config.ROOT, config.saved_model_path))
+                    epochs=config.epoch,
+                    save_folder=os.path.join(config.ROOT, config.saved_model_path))
 
     elif mode == 'test':
         # ----------------------------------------------------------------------
         # 2. test mode (optional)
         # ----------------------------------------------------------------------
         X, y = make_test_data(
-            raw_X_path=os.join(
+            raw_X_path=os.path.join(
                 config.ROOT, config.x_path, config.raw_x_path),
-            raw_y_path=os.join(
+            raw_y_path=os.path.join(
                 config.ROOT, config.y_path, config.raw_y_path),
-            daily_X_path=os.join(
+            daily_X_path=os.path.join(
                 config.ROOT, config.x_path, config.daily_x_path),
-            daily_y_path=os.join(
+            daily_y_path=os.path.join(
                 config.ROOT, config.y_path, config.daily_y_path),
             begin_date=config.begin_test_date,
             end_date=config.end_test_date,
@@ -96,13 +97,13 @@ def main(mode):
         # 3. inference mode (once a day)
         # ----------------------------------------------------------------------
         X = make_inference_data(
-            raw_X_path=os.join(
+            raw_X_path=os.path.join(
                 config.ROOT, config.x_path, config.raw_x_path),
-            raw_y_path=os.join(
+            raw_y_path=os.path.join(
                 config.ROOT, config.y_path, config.raw_y_path),
-            daily_X_path=os.join(
+            daily_X_path=os.path.join(
                 config.ROOT, config.x_path, config.daily_x_path),
-            daily_y_path=os.join(
+            daily_y_path=os.path.join(
                 config.ROOT, config.y_path, config.daily_y_path),
             begin_date=config.begin_inference_date,
             end_date=config.end_inference_date,
@@ -116,6 +117,8 @@ def main(mode):
             window_size=config.window_size,
             use_lag_y=config.use_lag_y)
 
+        print(X.shape)
+
 
 if __name__ == '__main__':
-    main(mode='train')
+    main(mode='inference')
