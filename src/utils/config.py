@@ -87,12 +87,12 @@ def parse_args():
                         default='HRSEPP/saved_model/')
     # hyperparameters
     # model paramters
-    parser.add_argument('--epoch', type=int, default=5)
-    parser.add_argument('--batch_size', type=int, default=32)
+    parser.add_argument('--epoch', type=int, default=50)
+    parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--loss', type=str, default='mse')
     parser.add_argument('--learning_rate', type=float, default=0.01)
     parser.add_argument('--metrics', type=list, default=['mae', 'mse'])
-    parser.add_argument('--split_ratio', type=float, default=0.3)
+    parser.add_argument('--split_ratio', type=float, default=0.2)
 
     # parfor paramters
     return parser.parse_args()

@@ -9,7 +9,9 @@
 
 import os
 
+import numpy as np
 import tensorflow as tf
+from sklearn.metrics import r2_score
 
 from data.make_inference_xy import make_inference_data
 from data.make_test_xy import make_test_data
@@ -92,6 +94,14 @@ def main(mode):
             window_size=config.window_size,
             use_lag_y=config.use_lag_y)
 
+        model = load_model(os.path.join(config.ROOT, config.saved_model_path))
+
+        for i in range(137):
+            for j in range(137):
+
+                y_pred = model.predict(X[:, :, i, j, :])
+                print(r2_score(np.squeeze(y[:, :, i, j, :]), y_pred))
+
     elif mode == 'inference':
         # ----------------------------------------------------------------------
         # 3. inference mode (once a day)
@@ -121,4 +131,4 @@ def main(mode):
 
 
 if __name__ == '__main__':
-    main(mode='inference')
+    main(mode='train')
