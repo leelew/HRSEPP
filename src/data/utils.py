@@ -76,7 +76,9 @@ def preprocess_train_daily_data(inputs):
 
             try:#if np.isnan(inputs
                 # interplot
-                imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+                #imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+                imp = SimpleImputer(missing_values=np.nan, strategy='constant', fill_value=0) # advised by Qingliang Li
+                
                 inputs[:, i, j, :] = imp.fit_transform(inputs[:, i, j, :]) # 
 
                 # min max scaler
@@ -106,7 +108,9 @@ def preprocess_test_daily_data(inputs, input_preprocess_path):
 
             try:
                 # interplot
-                imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+                #imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+                imp = SimpleImputer(missing_values=np.nan, strategy='constant', fill_value=0) # advised by Qingliang Li
+
                 inputs[:, i, j, :] = imp.fit_transform(inputs[:, i, j, :])
 
                 # min max scaler

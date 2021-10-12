@@ -65,20 +65,20 @@ def main(mode):
         import numpy as np
         np.save('X.npy', X)
         np.save('y.npy', y)
-        #model = lstm(
-        #    n_feature=X.shape[-1],
-        #    input_len=config.len_input)
+        model = lstm(
+            n_feature=X.shape[-1],
+            input_len=config.len_input)
         # model = convlstm(
         #    n_feature=X.shape[-1],
         #    input_len=config.len_input,
         #    n_lat=X.shape[-2],
         #    n_lon=X.shape[-3])
 
-        #keras_train(model,
-        #            X, y,
-        #            batch_size=config.batch_size,
-        #            epochs=config.epoch,
-        #            save_folder=os.path.join(config.ROOT, config.saved_model_path))
+        keras_train(model,
+                    X, y,
+                    batch_size=config.batch_size,
+                    epochs=config.epoch,
+                    save_folder=os.path.join(config.ROOT, config.saved_model_path))
 
     elif mode == 'test':
         # ----------------------------------------------------------------------
@@ -108,13 +108,13 @@ def main(mode):
         import numpy as np
         np.save('X_test.npy', X)
         np.save('y_test.npy', y)
-        #model = load_model(os.path.join(config.ROOT, config.saved_model_path))
+        model = load_model(os.path.join(config.ROOT, config.saved_model_path))
 
-        #for i in range(137):
-        #    for j in range(137):
+        for i in range(X.shape[2]):
+            for j in range(X.shape[3]):
 
-        #        y_pred = model.predict(X[:, :, i, j, :])
-        #        print(r2_score(np.squeeze(y[:, :, i, j, :]), y_pred))
+                y_pred = model.predict(X[:, :, i, j, :])
+                print(r2_score(np.squeeze(y[:, :, i, j, :]), y_pred))
 
     elif mode == 'inference':
         # ----------------------------------------------------------------------
@@ -145,4 +145,4 @@ def main(mode):
 
 
 if __name__ == '__main__':
-    main(mode='train')
+    main(mode='test')

@@ -66,7 +66,7 @@ def make_train_data(raw_X_path, raw_y_path,
                          begin_date=begin_date,
                          end_date=end_date)
 
-    """
+   
     # ----------------------------------------------------#
     # 4. make final inputs for DL
     # ----------------------------------------------------#
@@ -78,7 +78,7 @@ def make_train_data(raw_X_path, raw_y_path,
                                len_output=len_output,
                                window_size=window_size,
                                use_lag_y=use_lag_y)
-    """
+    
     return X, y
 
 

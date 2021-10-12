@@ -1,8 +1,7 @@
 from osgeo import gdal
 import os
 
-
-class GDALReadWrite:
+class Matrix2Raster():
 
     # read raster file
     def read_img(self, filename):

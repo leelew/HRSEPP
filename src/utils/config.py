@@ -61,9 +61,9 @@ def parse_args():
     parser.add_argument('--daily_y_path', type=str, default='test/SMAP_L4_DD/')
 
     parser.add_argument('--begin_train_date', type=str, default='2015-05-31')
-    parser.add_argument('--end_train_date', type=str, default='2015-11-01')
+    parser.add_argument('--end_train_date', type=str, default='2017-05-31')
 
-    parser.add_argument('--begin_test_date', type=str, default='2017-04-01')
+    parser.add_argument('--begin_test_date', type=str, default='2017-06-01')
     parser.add_argument('--end_test_date', type=str, default='2017-12-01')
 
     parser.add_argument('--begin_inference_date',type=str, default='2017-12-02')
