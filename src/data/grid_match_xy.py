@@ -27,10 +27,13 @@ def grid_match(X, y, Xlat, Xlon, Xres, ylat, ylon, yres):
                                (Xlat > (lat - yres/2)))[0]
             lon_idx = np.where((Xlon < (lon + yres/2)) &
                                (Xlon > (lon - yres/2)))[0]
-
+            
+            print(lat_idx)
+            print(lon_idx)
+            print(X[:, lat_idx, lon_idx, :].shape)
             # average mapping
             matched_X[:, i, j, :] = np.nanmean(
-                X[:, lat_idx, lon_idx, :], axis=(-2, -3))
+                X[:, lat_idx, lon_idx, :], axis=(-2))
 
     return matched_X, y
 
@@ -46,7 +49,7 @@ def grid_match_xy(X_path, y_path, begin_date, end_date):
         begin_date=begin_date,
         end_date=end_date)
 
-    assert y.shape[0] == X.shape[0]
+    #assert y.shape[0] == X.shape[0]
 
     X, y = grid_match(X, y, Xlat, Xlon, 0.0625, ylat,
                       ylon, 0.09)  # 9km, 0.0625

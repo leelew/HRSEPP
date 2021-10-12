@@ -42,6 +42,21 @@ def get_date_array(begin_date, end_date):
     return dates
 
 
+def _check_x(inputs):
+    
+    # check inputs by following constrains
+    # 1) if any feature of inputs is all NaN, then discard this inputs.
+    # 2) if dimensions of inputs is not equal to 4, then raise error.
+    
+    if inputs.ndim == 4:
+        Nt, Nlat, Nlon, Nf = inputs.shape
+        
+        #for i in range(Nf):
+        pass
+    else:
+        raise TypeError('The dimension is not equal to 4')
+
+
 # ------------------------------------------------------------------------------
 # 2. Preprocessing data by interplot and normalization for training mode
 #    Note: preprocessing process isn't applied on SMAP.
@@ -59,10 +74,10 @@ def preprocess_train_daily_data(inputs):
     for i in np.arange(Nlat):
         for j in np.arange(Nlon):
 
-            try:
+            try:#if np.isnan(inputs
                 # interplot
                 imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-                inputs[:, i, j, :] = imp.fit_transform(inputs[:, i, j, :])
+                inputs[:, i, j, :] = imp.fit_transform(inputs[:, i, j, :]) # 
 
                 # min max scaler
                 scaler = MinMaxScaler()
@@ -81,7 +96,8 @@ def preprocess_test_daily_data(inputs, input_preprocess_path):
     Nt, Nlat, Nlon, Nf = inputs.shape
 
     # get min/max
-    f = nc.Dataset(input_preprocess_path + 'CLDAS_force_P_20150331.nc', 'r')
+    #TODO: give a more smart operation to read min/max matrixs
+    f = nc.Dataset(input_preprocess_path + 'CLDAS_force_P_20150531.nc', 'r')
     min_, max_ = f['min'][:], f['max'][:]
 
     # preprocess according normalized parameters

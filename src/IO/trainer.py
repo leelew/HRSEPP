@@ -3,16 +3,6 @@ import tensorflow as tf
 import tqdm
 
 
-gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
-for gpu in gpus:
-
-    #tf.config.experimental.set_visible_devices(devices=gpus[1], device_type='GPU')
-    tf.config.experimental.set_memory_growth(device=gpu, enable=True)
-
-#import os
-#os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-
-
 def keras_train(model, X, y, batch_size, epochs, save_folder):
 
     # TODO: split spatiotemporal or temporal model modes
@@ -39,8 +29,7 @@ def keras_train(model, X, y, batch_size, epochs, save_folder):
     return model
 
 
-def load_model(path):
-    return tf.keras.models.load_model(path)
+def load_model(path): return tf.keras.models.load_model(path)
 
 
 class trainer():

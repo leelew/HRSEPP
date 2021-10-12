@@ -57,24 +57,22 @@ def parse_args():
     parser.add_argument('--y_path', type=str, default='SMAP_L4/')
     parser.add_argument('--raw_x_path', type=str, default='CLDAS_FORCING/')
     parser.add_argument('--raw_y_path', type=str, default='SMAP_L4/')
-    parser.add_argument('--daily_x_path', type=str,
-                        default='CLDAS_FORCING_DD/')
-    parser.add_argument('--daily_y_path', type=str, default='SMAP_L4_DD/')
+    parser.add_argument('--daily_x_path', type=str, default='test/CLDAS_FORCING_DD/')
+    parser.add_argument('--daily_y_path', type=str, default='test/SMAP_L4_DD/')
 
     parser.add_argument('--begin_train_date', type=str, default='2015-05-31')
-    parser.add_argument('--end_train_date', type=str, default='2017-03-31')
+    parser.add_argument('--end_train_date', type=str, default='2015-11-01')
 
     parser.add_argument('--begin_test_date', type=str, default='2017-04-01')
     parser.add_argument('--end_test_date', type=str, default='2017-12-01')
 
-    parser.add_argument('--begin_inference_date',
-                        type=str, default='2017-12-02')
+    parser.add_argument('--begin_inference_date',type=str, default='2017-12-02')
     parser.add_argument('--end_inference_date', type=str, default='2017-12-06')
 
-    parser.add_argument('--lat_lower', type=int, default=22)
-    parser.add_argument('--lat_upper', type=int, default=33)
-    parser.add_argument('--lon_left', type=int, default=110)
-    parser.add_argument('--lon_right', type=int, default=123)
+    parser.add_argument('--lat_lower', type=int, default=30)
+    parser.add_argument('--lat_upper', type=int, default=30.2)
+    parser.add_argument('--lon_left', type=int, default=118)
+    parser.add_argument('--lon_right', type=int, default=118.2)
 
     parser.add_argument('--len_input', type=int, default=5)
     parser.add_argument('--len_output', type=int, default=1)
@@ -83,9 +81,8 @@ def parse_args():
     parser.add_argument('--fillvalue', type=float, default=-9999)
     parser.add_argument('--train_test_ratio', type=float, default=0.2)
 
-    parser.add_argument('--saved_model_path', type=str,
-                        default='HRSEPP/saved_model/')
-    # hyperparameters
+    parser.add_argument('--saved_model_path', type=str, default='HRSEPP/saved_model/')
+
     # model paramters
     parser.add_argument('--epoch', type=int, default=50)
     parser.add_argument('--batch_size', type=int, default=256)
