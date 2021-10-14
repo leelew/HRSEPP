@@ -2,7 +2,7 @@ from os import name
 import tensorflow as tf
 import numpy as np
 from sklearn.metrics import mean_squared_error
-
+import time
 def random_index(num_grid, n_t, batch_size, rho, bufftime=0):
 
     if num_grid < 100: batch_size = num_grid
@@ -24,7 +24,7 @@ def select_subset(x, idx_grid, idx_t, rho, bufftime=0):
 
 
 def rmse_loss(y_true, y_pred):
-    return tf.math.reduce_sum(tf.math.sqrt((y_true-y_pred)**2))
+    return tf.math.reduce_mean(tf.math.sqrt((y_true-y_pred)**2))
 
 def train(model,
           X, 
@@ -35,9 +35,12 @@ def train(model,
           rho=30
           ):
 
-    optimizer = tf.keras.optimizers.Adam()
+    optimizer = tf.keras.optimizers.Adadelta()
     num_grid, n_t, n_f = X.shape
+    
     for i_epoch in range(epochs):
+        lossEp = 0
+        time0 = time.time()
         for i_iter in range(230):
 
             with tf.GradientTape() as tape:
@@ -54,8 +57,12 @@ def train(model,
                 #print(loss)
             gradients = tape.gradient(loss, model.trainable_variables)
             optimizer.apply_gradients(zip(gradients, model.trainable_variables)) 
+            
+            lossEp+=loss
+        print(lossEp)
+        time1 = time.time()
 
-        print("epoch {}: MSE is {}".format(i_epoch, loss))
+        print("epoch {}: MSE is {}, cost time: {}".format(i_epoch, lossEp/230, time1-time0))
 
     return model   
 

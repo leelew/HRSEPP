@@ -52,7 +52,8 @@ class GlobalLSTM(keras.Model):
         super().__init__()
         self.hidden_size = hidden_size
         self.in_layer = keras.layers.Dense(hidden_size, activation='relu')
-        self.hidden_layer = GlobalLSTMCell(hidden_size)
+        #self.hidden_layer = GlobalLSTMCell(hidden_size) 
+        self.hidden_layer = keras.layers.LSTM(hidden_size, return_sequences=True)
         self.out_layer = keras.layers.Dense(1)
 
     def update_state(self, state, state_new, state_idx, N):
@@ -74,9 +75,10 @@ class GlobalLSTM(keras.Model):
             X: the shape of inputs is (batch_size, timestep, hidden_size)
             the shape of outputs is (ngrids, nt, 1)
         """
-        x0 = self.in_layer(X)
+        #x0 = self.in_layer(X)
         #print(x0.shape)
-
+        out_lstm = self.hidden_layer(X)
+        """
         batch_size, timesteps, num_features = X.get_shape().as_list()
 
         if h0 is None:
@@ -92,10 +94,13 @@ class GlobalLSTM(keras.Model):
             h0, c0 = self.hidden_layer(x0[:,i,:][:, tf.newaxis,:], h0, c0)
             #print(h0.shape)
             out_lstm = self.update_state(out_lstm, h0, i, timesteps)
-
+        """
         out = self.out_layer(out_lstm)
         
         return out
+    
+    
+ 
 
 
 if __name__ == '__main__':

@@ -71,14 +71,14 @@ def make_train_data(raw_X_path, raw_y_path,
     # 4. make final inputs for DL
     # ----------------------------------------------------#
     print('\033[1;31m%s\033[0m' % 'Make inputs')
-    """
+
     X, y = make_grids_train_xy(X,
                                y,
                                len_input=len_input,
                                len_output=len_output,
                                window_size=window_size,
                                use_lag_y=use_lag_y)
-    """
+    
     return X, y
 
 

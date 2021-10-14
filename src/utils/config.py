@@ -74,7 +74,7 @@ def parse_args():
     parser.add_argument('--lon_left', type=int, default=118)
     parser.add_argument('--lon_right', type=int, default=118.2)
 
-    parser.add_argument('--len_input', type=int, default=5)
+    parser.add_argument('--len_input', type=int, default=10)
     parser.add_argument('--len_output', type=int, default=1)
     parser.add_argument('--window_size', type=int, default=3)
     parser.add_argument('--use_lag_y', type=bool, default=True)
@@ -85,7 +85,7 @@ def parse_args():
 
     # model paramters
     parser.add_argument('--epoch', type=int, default=50)
-    parser.add_argument('--batch_size', type=int, default=256)
+    parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--loss', type=str, default='mse')
     parser.add_argument('--learning_rate', type=float, default=0.01)
     parser.add_argument('--metrics', type=list, default=['mae', 'mse'])

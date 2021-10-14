@@ -68,8 +68,8 @@ def make_inference_data(raw_X_path, raw_y_path,
     # ----------------------------------------------------#
     print('\033[1;31m%s\033[0m' % 'Make inputs')
 
-    X = make_grids_inference_x(X,
-                               y,
-                               use_lag_y=use_lag_y)
+    #X = make_grids_inference_x(X,
+    #                           y,
+    #                           use_lag_y=use_lag_y)
 
     return X

@@ -16,7 +16,7 @@ from sklearn.metrics import r2_score
 from data.make_inference_xy import make_inference_data
 from data.make_test_xy import make_test_data
 from data.make_train_xy import make_train_data
-from IO.trainer import keras_train, load_model
+from IO.train import keras_train, load_model
 from model.lstm import lstm
 from model.convlstm import convlstm
 from utils.config import parse_args
