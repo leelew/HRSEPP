@@ -145,6 +145,7 @@ class CudnnLstmModel(torch.nn.Module):
         # self.drtest = torch.nn.Dropout(p=0.4)
 
     def forward(self, x, doDropMC=False, dropoutFalse=False):
+
         x0 = F.relu(self.linearIn(x))
         outLSTM, (hn, cn) = self.lstm(x0, doDropMC=doDropMC, dropoutFalse=dropoutFalse)
         # outLSTMdr = self.drtest(outLSTM)
