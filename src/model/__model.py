@@ -36,43 +36,14 @@ def selectSubset(x, iGrid, iT, rho, *, c=None, tupleOut=False, LCopt=False, buff
         iT.fill(0)
 
     batchSize = iGrid.shape[0]
-    if iT is not None:
-        # batchSize = iGrid.shape[0]
-        xTensor = np.zeros([rho+bufftime, batchSize, nx])
-        for k in range(batchSize):
-            temp = x[iGrid[k]:iGrid[k] + 1, np.arange(iT[k]-bufftime, iT[k] + rho), :]
-            xTensor[:, k:k + 1, :] = np.swapaxes(temp, 1, 0)
-    else:
-        if LCopt is True:
-            # used for local calibration kernel: FDC, SMAP...
-            if len(x.shape) == 2:
-                # Used for local calibration kernel as FDC
-                # x = Ngrid * Ntime
-                xTensor = torch.from_numpy(x[iGrid, :]).float()
-            elif len(x.shape) == 3:
-                # used for LC-SMAP x=Ngrid*Ntime*Nvar
-                xTensor = torch.from_numpy(np.swapaxes(x[iGrid, :, :], 1, 2)).float()
-        else:
-            # Used for rho equal to the whole length of time series
-            xTensor = torch.from_numpy(np.swapaxes(x[iGrid, :, :], 1, 0)).float()
-            rho = xTensor.shape[0]
-    if c is not None:
-        nc = c.shape[-1]
-        temp = np.repeat(
-            np.reshape(c[iGrid, :], [batchSize, 1, nc]), rho+bufftime, axis=1)
-        cTensor = torch.from_numpy(np.swapaxes(temp, 1, 0)).float()
 
-        if (tupleOut):
-            if torch.cuda.is_available():
-                xTensor = xTensor.cuda()
-                cTensor = cTensor.cuda()
-            out = (xTensor, cTensor)
-        else:
-            out = torch.cat((xTensor, cTensor), 2)
-    else:
-        out = xTensor
-
-    return out
+    # batchSize = iGrid.shape[0]
+    xTensor = np.zeros([rho+bufftime, batchSize, nx])
+    for k in range(batchSize):
+        temp = x[iGrid[k]:iGrid[k] + 1, np.arange(iT[k]-bufftime, iT[k] + rho), :]
+        xTensor[:, k:k + 1, :] = np.swapaxes(temp, 1, 0)
+        
+    return xTensor
 
 
 class RMSELoss(tf.keras.losses.Loss):
