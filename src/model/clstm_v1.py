@@ -1,19 +1,21 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import seaborn as sns
 import tensorflow as tf
-from scipy import stats
-from scipy.stats import pearsonr
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from tensorflow.keras import layers
+from tensorflow.keras import layers, Model
 
 
-class CausalLSTMNodeCell(tf.keras.layers.Layer):
+class CausalLSTMNodeCell(layers.Layer):
+    """node calculation of causality-structured LSTM, this class implemented the graph 
+    calculation of single node in causality-structure for a single cell.
+
+    Call arguments:
+    inputs: A 3D tensor with shape [batch_size, 1, num_nodes*num_grids]
+    h: hidden state from last timestep, a 3D tensor with shape [batch_size, 1, num_hiddens]
+    c: cell state from last timestep, a 3D tensor with shape [batch_size, 1, num_hiddens]
+    n: causality state from last timestep, a 3D tensor with shape [batch_size, 1, num_hiddens]
+    """
     def __init__(self,
                  num_hiddens=16,
                  num_children=3):
-        super(CausalLSTMNodeCell, self).__init__()
+        super().__init__()
 
         self.num_hiddens = num_hiddens
         self.num_children = num_children
@@ -32,10 +34,12 @@ class CausalLSTMNodeCell(tf.keras.layers.Layer):
                 num_children * num_hiddens, activation=None)
             self._r_child_h = layers.Dense(
                 num_children * num_hiddens, activation=None)
+
         self._n_1_x = layers.Dense(num_hiddens, activation=None)
         self._n_1_h = layers.Dense(num_hiddens, activation=None)
         self._n_2_x = layers.Dense(num_hiddens, activation=None)
         self._n_2_h = layers.Dense(num_hiddens, activation=None)
+
 
     def _horizontal_forward(self, inputs, h_prev, c_prev):
         """forward pass of horizontal pass."""
@@ -54,189 +58,181 @@ class CausalLSTMNodeCell(tf.keras.layers.Layer):
 
         return h, c
 
+
     def _vertical_forward(self, inputs, h_prev, h, child_n=None):
         """forward pass of vertical pass"""
         if self.num_children == 0:
             r = 0
         else:
             # generate intermediate variable for neighborhood
-            # (None, num_hiddens * num_child)
-            child_r = tf.sigmoid(self._r_child_x(
-                inputs) + self._r_child_h(h_prev))
-            # (num_child, None, num_hiddens)
-            child_r = tf.reshape(
-                child_r, [self.num_children, -1, self.num_hiddens])
+            child_r = tf.sigmoid(self._r_child_x(inputs) + self._r_child_h(h_prev)) #[b, 1, num_hiddens*num_childs]
+            child_r = tf.reshape(child_r, [-1, 1, self.num_hiddens, self.num_children]) 
 
             # (num_child, None, num_hiddens)
-            child_r_n = tf.math.multiply(child_r, child_n)
-            r = tf.reduce_sum(child_r_n, axis=0)  # (None, num_hiddens)
+            child_r_n = tf.math.multiply(child_r, child_n) # [b, 1, units, num_children]
+            r = tf.reduce_sum(child_r_n, axis=-1)  # (None, num_hiddens)
 
         # generate weight for neighborhood and hidden state
-        n_1 = tf.sigmoid(self._n_1_x(inputs) + self._n_1_h(h_prev))
+        n_1 = tf.sigmoid(self._n_1_x(inputs) + self._n_1_h(h_prev)) #[b, 1, num_hidden]
         n_2 = tf.sigmoid(self._n_2_x(inputs) + self._n_2_h(h_prev))
 
         # generate current neighborhood state
         n = tf.math.multiply(n_1, r) + tf.math.multiply(n_2, h)
 
-        return n
+        return n # [b, 1, num_hidden]
+
 
     def call(self, inputs, h_prev, c_prev, child_n=None):
         h, c = self._horizontal_forward(inputs, h_prev, c_prev)
         n = self._vertical_forward(inputs, h_prev, h, child_n)
-
         return n, h, c
 
 
-class CausalLSTMCell(tf.keras.layers.Layer):
+class CausalLSTMCell(layers.Layer):
+    """Cell for Causality-structured LSTM, this class implemented the graph 
+    calculation of all nodes in causality-structure for a single cell.
+
+    Args:
+
+    Call arguments:
+        inputs: A 3D tensor with shape [batch_size, 1, num_grid*num_feature]
+        h: hidden state from last timestep, a 4D tensor with shape [batch_size, 1, num_hiddens, num_nodes]
+        c: cell state from last timestep, a 4D tensor with shape [batch_size, 1, num_hiddens, num_nodes]
+        n: causality state from last timestep, a 4D tensor with shape [batch_size, 1, num_hiddens, num_nodes]
+    """
     def __init__(self,
                  num_hiddens=16,
                  num_nodes=6,
+                 num_out=1,
                  children=None,
                  child_input_idx=None,
                  child_state_idx=None):
-        super(CausalLSTMCell, self).__init__()
+        super().__init__()
 
         self.num_hiddens = num_hiddens
         self.num_nodes = num_nodes
         self.child_input_idx = child_input_idx  # list [[1,2,3],[4,5,6]]
         self.child_state_idx = child_state_idx
-        self.children = children  # num of children
+        self.children = children  
 
-        self.lstm = []
+        self.clstm_node_layers = []
         for i in range(num_nodes):
-            self.lstm.append(CausalLSTMNodeCell(num_hiddens, children[i]))
+            self.clstm_node_layers.append(
+                CausalLSTMNodeCell(num_hiddens, children[i]))
 
-    def update_state(self, state, state_new, state_idx, N):
+        self.out_linear_layer = layers.Dense(num_out, activation=None)
 
-        if state_idx == 0:
-            state = tf.concat([state_new, state[state_idx+1:, :, :]], axis=0)
-        elif state_idx == N:
-            state = tf.concat([state[:state_idx, :, :], state_new], axis=0)
+
+    def _update_state(self, state, state_new, state_idx):
+        """update all nodes state by new state for each nodes
+
+        Args:
+            state: A 4D tensor with shape [batch_size, 1, num_hiddens, num_nodes]
+            state_new: A 4D tensor with shape [batch_size, 1, num_hiddens, 1]
+            state_idx (int): The index of node
+        """
+        if state_idx == 0: 
+            state = tf.concat([state_new, state[:, :, :, state_idx+1:]], axis=-1)
+        elif state_idx == self.num_nodes:
+            state = tf.concat([state[:, :, :, :state_idx], state_new], axis=-1)
         else:
-            state = tf.concat(
-                [state[:state_idx, :, :], state_new, state[state_idx+1:, :, :]], axis=0)
-
+            state = tf.concat([state[:, :, :, :state_idx], state_new, state[:, :, :, state_idx+1:]], axis=-1)
         return state
+
 
     def call(self, inputs, h, c, n):
 
-        # inputs: [None, features]
-        # h, c: [num_nodes, None, num_hiddens]
-        # n: [num_nodes, None, num_hiddens]
-
+        #TODO: Select feature for each node over all grids. If this cause poor 
+        #      performance, the alternative way is using mean of all features on 
+        #      each node.
         for i in range(self.num_nodes):
-            _in_x = tf.stack([inputs[:, k] for k in self.child_input_idx[i]], axis=-1)
-            _h, _c = h[i, :, :], c[i, :, :]  # (None, num_hiddens)
 
-            if self.children[i] == 0:
-                n_new, h_new, c_new = self.lstm[i](_in_x, _h, _c, child_n=None)
+            # prepare inputs of each nodes
+            #FIXME: The output shape is not correct
+            _in_x = tf.concat([inputs[:, :, ::k] for k in self.child_input_idx[i]], axis=-1) # [b, 1, f]
+            _h, _c = h[:, :, :, i], c[:, :, :, i] # [b, 1, units]
 
+            # this node have no parents
+            if self.children[i] == 0: 
+                n_new, h_new, c_new = self.clstm_node_layers[i](_in_x, _h, _c, child_n=None)
+
+            # have parents
             else:
-                # (num_children, None, num_hiddens)
-                child_n = tf.stack([n[j, :, :] for j in self.child_state_idx[i]], axis=0)
-                n_new, h_new, c_new = self.lstm[i](_in_x, _h, _c, child_n)
+                # make parents causality states
+                child_n = tf.stack([n[:, :, :, j] for j in self.child_state_idx[i]], axis=-1) # (b, 1, units, num_nodes)
+                n_new, h_new, c_new = self.clstm_node_layers[i](_in_x, _h, _c, child_n) # (b, 1, units)
+            n = self._update_state(n, n_new[:,:,:,tf.newaxis], i)
+            h = self._update_state(h, h_new[:,:,:,tf.newaxis], i)
+            c = self._update_state(c, c_new[:,:,:,tf.newaxis], i)
 
-            n = self.update_state(
-                n, n_new[tf.newaxis, :, :], i, self.num_nodes)
-            h = self.update_state(
-                h, h_new[tf.newaxis, :, :], i, self.num_nodes)
-            c = self.update_state(
-                c, c_new[tf.newaxis, :, :], i, self.num_nodes)
+        out = self.out_linear_layer(n[:,:,:,-1])
 
-        return n, h, c
+        return out, (h, c, n)
 
 
-class CausalLSTM(tf.keras.Model):
+class CausalLSTM(Model):
+    """causality-structured LSTM (CLSTM)
+
+    Args:
+        num_nodes (int): The number of nodes in graph calculation.
+        num_hiddens (int): The number of cells in hidden layers. 
+        children ([type]): [description]
+        child_input_idx ([type]): [description]
+        child_state_idx ([type]): [description]
+        return_sequences (bool, optional): Whether to return the last output. 
+            in the output sequence, or the full sequence. Defaults to True.
+
+    Call arguments:
+        inputs: A 3D tensor with shape [batch_size, timesteps, num_grid*num_feature]
+    """
     def __init__(self,
+                 len_inputs,
                  num_nodes,
                  num_hiddens,
+                 num_out,
                  children,
                  child_input_idx,
                  child_state_idx,
-                 input_len,
-                 #batch_size=32
+                 return_sequences=True,
+                 **kwargs
                  ):
-        super(CausalLSTM, self).__init__()
+        super().__init__()
 
         self.num_nodes = num_nodes
         self.num_hiddens = num_hiddens
-        self.t_x = input_len
-        #self.batch_size = batch_size
+        self.len_inputs = len_inputs
+        self.return_sequences = return_sequences
 
-        self.clstm = []
-        for i in range(self.t_x):
-            self.clstm.append(CausalLSTMCell(
-                num_hiddens, num_nodes, children, child_input_idx, child_state_idx))
+        #TODO: Make sure that should CLSTM share weight of different CLSTM 
+        #      cell? Now we set different weight.
+        self.clstm_layers = []
+        for _ in range(self.len_inputs):
+            self.clstm_layers.append(CausalLSTMCell(
+                num_hiddens, 
+                num_nodes,
+                num_out, 
+                children, 
+                child_input_idx, 
+                child_state_idx))
 
-        self.dense = layers.Dense(1)
 
-    def initial_tree_state(self, batch_size):
-        """initial tree state using default LSTM."""
-        initializer = tf.keras.initializers.Zeros()  # RandomUniform(minval=0., maxval=1.)
-        h0 = initializer(
-            shape=(self.num_nodes, batch_size, self.num_hiddens))
-        c0 = initializer(
-            shape=(self.num_nodes, batch_size, self.num_hiddens))
-        n0 = initializer(
-            shape=(self.num_nodes, batch_size, self.num_hiddens))
-
-        return n0, h0, c0
-
-    def call(self, inputs):
-        """Causality LSTM"""
+    def call(self, inputs, h0=None, c0=None, n0=None):
         batch_size, timestep, nx = inputs.shape
 
-        n, h, c = self.initial_tree_state(batch_size) # @fix remove bug for using different batch size
+        #TODO: Decide a properly initializers, now set to zeros. 
+        # Maybe should be setting to the same initializers with tensorflow.LSTM
+        if h0 is None: h = tf.zeros([tf.shape(inputs)[0], 1, self.num_hiddens, self.num_nodes])
+        if c0 is None: c = tf.zeros([tf.shape(inputs)[0], 1, self.num_hiddens, self.num_nodes])
+        if n0 is None: n = tf.zeros([tf.shape(inputs)[0], 1, self.num_hiddens, self.num_nodes])
 
-        for i in range(self.t_x):
-            n, h, c = self.clstm[i](inputs[:, i, :], h, c, n)
+        successive_outputs = []
+        for i in range(self.len_inputs):
+            out, (h, c, n) = self.clstm_layers[i](inputs[:, i:i+1, :], h, c, n) 
+            successive_outputs.append(out)
 
-        out = self.dense(n[-1, :, :])  # output = tf.stack(output, axis=1)
-
-        return out
-
-
-class LSTMCell(tf.keras.layers.Layer):
-    def __init__(self, num_hiddens):
-        super(LSTMCell, self).__init__()
-        self.num_hiddens = num_hiddens
-        self.gates_x = layers.Dense(
-            3 * num_hiddens, activation=None)
-        self.gates_h = layers.Dense(
-            3 * num_hiddens, activation=None)
-        self.u_x = layers.Dense(
-            num_hiddens, activation=None)
-        self.u_h = layers.Dense(
-            num_hiddens, activation=None)
-
-    def call(self, inputs, h, c):
-        gates = tf.sigmoid(self.gates_x(inputs) + self.gates_h(h))
-        i, f, o = tf.split(gates, 3, axis=-1)
-        u = tf.math.tanh(self.u_x(inputs)+self.u_h(h))
-
-        c = tf.math.multiply(i, u) + tf.math.multiply(f, c)
-        h = tf.math.multiply(o, tf.math.tanh(c))
-
-        return h, c
-
-
-class LSTM(tf.keras.Model):
-    def __init__(self, num_hiddens, batch_size):
-        super(LSTM, self).__init__()
-        self.num_hiddens = num_hiddens
-        self.rnn = LSTMCell(num_hiddens)
-        self.dense = layers.Dense(1)
-        self.batch_size = batch_size
-
-    def call(self, inputs):
-        # RandomUniform(minval=0., maxval=1.)
-        initializer = tf.keras.initializers.Zeros()
-        hx = initializer(shape=(self.batch_size, self.num_hiddens))
-        cx = initializer(shape=(self.batch_size, self.num_hiddens))
-
-        output = []
-        for i in range(10):
-            hx, cx = self.rnn(inputs[:, i], hx, cx)
-        out = self.dense(hx)
-
-        return out
+        if self.return_sequences is True:
+            outputs = tf.concat(successive_outputs, axis=1) 
+        else:
+            outputs = successive_outputs[-1]
+               
+        return outputs
