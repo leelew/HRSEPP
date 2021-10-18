@@ -1,10 +1,12 @@
+import numpy as np
 import tensorflow as tf
-from tensorflow.keras import layers, Model
+from tensorflow.keras import Model, layers
+
+from model.tree_causality import CausalTree
 
 
 class CausalLSTMNodeCell(layers.Layer):
-    """node calculation of causality-structured LSTM, this class implemented the graph 
-    calculation of single node in causality-structure for a single cell.
+    """node calculation of causality-structured LSTM, this class implemented the graph calculation of single node in causality-structure for a single cell.
 
     Call arguments:
     inputs: A 3D tensor with shape [batch_size, 1, num_nodes*num_grids]
@@ -103,7 +105,7 @@ class CausalLSTMCell(layers.Layer):
     def __init__(self,
                  num_hiddens=16,
                  num_nodes=6,
-                 num_out=1,
+                 len_outputs=1,
                  children=None,
                  child_input_idx=None,
                  child_state_idx=None):
@@ -120,7 +122,7 @@ class CausalLSTMCell(layers.Layer):
             self.clstm_node_layers.append(
                 CausalLSTMNodeCell(num_hiddens, children[i]))
 
-        self.out_linear_layer = layers.Dense(num_out, activation=None)
+        self.out_linear_layer = layers.Dense(len_outputs, activation=None)
 
 
     def _update_state(self, state, state_new, state_idx):
@@ -148,7 +150,6 @@ class CausalLSTMCell(layers.Layer):
         for i in range(self.num_nodes):
 
             # prepare inputs of each nodes
-            #FIXME: The output shape is not correct
             _in_x = tf.concat([inputs[:, :, ::k] for k in self.child_input_idx[i]], axis=-1) # [b, 1, f]
             _h, _c = h[:, :, :, i], c[:, :, :, i] # [b, 1, units]
 
@@ -176,7 +177,7 @@ class CausalLSTM(Model):
     Args:
         num_nodes (int): The number of nodes in graph calculation.
         num_hiddens (int): The number of cells in hidden layers. 
-        children ([type]): [description]
+        children (nest list): A nest list contain the parent nodes of nodes in causality-structure.
         child_input_idx ([type]): [description]
         child_state_idx ([type]): [description]
         return_sequences (bool, optional): Whether to return the last output. 
@@ -189,7 +190,7 @@ class CausalLSTM(Model):
                  len_inputs,
                  num_nodes,
                  num_hiddens,
-                 num_out,
+                 len_outputs,
                  children,
                  child_input_idx,
                  child_state_idx,
@@ -210,7 +211,7 @@ class CausalLSTM(Model):
             self.clstm_layers.append(CausalLSTMCell(
                 num_hiddens, 
                 num_nodes,
-                num_out, 
+                len_outputs, 
                 children, 
                 child_input_idx, 
                 child_state_idx))
@@ -236,3 +237,66 @@ class CausalLSTM(Model):
             outputs = successive_outputs[-1]
                
         return outputs
+
+
+def clstm_v1(X, 
+             y, 
+             len_inputs, 
+             len_outputs,
+             num_hiddens, 
+             num_nodes,
+             feature_params, 
+             corr_threshold, 
+             mic_threshold, 
+             flag, 
+             depth):
+    """default version (v1.0.0) of causality-structured LSTM
+
+    This default edition is proposed by Li et al. 2021, including two steps: 
+    1) generate causality-structure by two correlation and two granger causality 
+       test, which is implemented by `CausalTree`.
+    2) training CLSTM according to causality-structure. CLSTM invovles a new 
+       state named causality state to propagate causality information vertically 
+       through causality-structure.
+
+    Args:
+        X (nd.array): A 4D nd.array with shape as [sample, timestep, lat, lon, nx]
+        y (nd.array): A 4D nd.array with shape as [sample, timestep, lat, lon, 1]
+        nx (int): The number of input features
+        len_inputs ([type]): [description]
+        len_outputs ([type]): [description]
+        num_hiddens ([type]): [description]
+        num_nodes ([type]): [description]
+        feature_params ([type]): [description]
+        corr_threshold ([type]): [description]
+        mic_threshold ([type]): [description]
+        flag ([type]): [description]
+        depth ([type]): [description]
+    """
+    _, Nlat, Nlon, Nf = X.shape
+    ct = CausalTree(num_features=len(feature_params),
+                    name_features=feature_params,
+                    #FIXME: Change the name of parameters
+                    corr_thresold=corr_threshold,
+                    mic_thresold=mic_threshold,
+                    flag=flag,
+                    depth=depth)
+    children, child_input_idx, child_state_idx = ct(np.nanmean(X, axis=(1,2)))
+
+    inputs = tf.keras.layers.Input(shape=(len_inputs, Nlat*Nlon*Nf))
+
+    x = CausalLSTM(num_nodes=len(children),
+                   num_hiddens=num_hiddens,
+                   len_inputs=len_inputs,
+                   len_outputs=len_outputs,
+                   children=children,
+                   child_input_idx=child_input_idx,
+                   child_state_idx=child_state_idx)(inputs)
+
+    # build
+    model = tf.keras.models.Model(inputs=inputs, outputs=x)
+
+    # summary
+    model.summary()    
+
+    return model

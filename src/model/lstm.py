@@ -28,3 +28,7 @@ def lstm():
     model.summary()
 
     return model
+
+
+def train():
+    lstm()

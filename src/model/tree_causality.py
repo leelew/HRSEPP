@@ -1,11 +1,20 @@
 import numpy as np
 from minepy import MINE
-from numpy.lib.function_base import corrcoef
 from scipy.stats import pearsonr
 from statsmodels.tsa.stattools import grangercausalitytests as gct
 
 
 class CausalTree():
+    """generate causality-structure
+
+    Args:
+    num_features (int): the number of variables
+    name_features ([type]): [description]
+    corr_thresold (float, optional): [description]. Defaults to 0.5.
+    mic_thresold (float, optional): [description]. Defaults to 0.5.
+    flag (list, optional): [description]. Defaults to [1, 0, 0].
+    depth (int, optional): depth of causality-structure. Defaults to 2.
+    """
     def __init__(self,
                  num_features,
                  name_features,
