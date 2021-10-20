@@ -1,7 +1,4 @@
-// High Resolution Soil Environment Prediction Platform
-
-/*
- * Map layer configuration
+/**Map layer configuration
  */
  
 //-----------------------------
@@ -13,55 +10,74 @@ var geometry = ee.Geometry.Polygon([[[3, 73],
                                      [3, 135],
                                      [53, 73],
                                      [53, 135]]], null, false);
+var palettes = require('users/gena/packages:palettes'); 
+var palette = palettes.misc.jet[7];//misc.jet[7];
+var vis = {min: 0, max: 30, palette: palette};
 
 //---------------------------------------------
 //predicted surface soil moisture (TODO:(luli))
 //---------------------------------------------
-    
+var pred = ee.Image("users/SysuLewLee1/testImage").visualize(vis);
+print(pred)
 //----------------------------------------------------
 //observation (TODO:add different sources observation)
 //----------------------------------------------------
 // gldas
-var gldas = ee.ImageCollection('NASA/GLDAS/V021/NOAH/G025/T3H').filterBounds(geometry).filterDate(begin_date, end_date);
+var gldas = ee.ImageCollection('NASA/GLDAS/V021/NOAH/G025/T3H').filterDate(begin_date, end_date);
 var gldas_ssm = gldas.select('SoilMoi0_10cm_inst');
-//gldas_ssm = gldas_ssm.map(function(image){
-//  return image.rename("GLDAS [0-10cm]")});
+gldas_ssm = gldas_ssm.map(function(image){
+  return image.rename("GLDAS_0-10cm")});
 
 // smap enhanced l3
-var smap = ee.ImageCollection("NASA_USDA/HSL/SMAP10KM_soil_moisture").filterBounds(geometry).filterDate(begin_date,end_date);
+var smap = ee.ImageCollection("NASA_USDA/HSL/SMAP10KM_soil_moisture").filterDate(begin_date,end_date);
 var smap_ssm = smap.select(['ssm']);
-//smap_ssm = smap_ssm.map(function(image){
-//  return image.rename("SMAP [0-2cm]")
-//});
+smap_ssm = smap_ssm.map(function(image){
+  return image.rename("SMAP_L3_0-2cm")});
 
 // mean smap enhanced l3 (TODO: removed after trial version)
-var mean_smap_ssm = smap_ssm.mean();
+var mean_smap_ssm = smap_ssm.mean().visualize(vis);
+
+// Near-real-time smap l3
+//list = smap_ssm.toList()
+//var smap_nrt = ee.Image(list.get(0))
+
 
 //-----------
 //merge (TODO)
 //-----------
 var sm_all = smap_ssm.merge(gldas_ssm);
+var sm_all_pred = sm_all.merge(pred);
+print(sm_all_pred)
 
 
 /*
  * Map
  */
  
+ 
 var mapPanel = ui.Map();
 var layers = mapPanel.layers();
 
 // create layers
 var mean_smap_ssm_layer = ui.Map.Layer(mean_smap_ssm).setName('mean smap enhanced l3');
+var predict_layer = ui.Map.Layer(pred).setName('predict sm');
 var clip_geometry_layer = ui.Map.Layer(geometry).setName('click geometry');
 
 // palettes setting from \ee-palettes\
-var palettes = require('users/gena/packages:palettes'); 
-var palette = palettes.misc.jet[7];
-var vis = {min: 0, max: 30, palette: palette};
-
 // add layers
-layers.add(mean_smap_ssm_layer, vis, 'mean smap l3');
-layers.add(clip_geometry_layer); //(FIXME: clip layer bug)
+//mapPanel.layers().set(2, mean_smap_ssm_layer);
+mapPanel.layers().set(2, predict_layer);
+mapPanel.layers().set(3, mean_smap_ssm_layer);
+
+
+//layers.add(mean_smap_ssm_layer, 'mean smap enhanced l3'); //(FIXME: colormap bug)
+//layers.add(clip_geometry_layer); //(FIXME: clip layer bug)
+//layers.add(predict_layer,  'predict')
+print(mean_smap_ssm)
+
+
+
+
 
 
 /*
@@ -91,11 +107,72 @@ var intro = ui.Panel([
 var lon = ui.Label(); 
 var lat = ui.Label();
 
+
+
+/*
+ * Panel 2
+ */
+
+var intro_download = ui.Panel([
+  ui.Label({
+    value: 'II. Download HRSEPP data',
+    style: {fontSize: '18px', fontWeight: 'bold', fontFamily: 'serif', position: 'top-center'}
+  }),
+  ui.Label({
+    value: 'Choose and download HRSEPP soil moisture.',
+    style: {fontFamily: 'serif', position: 'top-center'}
+  })
+])
+
+var filters = {
+  startDate: ui.Textbox('YYYY-MM-DD', '2018-03-01'),
+  endDate: ui.Textbox('YYYY-MM-DD', '2018-05-11'),
+  applyButton: ui.Button({
+    label: 'download', 
+    onClick: function(){
+      var Images = ee.ImageCollection("NASA_USDA/HSL/SMAP10KM_soil_moisture").select(['ssm']);
+      
+      // Set filter variables.
+      var start = filters.startDate.getValue();
+      if (start) start = ee.Date(start);
+      var end = filters.endDate.getValue();
+      if (end) end = ee.Date(end);
+      if (start) Images = Images.filterDate(start, end);
+
+      //(FIXME: export to google drive)
+      Export.image.toDrive({
+          image: Images,
+    })
+  }
+}),
+  loadingLabel: ui.Label({
+    value: 'downloading...',
+    style: {stretch: 'vertical', color: 'gray', shown: false}
+  })
+}
+
+
+// filter control widgets
+filters.panel = ui.Panel({
+  widgets: [
+    ui.Label('Start Date'), 
+    filters.startDate,
+    ui.Label('End Date'),
+    filters.endDate,
+    ui.Panel([
+      filters.applyButton,
+      filters.loadingLabel])
+  ]})
+
+
 // Add module for panel
 inspectorPanel.add(intro);
 inspectorPanel.add(ui.Panel([lon, lat], ui.Panel.Layout.flow('horizontal')));
 inspectorPanel.add(ui.Label('[Chart]')); // Add placeholders for the chart and legend.
 //inspectorPanel.add(ui.Label('[Legend]'));
+inspectorPanel.add(intro_download);
+inspectorPanel.add(filters.panel)
+
 
 
 /*
@@ -135,13 +212,23 @@ var generateChart = function (coords) {
         lineWidth: 0,
         pointsVisible: true,
         pointSize: 2
+      },
+      2: {
+        color: 'green',
+        lineWidth: 0,
+        pointsVisible: true,
+        pointSize: 2
       }
     },
     legend: {position: 'right'},
   });
+  
+  smChart.setDownloadable('png')
   // Add the chart at a fixed position, so that new charts overwrite older ones.
   inspectorPanel.widgets().set(2, smChart);
 };
+
+
 
 
 /*
@@ -186,13 +273,10 @@ var legendTitle = ui.Label({
 });
 
 var legendPanel = ui.Panel([legendTitle, colorBar, legendLabels]);
-
 mapPanel.add(legendPanel)
-//inspectorPanel.widgets().set(3, legendPanel);
 
-/*
- * Map setup
- */
+
+
 
 // Register a callback on the default map to be invoked when the map is clicked.
 mapPanel.onClick(generateChart);
@@ -201,53 +285,11 @@ mapPanel.onClick(generateChart);
 mapPanel.style().set('cursor', 'crosshair');
 
 // Initialize with a test point at SYSU.
-var initialPoint = ee.Geometry.Point(113.58, 22.34);
+var initialPoint = ee.Geometry.Point(113, 23);
 mapPanel.centerObject(initialPoint, 4);
 
 
-/*
- * Panel 2
- */
 
-var intro_download = ui.Panel([
-  ui.Label({
-    value: 'II. Download HRSEPP data',
-    style: {fontSize: '18px', fontWeight: 'bold', fontFamily: 'serif', position: 'top-center'}
-  }),
-  ui.Label({
-    value: 'Choose and download HRSEPP soil moisture.',
-    style: {fontFamily: 'serif', position: 'top-center'}
-  })
-])
-
-var filters = {
-  startDate: ui.Textbox('YYYY-MM-DD', '2018-03-01'),
-  endDate: ui.Textbox('YYYY-MM-DD', '2018-05-11'),
-  applyButton: ui.Button('download', download),
-  loadingLabel: ui.Label({
-    value: 'downloading...',
-    style: {stretch: 'vertical', color: 'gray', shown: false}
-  })
-}
-
-// filter control widgets
-filters.panel = ui.Panel({
-  widgets: [
-    ui.Label('Start Date'), 
-    filters.startDate,
-    ui.Label('End Date'),
-    filters.endDate,
-    ui.Panel([
-      filters.applyButton,
-      filters.loadingLabel])
-  ]})
-
-var download = function(){
-  return '1'
-}
-
-inspectorPanel.add(intro_download);
-//inspectorPanel.add(filters)
 /*
  * Initialize the app
  */
@@ -255,7 +297,6 @@ inspectorPanel.add(intro_download);
 // Replace the root with a SplitPanel that contains the inspector and map.
 ui.root.clear();
 ui.root.add(ui.SplitPanel(inspectorPanel, mapPanel));
-ui.root.add(filters.panel)
 
 generateChart({
   lon: initialPoint.coordinates().get(0).getInfo(),

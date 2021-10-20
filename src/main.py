@@ -79,7 +79,7 @@ def main(mode):
         #            batch_size=config.batch_size,
         #            epochs=config.epoch,
         #            save_folder=os.path.join(config.ROOT, config.saved_model_path))
-
+        #TODO:Save nd.array, postprocess EASE to WGS84 projection.
     elif mode == 'test':
         # ----------------------------------------------------------------------
         # 2. test mode (optional)
@@ -115,7 +115,7 @@ def main(mode):
 
         #        y_pred = model.predict(X[:, :, i, j, :])
         #        print(r2_score(np.squeeze(y[:, :, i, j, :]), y_pred))
-
+        #TODO:Postprocess EASE to WGS84 and save the images
     elif mode == 'inference':
         # ----------------------------------------------------------------------
         # 3. inference mode (once a day)
