@@ -43,9 +43,7 @@ var mean_smap_ssm = smap_ssm.mean();
 var sm_all = smap_ssm.merge(gldas_ssm);
 
 
-/*
- * Map
- */
+/** Map */
  
 var mapPanel = ui.Map();
 var layers = mapPanel.layers();
