@@ -6,8 +6,8 @@
 
 from data.grid_match_xy import grid_match_xy
 from data.make_grids_xy import make_grids_train_xy
-from data.preprocess_x import (preprocess_raw_cldas_forcing, preprocess_raw_smap_forcing,
-                               preprocess_train_daily_cldas_forcing, preprocess_train_daily_smap_forcing)
+from data.preprocess_x import (preprocess_raw_smap_forcing,
+                                preprocess_train_daily_smap_forcing)
 from data.preprocess_y import preprocess_raw_smap
 
 

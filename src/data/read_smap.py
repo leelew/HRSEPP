@@ -4,7 +4,6 @@
 # author: Lu Li, 2021/09/27
 # ==============================================================================
 
-
 import datetime as dt
 
 import h5py
@@ -14,44 +13,47 @@ import numpy as np
 from data.utils import get_date_array
 
 
-# ------------------------------------------------------------------------------
-# 1. read single file of SMAP and crop spatial dimension
-# ------------------------------------------------------------------------------
 def read_single_smap(path,
                      lat_lower,
                      lat_upper,
                      lon_left,
                      lon_right):
+    """Read from single file of SMAP and crop spatial dimension.
 
-    # get date for data
-    # TODO: now must obey SMAP file rules, need to extent to other file name.
+    Args:
+        path ([type]): [description]
+        lat_lower ([type]): [description]
+        lat_upper ([type]): [description]
+        lon_left ([type]): [description]
+        lon_right ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+
+    # get date for data TODO:Extent to other type of file name.
     yyyymmddhh = path.split('/')[-1].split('_')[4]
     yyyy = int(yyyymmddhh[0:4])
     mm = int(yyyymmddhh[4:6])
     dd = int(yyyymmddhh[6:8])
     hh = int(yyyymmddhh[9:11])
     date = dt.datetime(yyyy, mm, dd, hh)
-    print('Now reading SMAP Level 4 Surface Soil Moisture for {}'.format(date))
+    print('[HRSEPP][IO] Reading SMAP Level 4 data of {}'.format(date))
 
     # handle for HDF file
     f = h5py.File(path, 'r')
 
-    # read lat, lon
-    lat_matrix_global = f['cell_lat'][:]
-    lon_matrix_global = f['cell_lon'][:]
+    # read attribute (lat, lon) and crop attributes
+    lat, lon = f['cell_lat'][:, 0], f['cell_lon'][0, :]
 
-    lat = lat_matrix_global[:, 0]
-    lon = lon_matrix_global[0, :]
-
-    # crop regions according lat/lon
     lat_idx = np.where((lat > lat_lower) & (lat < lat_upper))[0]
     lon_idx = np.where((lon > lon_left) & (lon < lon_right))[0]
 
-    # read surface soil moisture
-    ssm = f['Geophysical_Data']['sm_surface'][lat_idx, :][:, lon_idx]
-    ssm[ssm == -9999] = np.nan
+    lat_2d = f['cell_lat'][lat_idx,:][:, lon_idx]
+    lon_2d = f['cell_lon'][lat_idx,:][:, lon_idx]
 
-    # read forcing
+    # read surface soil moisture and forcing of target regions
+    ssm = f['Geophysical_Data']['sm_surface'][lat_idx, :][:, lon_idx]
     p = f['Geophysical_Data']['precipitation_total_surface_flux'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
     lw = f['Geophysical_Data']['radiation_longwave_absorbed_flux'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
     sw = f['Geophysical_Data']['radiation_shortwave_downward_flux'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
@@ -59,15 +61,13 @@ def read_single_smap(path,
     sp = f['Geophysical_Data']['surface_pressure'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
     st = f['Geophysical_Data']['surface_temp'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
     ws = f['Geophysical_Data']['windspeed_lowatmmodlay'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
-
     force = np.concatenate([p, lw, sw, sh, sp, st, ws], axis=-1)
 
-    lat_matrix = lat_matrix_global[lat_idx][:, lon_idx]
-    lon_matrix = lon_matrix_global[lat_idx][:, lon_idx]
+    # turn fillvalue to NaN
+    ssm[ssm == -9999] = np.nan
+    force[force == -9999] = np.nan
 
-    return ssm, force, lat_matrix, lon_matrix, \
-        date, \
-        lat_matrix.shape[0], lat_matrix.shape[1]
+    return ssm, force, lat_2d, lon_2d
 
 
 def read_daily_smap(input_path, begin_date, end_date):
