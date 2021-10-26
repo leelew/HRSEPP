@@ -5,7 +5,7 @@
 # ==============================================================================
 
 import numpy as np
-from data.read_cldas import read_preprocessed_daily_cldas_forcing
+#from data.read_cldas import read_preprocessed_daily_cldas_forcing
 from data.read_smap import read_daily_smap
 
 

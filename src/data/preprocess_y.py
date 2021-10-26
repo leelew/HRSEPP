@@ -56,7 +56,7 @@ def preprocess_raw_smap(input_path,
         else:
 
             # get shape
-            _, _, lat_2d, lon_2d = read_single_smap(
+            _, lat_2d, lon_2d = read_single_smap(
                 l[0],
                 lat_lower, lat_upper,
                 lon_left, lon_right)
@@ -65,7 +65,7 @@ def preprocess_raw_smap(input_path,
             ssm_3hh = np.full((lat_2d.shape[0], lon_2d.shape[1], len(l)), np.nan)
 
             for i, path in enumerate(l):
-                ssm_3hh[:, :, i], _, _, _ = read_single_smap(
+                ssm_3hh[:, :, i], _, _ = read_single_smap(
                     path,
                     lat_lower, lat_upper,
                     lon_left, lon_right)

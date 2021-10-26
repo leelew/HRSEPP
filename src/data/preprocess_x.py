@@ -4,7 +4,7 @@ import os
 import netCDF4 as nc
 import numpy as np
 
-from data.read_smap import read_daily_smap_force, read_single_smap
+from data.read_smap import read_daily_smap_force, read_single_smap, read_single_smap_forcing
 from data.utils import (get_date_array, preprocess_test_daily_data,
                         preprocess_train_daily_data)
 
@@ -46,7 +46,7 @@ def preprocess_raw_smap_forcing(input_path,
         else:
 
             # get shape
-            _, force, lat_2d, lon_2d = read_single_smap(l[0],
+            force, lat_2d, lon_2d = read_single_smap_forcing(l[0],
                                                       lat_lower, lat_upper,
                                                       lon_left, lon_right)
 
@@ -54,7 +54,7 @@ def preprocess_raw_smap_forcing(input_path,
             force_3hh = np.full((force.shape[0], force.shape[1], force.shape[2], len(l)), np.nan)
 
             for i, path in enumerate(l):
-                _, force_3hh[:, :, :, i], _, _ = read_single_smap(
+                force_3hh[:, :, :, i], _, _ = read_single_smap_forcing(
                     path,
                     lat_lower, lat_upper,
                     lon_left, lon_right)
