@@ -6,8 +6,8 @@
 
 from data.grid_match_xy import grid_match_xy
 from data.make_grids_xy import make_grids_train_xy
-from data.preprocess_x import (preprocess_raw_cldas_forcing,
-                               preprocess_train_daily_cldas_forcing)
+from data.preprocess_x import (preprocess_raw_cldas_forcing, preprocess_raw_smap_forcing,
+                               preprocess_train_daily_cldas_forcing, preprocess_train_daily_smap_forcing)
 from data.preprocess_y import preprocess_raw_smap
 
 
@@ -37,7 +37,7 @@ def make_train_data(raw_X_path, raw_y_path,
                         lon_left=lon_left,
                         lon_right=lon_right)
 
-    preprocess_raw_cldas_forcing(input_path=raw_X_path,
+    preprocess_raw_smap_forcing(input_path=raw_X_path,
                                  out_path=daily_X_path,
                                  begin_date=begin_date,
                                  end_date=end_date,
@@ -51,7 +51,7 @@ def make_train_data(raw_X_path, raw_y_path,
     # ----------------------------------------------------#
     print('\033[1;31m%s\033[0m' % 'Preprocess inputs')
 
-    preprocess_train_daily_cldas_forcing(input_path=daily_X_path,
+    preprocess_train_daily_smap_forcing(input_path=daily_X_path,
                                          out_path=daily_X_path,
                                          begin_date=begin_date,
                                          end_date=end_date)

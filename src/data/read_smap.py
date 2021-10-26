@@ -51,10 +51,21 @@ def read_single_smap(path,
     ssm = f['Geophysical_Data']['sm_surface'][lat_idx, :][:, lon_idx]
     ssm[ssm == -9999] = np.nan
 
+    # read forcing
+    p = f['Geophysical_Data']['precipitation_total_surface_flux'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
+    lw = f['Geophysical_Data']['radiation_longwave_absorbed_flux'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
+    sw = f['Geophysical_Data']['radiation_shortwave_downward_flux'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
+    sh = f['Geophysical_Data']['specific_humidity_lowatmmodlay'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
+    sp = f['Geophysical_Data']['surface_pressure'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
+    st = f['Geophysical_Data']['surface_temp'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
+    ws = f['Geophysical_Data']['windspeed_lowatmmodlay'][lat_idx, :][:, lon_idx][:,:, np.newaxis]
+
+    force = np.concatenate([p, lw, sw, sh, sp, st, ws], axis=-1)
+
     lat_matrix = lat_matrix_global[lat_idx][:, lon_idx]
     lon_matrix = lon_matrix_global[lat_idx][:, lon_idx]
 
-    return ssm, lat_matrix, lon_matrix, \
+    return ssm, force, lat_matrix, lon_matrix, \
         date, \
         lat_matrix.shape[0], lat_matrix.shape[1]
 
@@ -93,3 +104,42 @@ def read_daily_smap(input_path, begin_date, end_date):
         lon = f['longitude'][:]
 
     return data, lat, lon
+
+
+def read_daily_smap_force(input_path, begin_date, end_date):
+
+    # get dates array according to begin/end dates
+    dates = get_date_array(begin_date, end_date)
+
+    # get shape
+    filename = 'SMAP_L4_force_{year}{month:02}{day:02}.nc'.\
+        format(year=dates[0].year,
+               month=dates[0].month,
+               day=dates[0].day)
+    f = nc.Dataset(input_path + filename, 'r')
+    Nlat, Nlon, Nf = f['force'][:].shape
+
+    # read file
+    # ---------
+    data = np.full((len(dates), Nlat, Nlon, Nf), np.nan)
+
+    for i, date in enumerate(dates):
+
+        # file name
+        filename = 'SMAP_L4_force_{year}{month:02}{day:02}.nc'.\
+            format(year=date.year,
+                   month=date.month,
+                   day=date.day)
+
+        # handle for nc file
+        f = nc.Dataset(input_path + filename, 'r')
+
+        # read forcing
+        data[i, :, :, :] = f['force'][:]
+        lat = f['latitude'][:]
+        lon = f['longitude'][:]
+
+    return data, lat, lon
+
+
+

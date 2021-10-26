@@ -50,9 +50,7 @@ var sm_all_pred = sm_all.merge(pred);
 print(sm_all_pred)
 
 
-/*
- * Map
- */
+/** Map */
  
  
 var mapPanel = ui.Map();
