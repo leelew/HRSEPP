@@ -52,10 +52,10 @@ def get_SMAP_L4_path(year, month, day, hour):
 # ------------------------------------------------------------------------------
 def download_SMAP_L4_NRT():
 
-    # ------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Set username, password, and save path TODO: using parser 
-    # ------------------------------------------------------------------------------
-    DATA_DIR_L4 = "/hard/lilu/SMAP_L4/SMAP_L4/"
+    # --------------------------------------------------------------------------
+    DATA_DIR_L4 = 'SMAP/'#"/hard/lilu/SMAP_L4/SMAP_L4/"
 
     USERNAME = 'sysulewlee1@gmail.com'
     PASSWORD = '941313Li'
@@ -67,19 +67,6 @@ def download_SMAP_L4_NRT():
     month = local_time.tm_mon
     day = local_time.tm_mday
 
-    # mkdir if don't exist path for save
-    # -----------------------------------
-    if not os.path.exists(DATA_DIR_L4):
-        os.mkdir(DATA_DIR_L4)
-
-    folder = DATA_DIR_L4 + '{year}.{month:02}.{day:02}/'.format(
-        year=year,
-        month=month,
-        day=day)
-
-    if not os.path.exists(folder):
-        os.mkdir(folder)
-
     # get SMAP data 5-day before to nowadays (if have)
     # ------------------------------------------------
 
@@ -90,7 +77,8 @@ def download_SMAP_L4_NRT():
         session.auth = (USERNAME, PASSWORD)
 
         # get data
-        for i in np.arange(5):
+        for i in range(5, 1, -1):
+            print(i)
             
             # get datetime for ~5-1 day before
             dt = datetime.datetime.now() - datetime.timedelta(days = i)
@@ -102,11 +90,27 @@ def download_SMAP_L4_NRT():
                         str(dt.month).zfill(2)+'-' +
                         str(dt.day).zfill(2)+'-' +
                         str(hour).zfill(2))
-
+                
                 # get online path for SMAP L4
                 url_SMAP_L4, file_name_L4 = get_SMAP_L4_path(
                         year, month, day, hour)
-                                        
+
+                # mkdir if don't exist path for save
+                # -----------------------------------
+                if not os.path.exists(DATA_DIR_L4):
+                    os.mkdir(DATA_DIR_L4)
+
+                folder = DATA_DIR_L4 + '{year}.{month:02}.{day:02}/'.format(
+                    year=dt.year,
+                    month=dt.month,
+                    day=dt.day)
+
+                if not os.path.exists(folder):
+                    os.mkdir(folder)
+
+                print(folder)
+                print(file_name_L4)
+                print(os.path.join(folder, file_name_L4))
                 # judge if already exist hour file
                 if not os.path.exists(os.path.join(folder, file_name_L4)):
                     response = session.get(url_SMAP_L4)
@@ -173,3 +177,7 @@ with open(out_path_L3, 'wb') as f:
     f.write(response.content)
 print('*** SMAP L3 data saved to: ' + out_path_L3 + ' *** ')
 """
+
+
+if __name__ == '__main__':
+    download_SMAP_L4_NRT()
