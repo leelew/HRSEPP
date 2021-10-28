@@ -10,10 +10,10 @@ import h5py
 import netCDF4 as nc
 import numpy as np
 
-from data.utils import get_date_array
+from ..utils.time import get_date_array
 
 
-def read_single_smap(path, lat_lower, lat_upper, lon_left, lon_right):
+def read_smap(path, lat_lower, lat_upper, lon_left, lon_right):
     """Read from single file of SMAP and crop spatial dimension.
 
     Args:

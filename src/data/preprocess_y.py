@@ -36,19 +36,16 @@ def preprocess_raw_smap(input_path,
     for date in dates:
 
         # folder name
-        foldername = '{year}.{month:02}.{day:02}/'.format(
-            year=date.year,
-            month=date.month,
-            day=date.day)
+        foldername = '{year}.{month:02}.{day:02}/'.format(year=date.year,
+                                                          month=date.month,
+                                                          day=date.day)
 
         # file list in each folder
         l = glob.glob(input_path + foldername + 'SMAP_L4*.h5', recursive=True)
 
         # save to nc files
         filename = 'SMAP_L4_SSM_{year}{month:02}{day:02}.nc'.format(
-            year=date.year,
-            month=date.month,
-            day=date.day)
+            year=date.year, month=date.month, day=date.day)
 
         # judge already exist file
         if os.path.exists(out_path + filename):
@@ -56,19 +53,17 @@ def preprocess_raw_smap(input_path,
         else:
 
             # get shape
-            _, lat_2d, lon_2d = read_single_smap(
-                l[0],
-                lat_lower, lat_upper,
-                lon_left, lon_right)
+            _, lat_2d, lon_2d = read_single_smap(l[0], lat_lower, lat_upper,
+                                                 lon_left, lon_right)
 
             # integrate from 3-hour to daily
-            ssm_3hh = np.full((lat_2d.shape[0], lon_2d.shape[1], len(l)), np.nan)
+            ssm_3hh = np.full((lat_2d.shape[0], lon_2d.shape[1], len(l)),
+                              np.nan)
 
             for i, path in enumerate(l):
-                ssm_3hh[:, :, i], _, _ = read_single_smap(
-                    path,
-                    lat_lower, lat_upper,
-                    lon_left, lon_right)
+                ssm_3hh[:, :,
+                        i], _, _ = read_single_smap(path, lat_lower, lat_upper,
+                                                    lon_left, lon_right)
 
             ssm_dd = np.nanmean(ssm_3hh, axis=-1)
 
@@ -80,7 +75,9 @@ def preprocess_raw_smap(input_path,
 
             lon = f.createVariable('longitude', 'f4', dimensions='longitude')
             lat = f.createVariable('latitude', 'f4', dimensions='latitude')
-            ssm = f.createVariable('ssm', 'f4', dimensions=('latitude', 'longitude'))
+            ssm = f.createVariable('ssm',
+                                   'f4',
+                                   dimensions=('latitude', 'longitude'))
 
             lon[:], lat[:], ssm[:] = lon_2d[0, :], lat_2d[:, 0], ssm_dd
 
