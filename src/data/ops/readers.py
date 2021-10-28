@@ -58,25 +58,23 @@ class NCReader():
 
 
 if __name__ == '__main__':
-    data, lat_2d, lon_2d = RawSMAPReader(
-        10, 20, 30, 40
-    )('/hard/lilu/SMAP_L4/SMAP_L4/2015.05.31/SMAP_L4_SM_gph_20150531T223000_Vv4030_001.h5'
-      )
+    data, lat_2d, lon_2d = RawSMAPReader(10, 20, 30, 40).read_one_file(
+        '/hard/lilu/SMAP_L4/SMAP_L4/2015.05.31/SMAP_L4_SM_gph_20150531T223000_Vv4030_001.h5'
+    )
 
     print(data.shape)
     print(lat_2d.shape)
     print(lon_2d.shape)
 
-    data, lat_2d, lon_2d = RawSMAPReader(
-        10, 20, 30, 40
-    )('/hard/lilu/SMAP_L4/SMAP_L4/2015.05.31/SMAP_L4_SM_gph_20150531T223000_Vv4030_001.h5',
-      var_list=[
-          'precipitation_total_surface_flux',
-          'radiation_longwave_absorbed_flux',
-          'radiation_shortwave_downward_flux',
-          'specific_humidity_lowatmmodlay', 'surface_pressure', 'surface_temp',
-          'windspeed_lowatmmodlay'
-      ])
+    data, lat_2d, lon_2d = RawSMAPReader(10, 20, 30, 40).read_one_file(
+        '/hard/lilu/SMAP_L4/SMAP_L4/2015.05.31/SMAP_L4_SM_gph_20150531T223000_Vv4030_001.h5',
+        var_list=[
+            'precipitation_total_surface_flux',
+            'radiation_longwave_absorbed_flux',
+            'radiation_shortwave_downward_flux',
+            'specific_humidity_lowatmmodlay', 'surface_pressure',
+            'surface_temp', 'windspeed_lowatmmodlay'
+        ])
 
     print(data.shape)
     print(lat_2d.shape)
