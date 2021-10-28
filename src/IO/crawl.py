@@ -55,7 +55,7 @@ def download_SMAP_L4_NRT():
     # --------------------------------------------------------------------------
     # Set username, password, and save path TODO: using parser 
     # --------------------------------------------------------------------------
-    DATA_DIR_L4 = 'SMAP/'#"/hard/lilu/SMAP_L4/SMAP_L4/"
+    DATA_DIR_L4 = "/hard/lilu/SMAP_L4/SMAP_L4/"
 
     USERNAME = 'sysulewlee1@gmail.com'
     PASSWORD = '941313Li'
@@ -77,7 +77,7 @@ def download_SMAP_L4_NRT():
         session.auth = (USERNAME, PASSWORD)
 
         # get data
-        for i in range(5, 1, -1):
+        for i in range(66, 30, -1):
             print(i)
             
             # get datetime for ~5-1 day before
@@ -93,7 +93,7 @@ def download_SMAP_L4_NRT():
                 
                 # get online path for SMAP L4
                 url_SMAP_L4, file_name_L4 = get_SMAP_L4_path(
-                        year, month, day, hour)
+                        dt.year, dt.month, dt.day, hour)
 
                 # mkdir if don't exist path for save
                 # -----------------------------------
@@ -111,6 +111,7 @@ def download_SMAP_L4_NRT():
                 print(folder)
                 print(file_name_L4)
                 print(os.path.join(folder, file_name_L4))
+                print(url_SMAP_L4)
                 # judge if already exist hour file
                 if not os.path.exists(os.path.join(folder, file_name_L4)):
                     response = session.get(url_SMAP_L4)

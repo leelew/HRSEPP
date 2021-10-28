@@ -106,8 +106,8 @@ def main(mode):
             use_lag_y=config.use_lag_y)
 
         import numpy as np
-        np.save('x_test.npy', X)
-        np.save('y_test.npy', y)
+        np.save('x_valid.npy', X)
+        np.save('y_valid.npy', y)
         #model = load_model(os.path.join(config.ROOT, config.saved_model_path))
 
         #for i in range(X.shape[2]):

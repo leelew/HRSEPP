@@ -1,4 +1,4 @@
-program: src/IO/train.py
+program: train.py
 project: HRSEPP
 name: bayes_sweep
 method: bayes
@@ -19,6 +19,9 @@ parameters:
   batch_size:
     distribution: categorical
     values: [1, 2, 4]
+  filter_size:
+    distribution: categorical
+    values: [3, 5]
 command:
   - ${env}
   - python3

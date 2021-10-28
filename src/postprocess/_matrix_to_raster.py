@@ -9,6 +9,9 @@ class Matrix2Raster():
 
         im_width = dataset.RasterXSize  # cols
         im_height = dataset.RasterYSize  # ros
+        
+        print(im_width)
+        print(im_height)
 
         im_geotrans = dataset.GetGeoTransform()  # transform_array
         im_proj = dataset.GetProjection()  # projection

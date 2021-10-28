@@ -53,26 +53,26 @@ def parse_args():
     parser = argparse.ArgumentParser()
     # paths
     parser.add_argument('--ROOT', type=str, default='/hard/lilu/')
-    parser.add_argument('--x_path', type=str, default='CLDAS_FORCING/')
+    parser.add_argument('--x_path', type=str, default='SMAP_L4/')
     parser.add_argument('--y_path', type=str, default='SMAP_L4/')
-    parser.add_argument('--raw_x_path', type=str, default='CLDAS_FORCING/')
+    parser.add_argument('--raw_x_path', type=str, default='SMAP_L4/')
     parser.add_argument('--raw_y_path', type=str, default='SMAP_L4/')
-    parser.add_argument('--daily_x_path', type=str, default='test/CLDAS_FORCING_DD/')
-    parser.add_argument('--daily_y_path', type=str, default='test/SMAP_L4_DD/')
+    parser.add_argument('--daily_x_path', type=str, default='test/forcing/')
+    parser.add_argument('--daily_y_path', type=str, default='test/SSM/')
 
     parser.add_argument('--begin_train_date', type=str, default='2015-05-31')
-    parser.add_argument('--end_train_date', type=str, default='2017-05-31')
+    parser.add_argument('--end_train_date', type=str, default='2020-05-31')
 
-    parser.add_argument('--begin_test_date', type=str, default='2017-06-01')
-    parser.add_argument('--end_test_date', type=str, default='2017-12-01')
+    parser.add_argument('--begin_test_date', type=str, default='2020-05-31')
+    parser.add_argument('--end_test_date', type=str, default='2021-05-31')
 
     parser.add_argument('--begin_inference_date',type=str, default='2017-12-02')
     parser.add_argument('--end_inference_date', type=str, default='2017-12-06')
 
-    parser.add_argument('--lat_lower', type=int, default=30)
-    parser.add_argument('--lat_upper', type=int, default=30.2)
-    parser.add_argument('--lon_left', type=int, default=118)
-    parser.add_argument('--lon_right', type=int, default=118.2)
+    parser.add_argument('--lat_lower', type=int, default=14.7)
+    parser.add_argument('--lat_upper', type=int, default=53.5)
+    parser.add_argument('--lon_left', type=int, default=72.3)
+    parser.add_argument('--lon_right', type=int, default=135)
 
     parser.add_argument('--len_input', type=int, default=10)
     parser.add_argument('--len_output', type=int, default=1)

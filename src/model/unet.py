@@ -12,10 +12,19 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 """Define U-Net model using IceNet from nature communication
 """
+class MaskMSELoss(tf.keras.losses.Loss):
+    def __init__(self, mask):
+        super().__init__()
+        self.mask = mask
 
+    def call(self, y_true, y_pred):
+        mse = tf.math.reduce_mean(tf.square(y_true-y_pred), axis=0)
+        mask_mse = tf.math.multiply(mse, self.mask)
+        return tf.math.reduce_mean(mask_mse)
 
 def unet_batchnorm(input_shape,
                    loss,
+                   mask,
                    weighted_metrics,
                    learning_rate=1e-4,
                    filter_size=3,
@@ -178,8 +187,8 @@ def unet_batchnorm(input_shape,
     model = Model(inputs, final_layer_logits)
 
     model.compile(optimizer=Adam(lr=learning_rate),
-                  loss=loss,
-                  weighted_metrics=weighted_metrics)
+                  loss=MaskMSELoss(mask))
+                  #weighted_metrics=weighted_metrics)
     model.summary()
     return model
 
