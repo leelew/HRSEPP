@@ -1,7 +1,8 @@
+from numpy.core.numeric import full
 from readers import RawSMAPReader
 import json
 import glob
-
+import os
 import numpy as np
 
 
@@ -24,8 +25,10 @@ class Init():
             'lon_2d': lon
         }
 
-        with open(auxiliary_data_path + 'auxiliary.json', 'w') as f:
-            json.dump(attr, f)
+        full_path = os.path.join(auxiliary_data_path, 'auxiliary.json')
+        with open(full_path, 'w') as f:
+            json_string = json.dumps(attr)
+            f.write(json_string)
 
     @staticmethod
     def get_mask(data):
