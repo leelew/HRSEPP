@@ -20,9 +20,9 @@ class Init():
         attr = {
             'Nlat': lat.shape[0],
             'Nlon': lon.shape[1],
-            'mask': mask,
-            'lat_2d': lat,
-            'lon_2d': lon
+            'mask': mask.tolist(),
+            'lat_2d': lat.tolist(),
+            'lon_2d': lon.tolist()
         }
 
         full_path = os.path.join(auxiliary_data_path, 'auxiliary.json')
