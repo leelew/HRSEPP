@@ -11,17 +11,21 @@ from data.preprocess_x import (preprocess_raw_smap_forcing,
 from data.preprocess_y import preprocess_raw_smap
 
 
-def make_train_data(raw_X_path, raw_y_path,
-                    daily_X_path, daily_y_path,
-                    begin_date, end_date,
-                    lat_lower=-90, lat_upper=90,
-                    lon_left=-180, lon_right=180,
-
+def make_train_data(raw_X_path,
+                    raw_y_path,
+                    daily_X_path,
+                    daily_y_path,
+                    begin_date,
+                    end_date,
+                    lat_lower=-90,
+                    lat_upper=90,
+                    lon_left=-180,
+                    lon_right=180,
                     len_input=10,
                     len_output=1,
                     window_size=7,
                     use_lag_y=True):
-
+    """
     # ----------------------------------------------------#
     # 1. read SMAP and CLDAS and processing to daily data.#
     # ----------------------------------------------------#
@@ -55,7 +59,7 @@ def make_train_data(raw_X_path, raw_y_path,
                                          out_path=daily_X_path,
                                          begin_date=begin_date,
                                          end_date=end_date)
-
+    """
     # ----------------------------------------------------#
     # 3. grid matching
     # ----------------------------------------------------#
@@ -66,7 +70,6 @@ def make_train_data(raw_X_path, raw_y_path,
                          begin_date=begin_date,
                          end_date=end_date)
 
-   
     # ----------------------------------------------------#
     # 4. make final inputs for DL
     # ----------------------------------------------------#
@@ -84,16 +87,17 @@ def make_train_data(raw_X_path, raw_y_path,
 
 if __name__ == "__main__":
 
-    make_train_data(
-        raw_X_path='/hard/lilu/CLDAS_FORCING/CLDAS_FORCING/',
-        raw_y_path='/hard/lilu/SMAP_L4/SMAP_L4/',
-        daily_X_path='/hard/lilu/CLDAS_FORCING/CLDAS_FORCING_DD/',
-        daily_y_path='/hard/lilu/SMAP_L4/SMAP_L4_DD/',
-        begin_date='2015-03-31', end_date='2017-03-31',
-        lat_lower=22, lat_upper=33,
-        lon_left=110, lon_right=123,
-
-        len_input=5,
-        len_output=1,
-        window_size=3,
-        use_lag_y=True)
+    make_train_data(raw_X_path='/hard/lilu/CLDAS_FORCING/CLDAS_FORCING/',
+                    raw_y_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+                    daily_X_path='/hard/lilu/CLDAS_FORCING/CLDAS_FORCING_DD/',
+                    daily_y_path='/hard/lilu/SMAP_L4/SMAP_L4_DD/',
+                    begin_date='2015-03-31',
+                    end_date='2017-03-31',
+                    lat_lower=22,
+                    lat_upper=33,
+                    lon_left=110,
+                    lon_right=123,
+                    len_input=5,
+                    len_output=1,
+                    window_size=3,
+                    use_lag_y=True)
