@@ -6,7 +6,7 @@
 
 import numpy as np
 #from data.read_cldas import read_preprocessed_daily_cldas_forcing
-from data.read_smap import read_daily_smap
+from data.read_smap import read_daily_smap, read_preprocessed_daily_smap_force
 
 
 def grid_match(X, y, Xlat, Xlon, Xres, ylat, ylon, yres):
@@ -23,17 +23,17 @@ def grid_match(X, y, Xlat, Xlon, Xres, ylat, ylon, yres):
 
             # grid match index
             lat, lon = ylat[i], ylon[j]
-            lat_idx = np.where((Xlat < (lat + yres/2)) &
-                               (Xlat > (lat - yres/2)))[0]
-            lon_idx = np.where((Xlon < (lon + yres/2)) &
-                               (Xlon > (lon - yres/2)))[0]
-            
+            lat_idx = np.where((Xlat < (lat + yres / 2))
+                               & (Xlat > (lat - yres / 2)))[0]
+            lon_idx = np.where((Xlon < (lon + yres / 2))
+                               & (Xlon > (lon - yres / 2)))[0]
+
             print(lat_idx)
             print(lon_idx)
             print(X[:, lat_idx, lon_idx, :].shape)
             # average mapping
-            matched_X[:, i, j, :] = np.nanmean(
-                X[:, lat_idx, lon_idx, :], axis=(-2))
+            matched_X[:, i, j, :] = np.nanmean(X[:, lat_idx, lon_idx, :],
+                                               axis=(-2))
 
     return matched_X, y
 
@@ -44,14 +44,13 @@ def grid_match_xy(X_path, y_path, begin_date, end_date):
                                     begin_date=begin_date,
                                     end_date=end_date)
 
-    X, Xlat, Xlon, _, _ = read_preprocessed_daily_cldas_forcing(
-        input_path=X_path,
-        begin_date=begin_date,
-        end_date=end_date)
+    X, Xlat, Xlon = read_preprocessed_daily_smap_force(input_path=X_path,
+                                                       begin_date=begin_date,
+                                                       end_date=end_date)
 
     #assert y.shape[0] == X.shape[0]
 
-    X, y = grid_match(X, y, Xlat, Xlon, 0.0625, ylat,
-                      ylon, 0.09)  # 9km, 0.0625
+    #X, y = grid_match(X, y, Xlat, Xlon, 0.0625, ylat,
+    #                  ylon, 0.09)  # 9km, 0.0625
 
     return X, y
