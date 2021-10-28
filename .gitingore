@@ -1,7 +1,7 @@
 *.npy
 */__pycache__/
 */.ipynb_check*
-
+test/*
 *.DS_*
 *tiff
 *tif
