@@ -39,7 +39,7 @@ class Init():
 
 if __name__ == '__main__':
     Init(raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
-         auxiliary_data_path='/work/lilu/HRSEPP/test/',
+         auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
          lat_lower=10,
          lat_upper=20,
          lon_left=30,
