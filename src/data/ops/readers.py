@@ -4,7 +4,7 @@ import numpy as np
 
 
 class RawSMAPReader():
-    """Reader for raw SMAP data.
+    """Reader for single raw SMAP data and crop target region.
     
     Returns:
         data: shape as [feature, lat, lon], feature = 1 when reading one variable.
@@ -17,14 +17,15 @@ class RawSMAPReader():
         self.lon_left = lon_left
         self.lon_right = lon_right
 
-    def read_one_file(self, one_file_path, var_list=['sm_surface']):
+    def __call__(self, one_file_path, var_list=['sm_surface']):
         yyyymmddhh = one_file_path.split('/')[-1].split('_')[4]
         yyyy = int(yyyymmddhh[0:4])
         mm = int(yyyymmddhh[4:6])
         dd = int(yyyymmddhh[6:8])
         hh = int(yyyymmddhh[9:11])
         date = dt.datetime(yyyy, mm, dd, hh)
-        print('[HRSEPP][IO]Read SMAP of {}'.format(date))
+        print('[HRSEPP][IO]Read {} variables of SMAP on {}'.format(
+            len(var_list), date))
 
         # handle for HDF file
         f = h5py.File(one_file_path, 'r')

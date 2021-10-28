@@ -32,3 +32,12 @@ class Init():
         mask = np.ones_like(data)
         mask[np.isnan(data)] = 0
         return np.array(mask)
+
+
+if __name__ == '__main__':
+    Init(raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+         auxiliary_data_path='/work/lilu/HRSEPP/test/',
+         lat_lower=10,
+         lat_upper=20,
+         lon_left=30,
+         lon_right=40)
