@@ -1,15 +1,23 @@
-from numpy.core.numeric import full
-from readers import RawSMAPReader
-import json
 import glob
+import json
 import os
+import sys
+
+sys.path.append('../../../hrsepp/')
 import numpy as np
+from numpy.core.numeric import full
+
+from data.ops.readers import RawSMAPReader
 
 
-class Init():
-    def __init__(self, raw_data_path, auxiliary_data_path, lat_lower,
-                 lat_upper, lon_left, lon_right):
+class AuxManager():
+    def __init__(self):
+        pass
 
+    def init(self, raw_data_path, auxiliary_data_path, lat_lower, lat_upper,
+             lon_left, lon_right):
+
+        # init land mask and latitude, longitude
         l = glob.glob(raw_data_path + '/2015.05.31/' + 'SMAP*h5',
                       recursive=True)
         data, lat, lon = RawSMAPReader(lat_lower, lat_upper, lon_left,
@@ -17,7 +25,7 @@ class Init():
         mask = self.get_mask(data)
 
         # init attribute and land mask
-        attr = {
+        aux = {
             'Nlat': lat.shape[0],
             'Nlon': lon.shape[1],
             'mask': mask.tolist(),
@@ -27,7 +35,19 @@ class Init():
 
         full_path = os.path.join(auxiliary_data_path, 'auxiliary.json')
         with open(full_path, 'w') as f:
-            json_string = json.dumps(attr)
+            json_string = json.dumps(aux)
+            f.write(json_string)
+
+    @staticmethod
+    def update(auxiliary_data_path, key, value):
+
+        with open(auxiliary_data_path + 'auxiliary.json', 'r') as f:
+            aux = json.load(f)
+
+        aux[key] = value
+
+        with open(auxiliary_data_path + 'auxiliary.json', 'w') as f:
+            json_string = json.dumps(aux)
             f.write(json_string)
 
     @staticmethod

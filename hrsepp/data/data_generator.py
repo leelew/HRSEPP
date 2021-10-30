@@ -1,0 +1,145 @@
+import sys
+
+sys.path.append('../../hrsepp/')
+
+from data.ops.init import AuxManager
+from data.ops.preprocesser import Preprocesser, RawSMAPPreprocesser
+import json
+import numpy as np
+
+
+class DataGenerator():
+    """generate comtemporary data of X, y. shape as [(t, f, lat, lon), (t, 1, lat, lon)]
+    """
+    def __init__(self,
+                 raw_data_path,
+                 auxiliary_data_path,
+                 save_x_path,
+                 save_y_path,
+                 save_p_path,
+                 lat_lower,
+                 lat_upper,
+                 lon_left,
+                 lon_right,
+                 begin_date,
+                 end_date,
+                 x_var_name='forcing',
+                 x_var_list=[
+                     'precipitation_total_surface_flux',
+                     'radiation_longwave_absorbed_flux',
+                     'radiation_shortwave_downward_flux',
+                     'specific_humidity_lowatmmodlay', 'surface_pressure',
+                     'surface_temp', 'windspeed_lowatmmodlay'
+                 ],
+                 y_var_name='SSM',
+                 y_var_list=['sm_surface'],
+                 mode='train',
+                 save=True):
+        self.raw_data_path = raw_data_path
+        self.auxiliary_data_path = auxiliary_data_path
+        self.save_x_path = save_x_path + mode + '/'
+        self.save_y_path = save_y_path + mode + '/'
+        self.save_p_path = save_p_path + mode + '/'
+
+        self.lat_lower = lat_lower
+        self.lat_upper = lat_upper
+        self.lon_left = lon_left
+        self.lon_right = lon_right
+
+        self.begin_date = begin_date
+        self.end_date = end_date
+
+        self.x_var_name = x_var_name
+        self.x_var_list = x_var_list
+
+        self.y_var_name = y_var_name
+        self.y_var_list = y_var_list
+        self.mode = mode
+        self.save = save
+
+    def __call__(self):
+
+        # init auxiliary data
+        AuxManager().init(raw_data_path=self.raw_data_path,
+                          auxiliary_data_path=self.auxiliary_data_path,
+                          lat_lower=self.lat_lower,
+                          lat_upper=self.lat_upper,
+                          lon_left=self.lon_left,
+                          lon_right=self.lon_right)
+
+        # load auxiliary data
+        with open(self.auxiliary_data_path + 'auxiliary.json') as f:
+            aux = json.load(f)
+
+        # read soil moisture from SMAP
+        y = RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
+                                aux=aux,
+                                save_path=self.save_y_path,
+                                begin_date=self.begin_date,
+                                end_date=self.end_date,
+                                var_name=self.y_var_name,
+                                var_list=self.y_var_list,
+                                lat_lower=self.lat_lower,
+                                lat_upper=self.lat_upper,
+                                lon_left=self.lon_left,
+                                lon_right=self.lon_right,
+                                save=self.save)()
+        # read forcing from SMAP
+        X = RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
+                                aux=aux,
+                                save_path=self.save_x_path,
+                                begin_date=self.begin_date,
+                                end_date=self.end_date,
+                                var_name=self.x_var_name,
+                                var_list=self.x_var_list,
+                                lat_lower=self.lat_lower,
+                                lat_upper=self.lat_upper,
+                                lon_left=self.lon_left,
+                                lon_right=self.lon_right,
+                                save=self.save)()
+
+        if self.use_lag_y:
+            X = np.concatenate([X, y], axis=1)
+
+        # preprocess forcing
+        X = Preprocesser(X,
+                         save_path=self.save_p_path,
+                         auxiliary_path=self.auxiliary_data_path,
+                         begin_date=self.begin_date,
+                         end_date=self.end_date,
+                         mode=self.mode,
+                         save=self.save,
+                         var_name=self.x_var_name)()
+
+        #
+        np.save('x_train.npy', X)
+        np.save('y_train.npy', y)
+
+        return X, y
+
+
+if __name__ == '__main__':
+
+    DataGenerator(raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+                  auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
+                  save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
+                  save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
+                  save_p_path='/hard/lilu/SMAP_L4/test/preprocess/',
+                  lat_lower=14.7,
+                  lat_upper=53.5,
+                  lon_left=72.3,
+                  lon_right=135,
+                  begin_date='2015-05-31',
+                  end_date='2020-05-31',
+                  x_var_name='forcing',
+                  x_var_list=[
+                      'precipitation_total_surface_flux',
+                      'radiation_longwave_absorbed_flux',
+                      'radiation_shortwave_downward_flux',
+                      'specific_humidity_lowatmmodlay', 'surface_pressure',
+                      'surface_temp', 'windspeed_lowatmmodlay'
+                  ],
+                  y_var_name='SSM',
+                  y_var_list=['sm_surface'],
+                  mode='train',
+                  save=True)()
