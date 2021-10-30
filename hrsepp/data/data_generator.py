@@ -3,7 +3,8 @@ import sys
 sys.path.append('../../hrsepp/')
 
 from data.ops.init import AuxManager
-from data.ops.preprocesser import Preprocesser, RawSMAPPreprocesser
+from data.ops.preprocesser import XPreprocesser, RawSMAPPreprocesser, yPreprocesser
+from data.ops.readers import NCReader
 import json
 import numpy as np
 
@@ -16,7 +17,8 @@ class DataGenerator():
                  auxiliary_data_path,
                  save_x_path,
                  save_y_path,
-                 save_p_path,
+                 save_px_path,
+                 save_py_path,
                  lat_lower,
                  lat_upper,
                  lon_left,
@@ -34,12 +36,14 @@ class DataGenerator():
                  y_var_name='SSM',
                  y_var_list=['sm_surface'],
                  mode='train',
-                 save=True):
+                 save=True,
+                 use_lag_y=True):
         self.raw_data_path = raw_data_path
         self.auxiliary_data_path = auxiliary_data_path
         self.save_x_path = save_x_path + mode + '/'
         self.save_y_path = save_y_path + mode + '/'
-        self.save_p_path = save_p_path + mode + '/'
+        self.save_px_path = save_px_path + mode + '/'
+        self.save_py_path = save_py_path + mode + '/'
 
         self.lat_lower = lat_lower
         self.lat_upper = lat_upper
@@ -57,6 +61,8 @@ class DataGenerator():
         self.mode = mode
         self.save = save
 
+        self.use_lag_y = use_lag_y
+
     def __call__(self):
 
         # init auxiliary data
@@ -72,44 +78,68 @@ class DataGenerator():
             aux = json.load(f)
 
         # read soil moisture from SMAP
-        y = RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
-                                aux=aux,
-                                save_path=self.save_y_path,
-                                begin_date=self.begin_date,
-                                end_date=self.end_date,
-                                var_name=self.y_var_name,
-                                var_list=self.y_var_list,
-                                lat_lower=self.lat_lower,
-                                lat_upper=self.lat_upper,
-                                lon_left=self.lon_left,
-                                lon_right=self.lon_right,
-                                save=self.save)()
+        RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
+                            aux=aux,
+                            save_path=self.save_y_path,
+                            begin_date=self.begin_date,
+                            end_date=self.end_date,
+                            var_name=self.y_var_name,
+                            var_list=self.y_var_list,
+                            lat_lower=self.lat_lower,
+                            lat_upper=self.lat_upper,
+                            lon_left=self.lon_left,
+                            lon_right=self.lon_right,
+                            save=self.save)()
         # read forcing from SMAP
-        X = RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
-                                aux=aux,
-                                save_path=self.save_x_path,
-                                begin_date=self.begin_date,
-                                end_date=self.end_date,
-                                var_name=self.x_var_name,
-                                var_list=self.x_var_list,
-                                lat_lower=self.lat_lower,
-                                lat_upper=self.lat_upper,
-                                lon_left=self.lon_left,
-                                lon_right=self.lon_right,
-                                save=self.save)()
+        RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
+                            aux=aux,
+                            save_path=self.save_x_path,
+                            begin_date=self.begin_date,
+                            end_date=self.end_date,
+                            var_name=self.x_var_name,
+                            var_list=self.x_var_list,
+                            lat_lower=self.lat_lower,
+                            lat_upper=self.lat_upper,
+                            lon_left=self.lon_left,
+                            lon_right=self.lon_right,
+                            save=self.save)()
+
+        X = NCReader(path=self.save_x_path,
+                     aux=aux,
+                     var_list=self.x_var_list,
+                     var_name=self.x_var_name,
+                     begin_date=self.begin_date,
+                     end_date=self.end_date)()
+
+        y = NCReader(path=self.save_y_path,
+                     aux=aux,
+                     var_list=self.y_var_list,
+                     var_name=self.y_var_name,
+                     begin_date=self.begin_date,
+                     end_date=self.end_date)()
 
         if self.use_lag_y:
             X = np.concatenate([X, y], axis=1)
 
+        NCReader
         # preprocess forcing
-        X = Preprocesser(X,
-                         save_path=self.save_p_path,
-                         auxiliary_path=self.auxiliary_data_path,
-                         begin_date=self.begin_date,
-                         end_date=self.end_date,
-                         mode=self.mode,
-                         save=self.save,
-                         var_name=self.x_var_name)()
+        X = XPreprocesser(X,
+                          save_path=self.save_px_path,
+                          auxiliary_path=self.auxiliary_data_path,
+                          begin_date=self.begin_date,
+                          end_date=self.end_date,
+                          mode=self.mode,
+                          save=self.save,
+                          var_name=self.x_var_name)()
+
+        y = yPreprocesser(y,
+                          save_path=self.save_py_path,
+                          auxiliary_path=self.auxiliary_data_path,
+                          begin_date=self.begin_date,
+                          end_date=self.end_date,
+                          mode=self.mode,
+                          save=self.save,
+                          var_name=self.y_var_name)()
 
         #
         np.save('x_train.npy', X)
@@ -124,7 +154,8 @@ if __name__ == '__main__':
                   auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
                   save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
                   save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
-                  save_p_path='/hard/lilu/SMAP_L4/test/preprocess/',
+                  save_px_path='/hard/lilu/SMAP_L4/test/px/',
+                  save_py_path='/hard/lilu/SMAP_L4/test/py',
                   lat_lower=14.7,
                   lat_upper=53.5,
                   lon_left=72.3,

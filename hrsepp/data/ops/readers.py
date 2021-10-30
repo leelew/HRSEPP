@@ -2,6 +2,9 @@ import datetime as dt
 import h5py
 import numpy as np
 
+from data.ops.time import TimeManager
+import netCDF as nc
+
 
 class RawSMAPReader():
     """Reader for single raw SMAP data and crop target region.
@@ -56,7 +59,43 @@ class RawSMAPReader():
 
 
 class NCReader():
-    pass
+    def __init__(self, path, aux, var_list, var_name, begin_date,
+                 end_date) -> None:
+        self.path = path
+        self.begin_date = begin_date
+        self.end_date = end_date
+        self.aux = aux
+
+        self.var_list = var_list
+        self.var_name = var_name
+
+    def __call__(self):
+        # get dates array according to begin/end dates
+        dates = TimeManager().get_date_array(self.begin_date, self.end_date)
+
+        data = np.full((
+            len(dates),
+            len(self.var_list),
+            self.aux['Nlat'],
+            self.aux['Nlon'],
+        ), np.nan)
+
+        for i, date in enumerate(dates):
+
+            # file name
+            filename = 'SMAP_L4_{var_name}_{year}{month:02}{day:02}.nc'.format(
+                var_name=self.var_name,
+                year=date.year,
+                month=date.month,
+                day=date.day)
+
+            # handle for nc file
+            f = nc.Dataset(self.path + filename, 'r')
+
+            # read forcing
+            data[i, :, :, :] = f[self.var_name][:]
+
+        return data
 
 
 if __name__ == '__main__':

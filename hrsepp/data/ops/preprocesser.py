@@ -48,43 +48,50 @@ class RawSMAPPreprocesser():
         dates = TimeManager().get_date_array(self.begin_date, self.end_date)
 
         # read and save file (after integrate spatial/temporal dimension)
-        data = np.full((len(dates), len(
-            self.var_list), self.aux['Nlat'], self.aux['Nlon']), np.nan)
-
         for t, date in enumerate(dates):
+            # check if already file
+            filename = 'SMAP_L4_{var_name}_{year}{month:02}{day:02}.nc'.format(
+                var_name=self.var_name,
+                year=date.year,
+                month=date.month,
+                day=date.day)
 
-            # folder name
-            foldername = '{year}.{month:02}.{day:02}/'.format(year=date.year,
-                                                              month=date.month,
-                                                              day=date.day)
-            # file list in each folder
-            l = glob.glob(self.raw_data_path + foldername + 'SMAP*.h5',
-                          recursive=True)
+            # judge already exist file
+            if not os.path.exists(self.save_path + filename):
 
-            assert len(l) == 8, '[HRSEPP][error]lack data of {}'.format(date)
+                # folder name
+                foldername = '{year}.{month:02}.{day:02}/'.format(
+                    year=date.year, month=date.month, day=date.day)
+                # file list in each folder
+                l = glob.glob(self.raw_data_path + foldername + 'SMAP*.h5',
+                              recursive=True)
 
-            # integrate from 3-hour to daily #NOTE:Only suite for SMAP
-            tmp = np.full((len(l), len(
-                self.var_list), self.aux['Nlat'], self.aux['Nlon']), np.nan)
+                assert len(l) == 8, '[HRSEPP][error]lack data of {}'.format(
+                    date)
 
-            for i, one_file_path in enumerate(l):
+                # integrate from 3-hour to daily #NOTE:Only suite for SMAP
+                tmp = np.full((len(l), len(
+                    self.var_list), self.aux['Nlat'], self.aux['Nlon']),
+                              np.nan)
 
-                tmp[i, :, :, :], _, _ = self.raw_smap_reader(
-                    one_file_path, self.var_list)
+                for i, one_file_path in enumerate(l):
 
-            data[t] = np.nanmean(tmp, axis=0)
+                    tmp[i, :, :, :], _, _ = self.raw_smap_reader(
+                        one_file_path, self.var_list)
 
-            nc_saver(save_path=self.save_path,
-                     X=np.nanmean(tmp, axis=0),
-                     var_name=self.var_name,
-                     date=date,
-                     lat_2d=self.aux['lat_2d'],
-                     lon_2d=self.aux['lon_2d'])
+                data[t] = np.nanmean(tmp, axis=0)
 
-        return data
+                nc_saver(save_path=self.save_path,
+                         X=np.nanmean(tmp, axis=0),
+                         var_name=self.var_name,
+                         date=date,
+                         lat_2d=self.aux['lat_2d'],
+                         lon_2d=self.aux['lon_2d'])
+            else:
+                print('[HRSEPP][IO]already have files of {}'.format(date))
 
 
-class Preprocesser():
+class XPreprocesser():
     def __init__(self,
                  X,
                  save_path,
@@ -109,6 +116,7 @@ class Preprocesser():
         self.var_name = var_name
 
     def __call__(self):
+
         if self.mode == 'train':
             X, min_scale, max_scale = self._train_preprocesser(self.X)
             AuxManager().update(self.auxiliary_path, 'min_scale',
@@ -190,6 +198,61 @@ class Preprocesser():
             raise IOError('preprocess train data before preprocess test data!')
 
         return inputs
+
+
+class yPreprocesser():
+    def __init__(self,
+                 y,
+                 save_path,
+                 auxiliary_path,
+                 begin_date,
+                 end_date,
+                 mode='train',
+                 save=True,
+                 var_name='SSM'):
+
+        # get shape
+        self.Nt, self.Nf, self.Nlat, self.Nlon = y.shape
+        self.begin_date = begin_date
+        self.end_date = end_date
+        self.auxiliary_path = auxiliary_path
+        with open(auxiliary_path + 'auxiliary.json', 'r') as f:
+            self.aux = json.load(f)
+        self.save_path = save_path
+        self.mode = mode
+        self.save = save
+        self.y = y
+        self.var_name = var_name
+
+    def __call__(self):
+        # interplot on time dimension.
+        for i in range(self.Nlat):
+            for j in range(self.Nlon):
+
+                try:
+                    # interplot
+                    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+                    self.y[:, :, i, j] = imp.fit_transform(self.y[:, :, i, j])
+                except:  # all missing data along time dimension
+                    pass
+
+        # interplot on spatial dimension, in order to fill gaps of images.
+        for m in range(self.Nt):
+            for n in range(self.Nf):
+
+                # interplot
+                tmp = self.y[m, n, :, :]
+                tmp[np.isnan(tmp)] = np.nanmean(tmp)
+                self.y[m, n, :, :] = tmp
+
+        # get dates array according to begin/end dates
+        dates = TimeManager().get_date_array(self.begin_date, self.end_date)
+
+        for i, date in enumerate(dates):
+            nc_saver(self.save_path, 'p_' + self.var_name, date,
+                     self.aux['lon_2d'], self.aux['lat_2d'], self.y[i])
+
+        return self.y
 
 
 if __name__ == '__main__':
