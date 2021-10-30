@@ -48,6 +48,10 @@ class RawSMAPPreprocesser():
         dates = TimeManager().get_date_array(self.begin_date, self.end_date)
 
         # read and save file (after integrate spatial/temporal dimension)
+        data = np.full((len(dates), len(
+            self.var_list), self.aux['Nlat'], self.aux['Nlon']), np.nan)
+
+        # read and save file (after integrate spatial/temporal dimension)
         for t, date in enumerate(dates):
             # check if already file
             filename = 'SMAP_L4_{var_name}_{year}{month:02}{day:02}.nc'.format(

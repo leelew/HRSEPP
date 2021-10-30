@@ -3,7 +3,7 @@ import h5py
 import numpy as np
 
 from data.ops.time import TimeManager
-import netCDF as nc
+import netCDF4 as nc
 
 
 class RawSMAPReader():
