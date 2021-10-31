@@ -59,8 +59,7 @@ class RawSMAPReader():
 
 
 class NCReader():
-    def __init__(self, path, aux, var_list, var_name, begin_date,
-                 end_date) -> None:
+    def __init__(self, path, aux, var_list, var_name, begin_date, end_date):
         self.path = path
         self.begin_date = begin_date
         self.end_date = end_date
@@ -81,6 +80,7 @@ class NCReader():
         ), np.nan)
 
         for i, date in enumerate(dates):
+            print('Now read {}'.format(date))
 
             # file name
             filename = 'SMAP_L4_{var_name}_{year}{month:02}{day:02}.nc'.format(

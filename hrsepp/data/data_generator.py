@@ -63,7 +63,7 @@ class DataGenerator():
 
         self.use_lag_y = use_lag_y
 
-    def __call__(self):
+    def __call__(self, ID):
 
         # init auxiliary data
         AuxManager().init(raw_data_path=self.raw_data_path,
@@ -77,6 +77,9 @@ class DataGenerator():
         with open(self.auxiliary_data_path + 'auxiliary.json') as f:
             aux = json.load(f)
 
+        b = [0, 224, 448, 0, 224, 448]
+        a = [0, 0, 0, 224, 224, 224]
+        
         # read soil moisture from SMAP
         RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
                             aux=aux,
@@ -90,6 +93,8 @@ class DataGenerator():
                             lon_left=self.lon_left,
                             lon_right=self.lon_right,
                             save=self.save)()
+
+        print('1')
         # read forcing from SMAP
         RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
                             aux=aux,
@@ -103,25 +108,20 @@ class DataGenerator():
                             lon_left=self.lon_left,
                             lon_right=self.lon_right,
                             save=self.save)()
+        print('2')
+
 
         X = NCReader(path=self.save_x_path,
                      aux=aux,
                      var_list=self.x_var_list,
                      var_name=self.x_var_name,
                      begin_date=self.begin_date,
-                     end_date=self.end_date)()
+                     end_date=self.end_date)()[:, :, a[ID - 1]:a[ID - 1] + 224,
+                                               b[ID - 1]:b[ID - 1] + 224]
 
-        y = NCReader(path=self.save_y_path,
-                     aux=aux,
-                     var_list=self.y_var_list,
-                     var_name=self.y_var_name,
-                     begin_date=self.begin_date,
-                     end_date=self.end_date)()
+        
+        print('3')
 
-        if self.use_lag_y:
-            X = np.concatenate([X, y], axis=1)
-
-        NCReader
         # preprocess forcing
         X = XPreprocesser(X,
                           save_path=self.save_px_path,
@@ -130,7 +130,19 @@ class DataGenerator():
                           end_date=self.end_date,
                           mode=self.mode,
                           save=self.save,
-                          var_name=self.x_var_name)()
+                          var_name=self.x_var_name)(ID=ID)
+
+        print('4')
+
+        np.save('x_{}_{}.npy'.format(self.mode, ID), X)
+       
+        y = NCReader(path=self.save_y_path,
+                     aux=aux,
+                     var_list=self.y_var_list,
+                     var_name=self.y_var_name,
+                     begin_date=self.begin_date,
+                     end_date=self.end_date)()[:, :, a[ID - 1]:a[ID - 1] + 224,
+                                               b[ID - 1]:b[ID - 1] + 224]
 
         y = yPreprocesser(y,
                           save_path=self.save_py_path,
@@ -139,11 +151,10 @@ class DataGenerator():
                           end_date=self.end_date,
                           mode=self.mode,
                           save=self.save,
-                          var_name=self.y_var_name)()
+                          var_name=self.y_var_name)(ID=ID)
 
         #
-        np.save('x_train.npy', X)
-        np.save('y_train.npy', y)
+        np.save('y_{}_{}.npy'.format(self.mode, ID), y)
 
         return X, y
 
@@ -155,13 +166,13 @@ if __name__ == '__main__':
                   save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
                   save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
                   save_px_path='/hard/lilu/SMAP_L4/test/px/',
-                  save_py_path='/hard/lilu/SMAP_L4/test/py',
+                  save_py_path='/hard/lilu/SMAP_L4/test/py/',
                   lat_lower=14.7,
                   lat_upper=53.5,
                   lon_left=72.3,
                   lon_right=135,
-                  begin_date='2015-05-31',
-                  end_date='2020-05-31',
+                  begin_date='2020-05-31',
+                  end_date='2021-05-31',
                   x_var_name='forcing',
                   x_var_list=[
                       'precipitation_total_surface_flux',
@@ -172,5 +183,5 @@ if __name__ == '__main__':
                   ],
                   y_var_name='SSM',
                   y_var_list=['sm_surface'],
-                  mode='train',
-                  save=True)()
+                  mode='test',
+                  save=True)(ID=6)
