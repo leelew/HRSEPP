@@ -67,11 +67,11 @@ class DataGenerator():
         if self.mode == 'train':
             # init auxiliary data
             AuxManager().init(raw_data_path=self.raw_data_path,
-                          auxiliary_data_path=self.auxiliary_data_path,
-                          lat_lower=self.lat_lower,
-                          lat_upper=self.lat_upper,
-                          lon_left=self.lon_left,
-                          lon_right=self.lon_right)
+                              auxiliary_data_path=self.auxiliary_data_path,
+                              lat_lower=self.lat_lower,
+                              lat_upper=self.lat_upper,
+                              lon_left=self.lon_left,
+                              lon_right=self.lon_right)
 
         # load auxiliary data
         with open(self.auxiliary_data_path + 'auxiliary.json') as f:
@@ -79,7 +79,7 @@ class DataGenerator():
 
         b = [0, 224, 448, 0, 224, 448]
         a = [0, 0, 0, 224, 224, 224]
-        
+
         # read soil moisture from SMAP
         RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
                             aux=aux,
@@ -110,7 +110,6 @@ class DataGenerator():
                             save=self.save)()
         print('2')
 
-
         X = NCReader(path=self.save_x_path,
                      aux=aux,
                      var_list=self.x_var_list,
@@ -119,7 +118,6 @@ class DataGenerator():
                      end_date=self.end_date)()[:, :, a[ID - 1]:a[ID - 1] + 224,
                                                b[ID - 1]:b[ID - 1] + 224]
 
-        
         print('3')
 
         # preprocess forcing
@@ -135,7 +133,7 @@ class DataGenerator():
         print('4')
 
         np.save('x_{}_{}.npy'.format(self.mode, ID), X)
-       
+
         y = NCReader(path=self.save_y_path,
                      aux=aux,
                      var_list=self.y_var_list,

@@ -28,21 +28,21 @@ def make_grid_train_xy(inputs,
     batch_size = len(batch_start_idx)
 
     # generate inputs
-    input_batch_idx = [
-        (range(i, i + len_input)) for i in batch_start_idx]
+    input_batch_idx = [(range(i, i + len_input)) for i in batch_start_idx]
     inputs = np.take(inputs, input_batch_idx, axis=0). \
         reshape(batch_size, len_input,
-                inputs.shape[1])
+                inputs.shape[1], inputs.shape[2], Nf)
 
     # generate outputs
-    output_batch_idx = [
-        (range(i + len_input + window_size, i + len_input + window_size +
-               len_output)) for i in batch_start_idx]
+    output_batch_idx = [(range(i + len_input + window_size,
+                               i + len_input + window_size + len_output))
+                        for i in batch_start_idx]
     outputs = np.take(outputs, output_batch_idx, axis=0). \
         reshape(batch_size,  len_output,
-                outputs.shape[1])
+                outputs.shape[1], outputs.shape[2], 1)
 
     return inputs, outputs
+
 
 # NOTES: also adapted to make test xy
 def make_grids_train_xy(X,
@@ -64,20 +64,19 @@ def make_grids_train_xy(X,
 
     for i in np.arange(X.shape[1]):
         for j in np.arange(X.shape[2]):
-            X_f[:, :, i, j, :], y_f[:, :, i, j, :] = make_grid_train_xy(
-                X[:, i, j, :],
-                y[:, i, j, :],
-                len_input=len_input,
-                len_output=len_output,
-                window_size=window_size,
-                use_lag_y=use_lag_y)
+            X_f[:, :, i,
+                j, :], y_f[:, :, i,
+                           j, :] = make_grid_train_xy(X[:, i, j, :],
+                                                      y[:, i, j, :],
+                                                      len_input=len_input,
+                                                      len_output=len_output,
+                                                      window_size=window_size,
+                                                      use_lag_y=use_lag_y)
 
     return X_f, y_f
 
 
-def make_grid_inference_x(inputs,
-                          outputs,
-                          use_lag_y=True):
+def make_grid_inference_x(inputs, outputs, use_lag_y=True):
 
     if use_lag_y:
         inputs = np.concatenate([inputs, outputs], axis=-1)
@@ -85,9 +84,7 @@ def make_grid_inference_x(inputs,
     return inputs[np.newaxis]
 
 
-def make_grids_inference_x(X,
-                           y,
-                           use_lag_y=True):
+def make_grids_inference_x(X, y, use_lag_y=True):
 
     if use_lag_y:
         Nf = X.shape[-1] + 1
@@ -98,9 +95,8 @@ def make_grids_inference_x(X,
 
     for i in np.arange(X.shape[1]):
         for j in np.arange(X.shape[2]):
-            X_f[:, :, i, j, :] = make_grid_inference_x(
-                X[:, i, j, :],
-                y[:, i, j, :],
-                use_lag_y=use_lag_y)
+            X_f[:, :, i, j, :] = make_grid_inference_x(X[:, i, j, :],
+                                                       y[:, i, j, :],
+                                                       use_lag_y=use_lag_y)
 
     return X_f
