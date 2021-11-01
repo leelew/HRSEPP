@@ -64,9 +64,9 @@ class DataGenerator():
         self.use_lag_y = use_lag_y
 
     def __call__(self, ID):
-
-        # init auxiliary data
-        AuxManager().init(raw_data_path=self.raw_data_path,
+        if self.mode == 'train':
+            # init auxiliary data
+            AuxManager().init(raw_data_path=self.raw_data_path,
                           auxiliary_data_path=self.auxiliary_data_path,
                           lat_lower=self.lat_lower,
                           lat_upper=self.lat_upper,
@@ -171,6 +171,31 @@ if __name__ == '__main__':
                   lat_upper=53.5,
                   lon_left=72.3,
                   lon_right=135,
+                  begin_date='2015-05-31',
+                  end_date='2020-05-31',
+                  x_var_name='forcing',
+                  x_var_list=[
+                      'precipitation_total_surface_flux',
+                      'radiation_longwave_absorbed_flux',
+                      'radiation_shortwave_downward_flux',
+                      'specific_humidity_lowatmmodlay', 'surface_pressure',
+                      'surface_temp', 'windspeed_lowatmmodlay'
+                  ],
+                  y_var_name='SSM',
+                  y_var_list=['sm_surface'],
+                  mode='train',
+                  save=True)(ID=2)
+
+    DataGenerator(raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+                  auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
+                  save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
+                  save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
+                  save_px_path='/hard/lilu/SMAP_L4/test/px/',
+                  save_py_path='/hard/lilu/SMAP_L4/test/py/',
+                  lat_lower=14.7,
+                  lat_upper=53.5,
+                  lon_left=72.3,
+                  lon_right=135,
                   begin_date='2020-05-31',
                   end_date='2021-05-31',
                   x_var_name='forcing',
@@ -184,4 +209,4 @@ if __name__ == '__main__':
                   y_var_name='SSM',
                   y_var_list=['sm_surface'],
                   mode='test',
-                  save=True)(ID=6)
+                  save=True)(ID=2)

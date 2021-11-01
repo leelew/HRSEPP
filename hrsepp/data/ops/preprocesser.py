@@ -233,10 +233,11 @@ class XPreprocesser():
         self.X = X
         self.var_name = var_name
 
-    def __call__(self):
+    def __call__(self, ID):
         b = [0, 224, 448, 0, 224, 448]
         a = [0, 0, 0, 224, 224, 224]
         if self.mode == 'train':
+            #TODO:Add ID for min, max scale in aux dict.
             X, min_scale, max_scale = self._train_preprocesser(self.X)
             AuxManager().update(self.auxiliary_path, 'min_scale',
                                 min_scale.tolist())
@@ -296,17 +297,19 @@ class XPreprocesser():
     def _test_preprocesser(self, inputs):
 
         try:
-            min_scale = self.aux['min_scale']
-            max_scale = self.aux['max_scale']
-
+            min_scale = np.array(self.aux['min_scale'])
+            max_scale = np.array(self.aux['max_scale'])
+            print(inputs.shape)
             # preprocess according normalized parameters
-            for i in range(self.Nlat):
-                for j in range(self.Nlon):
-
-                    # interplot
-                    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-
-                    inputs[:, :, i, j] = imp.fit_transform(inputs[:, :, i, j])
+            for i in range(inputs.shape[-2]):
+                for j in range(inputs.shape[-1]):
+                    try:
+                        # interplot
+                        imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+                        print(inputs.shape)
+                        inputs[:, :, i, j] = imp.fit_transform(inputs[:, :, i, j])
+                    except:
+                        pass
 
                     # min max scaler
                     for m in np.arange(self.Nf):
@@ -316,6 +319,17 @@ class XPreprocesser():
 
         except:
             raise IOError('preprocess train data before preprocess test data!')
+
+        # interplot on spatial dimension, in order to fill gaps of images.
+        for m in range(self.Nt):
+            for n in range(self.Nf):
+
+                # interplot
+                tmp = inputs[m, n, :, :]
+                tmp[np.isnan(tmp)] = np.nanmean(tmp)
+                inputs[m, n, :, :] = tmp
+
+
 
         return inputs
 
@@ -344,12 +358,12 @@ class yPreprocesser():
         self.y = y
         self.var_name = var_name
 
-    def __call__(self):
+    def __call__(self, ID):
         b = [0, 224, 448, 0, 224, 448]
         a = [0, 0, 0, 224, 224, 224]
         # interplot on time dimension.
-        for i in range(self.Nlat):
-            for j in range(self.Nlon):
+        for i in range(self.y.shape[-2]):
+            for j in range(self.y.shape[-1]):
 
                 try:
                     # interplot

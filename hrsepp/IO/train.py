@@ -23,7 +23,7 @@ def train(x_train,
     if wanda_mode:
         wandb.init()
 
-    model = unet5(input_shape=(112, 112, 8),
+    model = unet5(input_shape=(224, 224, 8),
                   mask=mask,
                   learning_rate=wandb.config.learning_rate,
                   filter_size=wandb.config.filter_size,
