@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "train.py", line 91, in <module>
+    save_path='/hard/lilu/SMAP_L4/model/ed_convlstm')
+  File "train.py", line 44, in train
+    n_filters_factor=wandb.config.n_filters_factor)
+  File "/work/lilu/HRSEPP/hrsepp/model/convlstm.py", line 26, in ed_convlstm
+    kernel_initializer='he_normal')(inputs)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/layers/recurrent.py", line 660, in __call__
+    return super(RNN, self).__call__(inputs, **kwargs)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/base_layer.py", line 952, in __call__
+    input_list)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/base_layer.py", line 1091, in _functional_construction_call
+    inputs, input_masks, args, kwargs)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/base_layer.py", line 822, in _keras_tensor_symbolic_call
+    return self._infer_output_signature(inputs, args, kwargs, input_masks)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/base_layer.py", line 862, in _infer_output_signature
+    self._maybe_build(inputs)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/base_layer.py", line 2685, in _maybe_build
+    self.input_spec, inputs, self.name)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/input_spec.py", line 223, in assert_input_compatibility
+    str(tuple(shape)))
+ValueError: Input 0 of layer conv_lst_m2d is incompatible with the layer: expected ndim=5, found ndim=4. Full shape received: (None, 224, 224, 8)

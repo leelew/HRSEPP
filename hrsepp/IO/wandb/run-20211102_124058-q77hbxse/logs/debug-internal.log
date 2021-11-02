@@ -1,0 +1,237 @@
+2021-11-02 12:40:58,720 INFO    MainThread:19924 [internal.py:wandb_internal():90] W&B internal server running at pid: 19924, started at: 2021-11-02 12:40:58.720541
+2021-11-02 12:40:58,723 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: check_version
+2021-11-02 12:40:58,723 INFO    WriterThread:19924 [datastore.py:open_for_write():77] open: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/run-q77hbxse.wandb
+2021-11-02 12:40:58,725 DEBUG   SenderThread:19924 [sender.py:send():238] send: header
+2021-11-02 12:40:58,725 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: check_version
+2021-11-02 12:40:59,148 DEBUG   SenderThread:19924 [sender.py:send():238] send: run
+2021-11-02 12:40:59,642 INFO    SenderThread:19924 [dir_watcher.py:__init__():169] watching files in: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files
+2021-11-02 12:40:59,643 INFO    SenderThread:19924 [sender.py:_start_run_threads():828] run started: q77hbxse with start time 1635828058
+2021-11-02 12:40:59,643 DEBUG   SenderThread:19924 [sender.py:send():238] send: summary
+2021-11-02 12:40:59,643 INFO    SenderThread:19924 [sender.py:_save_file():960] saving file wandb-summary.json with policy end
+2021-11-02 12:40:59,644 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: run_start
+2021-11-02 12:41:00,580 DEBUG   HandlerThread:19924 [meta.py:__init__():40] meta init
+2021-11-02 12:41:00,581 DEBUG   HandlerThread:19924 [meta.py:__init__():54] meta init done
+2021-11-02 12:41:00,581 DEBUG   HandlerThread:19924 [meta.py:probe():214] probe
+2021-11-02 12:41:00,587 DEBUG   HandlerThread:19924 [meta.py:_setup_git():204] setup git
+2021-11-02 12:41:00,604 DEBUG   HandlerThread:19924 [meta.py:_setup_git():211] setup git done
+2021-11-02 12:41:00,604 DEBUG   HandlerThread:19924 [meta.py:_save_pip():58] save pip
+2021-11-02 12:41:00,605 DEBUG   HandlerThread:19924 [meta.py:_save_pip():72] save pip done
+2021-11-02 12:41:00,605 DEBUG   HandlerThread:19924 [meta.py:_save_conda():79] save conda
+2021-11-02 12:41:00,646 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_created():217] file/dir created: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/conda-environment.yaml
+2021-11-02 12:41:00,647 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_created():217] file/dir created: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/requirements.txt
+2021-11-02 12:41:00,647 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_created():217] file/dir created: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/wandb-summary.json
+2021-11-02 12:41:05,645 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_created():217] file/dir created: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:07,646 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:08,464 DEBUG   HandlerThread:19924 [meta.py:_save_conda():89] save conda done
+2021-11-02 12:41:08,464 DEBUG   HandlerThread:19924 [meta.py:probe():252] probe done
+2021-11-02 12:41:08,469 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:41:08,470 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:41:08,646 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_created():217] file/dir created: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/wandb-metadata.json
+2021-11-02 12:41:08,751 DEBUG   SenderThread:19924 [sender.py:send():238] send: files
+2021-11-02 12:41:08,755 INFO    SenderThread:19924 [sender.py:_save_file():960] saving file wandb-metadata.json with policy now
+2021-11-02 12:41:09,478 INFO    Thread-11 :19924 [upload_job.py:push():137] Uploaded file /tmp/tmp7r9amadgwandb/281apg7d-wandb-metadata.json
+2021-11-02 12:41:11,648 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:13,649 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:21,652 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:23,654 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:24,316 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:41:24,316 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:41:25,655 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:27,656 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:29,120 DEBUG   SenderThread:19924 [sender.py:send():238] send: stats
+2021-11-02 12:41:29,657 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:31,658 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:33,659 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:35,660 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:37,661 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:39,662 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:39,858 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:41:39,858 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:41:41,663 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:43,665 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:45,666 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:47,667 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:49,668 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:51,669 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:53,670 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:55,142 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:41:55,142 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:41:55,671 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:57,672 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:41:59,632 DEBUG   SenderThread:19924 [sender.py:send():238] send: stats
+2021-11-02 12:42:05,680 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:10,416 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:42:10,416 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:42:11,683 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:13,684 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:15,685 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:17,685 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:19,686 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:21,687 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:23,688 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:25,689 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:26,136 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:42:26,136 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:42:27,690 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:29,691 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:30,119 DEBUG   SenderThread:19924 [sender.py:send():238] send: stats
+2021-11-02 12:42:31,691 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:33,692 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:35,693 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:37,694 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:39,695 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:41,475 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:42:41,475 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:42:41,696 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:43,697 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:45,698 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:47,699 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:49,700 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:51,701 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:53,702 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:55,703 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:56,764 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:42:56,764 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:42:57,704 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:42:59,705 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:00,614 DEBUG   SenderThread:19924 [sender.py:send():238] send: stats
+2021-11-02 12:43:01,706 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:03,707 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:05,708 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:07,709 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:09,710 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:11,711 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:12,061 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:43:12,062 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:43:13,712 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:15,713 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:17,714 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:19,715 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:21,716 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:23,717 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:25,718 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:27,336 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:43:27,337 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:43:27,719 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:29,720 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:31,109 DEBUG   SenderThread:19924 [sender.py:send():238] send: stats
+2021-11-02 12:43:31,721 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:33,722 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:35,723 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:37,724 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:39,724 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:41,725 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:42,623 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:43:42,623 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:43:43,726 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:45,728 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:47,728 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:49,729 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:51,730 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:53,731 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:55,732 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:57,733 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:43:57,912 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:43:57,913 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:43:59,734 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:01,600 DEBUG   SenderThread:19924 [sender.py:send():238] send: stats
+2021-11-02 12:44:01,735 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:03,736 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:05,738 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:07,739 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:09,740 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:11,741 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:13,198 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:44:13,199 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:44:13,742 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:15,743 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:17,744 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:19,745 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:21,746 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:23,747 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:25,748 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:27,749 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:28,485 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:44:28,485 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:44:29,750 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:31,751 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:32,105 DEBUG   SenderThread:19924 [sender.py:send():238] send: stats
+2021-11-02 12:44:33,752 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:35,753 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:37,754 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:39,755 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:41,756 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:43,757 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:43,774 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:44:43,775 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:44:45,758 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:47,759 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:49,760 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:51,761 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:53,762 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:55,763 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:57,764 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:44:59,052 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:44:59,052 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:45:01,766 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:02,605 DEBUG   SenderThread:19924 [sender.py:send():238] send: stats
+2021-11-02 12:45:03,767 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:05,767 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:07,768 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:09,769 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:11,770 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:13,771 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:14,332 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:45:14,333 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:45:15,772 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:17,773 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:19,774 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:21,775 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:23,776 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:25,777 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:27,778 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:29,610 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:45:29,610 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:45:29,779 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:31,780 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:33,101 DEBUG   SenderThread:19924 [sender.py:send():238] send: stats
+2021-11-02 12:45:33,781 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:35,782 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:37,783 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:39,784 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:43,786 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:44,887 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:45:44,888 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:45:45,787 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:47,788 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:50,790 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:52,791 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:54,792 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:56,793 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:45:58,794 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:00,186 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:46:00,186 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:46:00,795 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:02,796 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:03,570 DEBUG   SenderThread:19924 [sender.py:send():238] send: stats
+2021-11-02 12:46:04,797 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:06,798 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:08,799 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:10,800 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:12,801 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:14,802 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:15,463 DEBUG   HandlerThread:19924 [handler.py:handle_request():130] handle_request: stop_status
+2021-11-02 12:46:15,463 DEBUG   SenderThread:19924 [sender.py:send_request():252] send_request: stop_status
+2021-11-02 12:46:16,803 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:18,805 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:20,806 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:22,807 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:24,476 WARNING MainThread:19924 [internal.py:wandb_internal():146] Internal process interrupt: 1
+2021-11-02 12:46:24,640 WARNING MainThread:19924 [internal.py:wandb_internal():146] Internal process interrupt: 2
+2021-11-02 12:46:24,641 ERROR   MainThread:19924 [internal.py:wandb_internal():149] Internal process interrupted.
+2021-11-02 12:46:24,808 INFO    Thread-8  :19924 [dir_watcher.py:_on_file_modified():230] file/dir modified: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/files/output.log
+2021-11-02 12:46:24,852 INFO    HandlerThread:19924 [handler.py:finish():731] shutting down handler
+2021-11-02 12:46:24,852 INFO    SenderThread:19924 [sender.py:finish():1091] shutting down sender
+2021-11-02 12:46:24,852 INFO    WriterThread:19924 [datastore.py:close():281] close: /work/lilu/HRSEPP/hrsepp/IO/wandb/run-20211102_124058-q77hbxse/run-q77hbxse.wandb
+2021-11-02 12:46:24,852 INFO    SenderThread:19924 [dir_watcher.py:finish():283] shutting down directory watcher
+2021-11-02 12:46:24,994 INFO    MainThread:19924 [internal.py:handle_exit():77] Internal process exited

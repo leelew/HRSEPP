@@ -5,7 +5,7 @@ from tensorflow.keras.layers import (BatchNormalization, Conv2D, Input,
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
-from ..utils.loss import MaskMSELoss, MaskSSIMLoss
+from utils.loss import MaskMSELoss, MaskSSIMLoss
 
 
 def unet5(input_shape,
@@ -20,12 +20,12 @@ def unet5(input_shape,
 
     conv1 = Conv2D(np.int(64 * n_filters_factor),
                    filter_size,
-                   activation='relu',
+                   activation='tanh',
                    padding='same',
                    kernel_initializer='he_normal')(inputs)
     conv1 = Conv2D(np.int(64 * n_filters_factor),
                    filter_size,
-                   activation='relu',
+                   activation='leakyrelu',
                    padding='same',
                    kernel_initializer='he_normal')(conv1)
     bn1 = BatchNormalization(axis=-1)(conv1)  # 112, 112, 64
@@ -97,7 +97,7 @@ def unet5(input_shape,
     final_layer_logits = [(Conv2D(n_output_classes, 1,
                                   activation='linear')(conv5))
                           for i in range(n_forecast_months)]
-    final_layer_logits = tf.concat(final_layer_logits, axis=-1)
+    final_layer_logits = tf.stack(final_layer_logits, axis=1)
 
     model = Model(inputs, final_layer_logits)
 
@@ -264,7 +264,7 @@ def unet9(input_shape,
     final_layer_logits = [(Conv2D(n_output_classes, 1,
                                   activation='linear')(conv9))
                           for i in range(n_forecast_months)]
-    final_layer_logits = tf.concat(final_layer_logits, axis=-1)
+    final_layer_logits = tf.stack(final_layer_logits, axis=1)
 
     model = Model(inputs, final_layer_logits)
 

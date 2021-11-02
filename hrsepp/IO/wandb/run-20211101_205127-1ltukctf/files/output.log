@@ -1,0 +1,72 @@
+Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+input_1 (InputLayer)         [(None, 1, 224, 224, 8)]  0
+_________________________________________________________________
+conv_lst_m2d (ConvLSTM2D)    (None, 224, 224, 17)      15368
+_________________________________________________________________
+batch_normalization (BatchNo (None, 224, 224, 17)      68
+_________________________________________________________________
+lambda (Lambda)              (None, 7, 224, 224, 17)   0
+_________________________________________________________________
+conv_lst_m2d_1 (ConvLSTM2D)  (None, 7, 224, 224, 17)   20876
+_________________________________________________________________
+dense (Dense)                (None, 7, 224, 224, 1)    18
+=================================================================
+Total params: 36,330
+Trainable params: 36,296
+Non-trainable params: 34
+_________________________________________________________________
+2021-11-01 20:51:34.417751: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-11-01 20:51:34.418413: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
+2021-11-01 20:51:34.469599: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties:
+pciBusID: 0000:02:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-01 20:51:34.470051: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties:
+pciBusID: 0000:65:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-01 20:51:34.470075: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-11-01 20:51:34.471916: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-11-01 20:51:34.471987: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-11-01 20:51:34.472676: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2021-11-01 20:51:34.472857: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2021-11-01 20:51:34.474549: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2021-11-01 20:51:34.474954: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2021-11-01 20:51:34.475062: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-11-01 20:51:34.476695: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
+2021-11-01 20:51:34.477070: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-11-01 20:51:34.478256: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-11-01 20:51:34.783905: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties:
+pciBusID: 0000:02:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-01 20:51:34.784352: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties:
+pciBusID: 0000:65:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-01 20:51:34.784385: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-11-01 20:51:34.784421: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-11-01 20:51:34.784432: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-11-01 20:51:34.784443: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2021-11-01 20:51:34.784452: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2021-11-01 20:51:34.784462: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2021-11-01 20:51:34.784473: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2021-11-01 20:51:34.784493: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-11-01 20:51:34.786078: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
+2021-11-01 20:51:34.786105: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-11-01 20:51:35.444510: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1261] Device interconnect StreamExecutor with strength 1 edge matrix:
+2021-11-01 20:51:35.444551: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1267]      0 1
+2021-11-01 20:51:35.444559: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 0:   N N
+2021-11-01 20:51:35.444566: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 1:   N N
+2021-11-01 20:51:35.446242: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10071 MB memory) -> physical GPU (device: 0, name: GeForce RTX 2080 Ti, pci bus id: 0000:02:00.0, compute capability: 7.5)
+2021-11-01 20:51:35.447316: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10020 MB memory) -> physical GPU (device: 1, name: GeForce RTX 2080 Ti, pci bus id: 0000:65:00.0, compute capability: 7.5)
+Traceback (most recent call last):
+  File "train.py", line 91, in <module>
+    save_path='/hard/lilu/SMAP_L4/model/ed_convlstm')
+  File "train.py", line 49, in train
+    epochs=wandb.config.epochs,
+  File "/root/anaconda3/lib/python3.7/site-packages/wandb/sdk/wandb_config.py", line 154, in __getattr__
+    return self.__getitem__(key)
+  File "/root/anaconda3/lib/python3.7/site-packages/wandb/sdk/wandb_config.py", line 122, in __getitem__
+    return self._items[key]
+KeyError: 'epochs'

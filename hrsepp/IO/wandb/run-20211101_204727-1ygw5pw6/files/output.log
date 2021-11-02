@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "train.py", line 92, in <module>
+    save_path='/hard/lilu/SMAP_L4/model/ed_convlstm')
+  File "train.py", line 45, in train
+    n_output_classes=1)
+TypeError: ed_convlstm() got an unexpected keyword argument 'n_forecast_months'

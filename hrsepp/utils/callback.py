@@ -5,15 +5,11 @@ from tensorflow.keras.callbacks import (EarlyStopping, LearningRateScheduler,
 from wandb.keras import WandbCallback
 
 
-class CallBacks(tf.keras.callbacks):
+class CallBacks():
     callbacks = []
 
     def __init__(
             self,
-            model_check,
-            early_stopping,
-            wandb,
-            lr_schedule,
             # Metric to monitor for model checkpointing
             mcMonitor='val_acc_mean',
             mcMode='max',
@@ -22,26 +18,31 @@ class CallBacks(tf.keras.callbacks):
             esMonitor='val_acc_mean',
             esMode='max',
             network_path='/hard/lilu/Checkpoints/') -> None:
-        super().__init__()
+        self.mcMonitor = mcMonitor
+        self.mcMode = mcMode
+        self.esPatience = esPatience
+        self.esMonitor = esMonitor
+        self.esMode = esMode
+        self.network_path = network_path
 
     def __call__(self):
 
         self.callbacks.append(
-            ModelCheckpoint(network_path,
-                            monitor=mcMonitor,
-                            mode=mcMode,
+            ModelCheckpoint(self.network_path,
+                            monitor=self.mcMonitor,
+                            mode=self.mcMode,
                             verbose=1,
                             save_best_only=True))
 
         self.callbacks.append(
-            EarlyStopping(monitor=esMonitor,
-                          mode=esMode,
+            EarlyStopping(monitor=self.esMonitor,
+                          mode=self.esMode,
                           verbose=1,
-                          patience=esPatience))
+                          patience=self.esPatience))
 
         self.callbacks.append(
-            WandbCallback(monitor=mcMonitor,
-                          mode=mcMode,
+            WandbCallback(monitor=self.mcMonitor,
+                          mode=self.mcMode,
                           log_weights=False,
                           log_gradients=False))
 

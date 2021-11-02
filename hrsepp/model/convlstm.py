@@ -7,7 +7,7 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 from tensorflow.python.keras.layers.core import Dense
 from tensorflow.keras import backend
-from ..utils.loss import MaskMSELoss, MaskSSIMLoss
+from utils.loss import MaskMSELoss, MaskSSIMLoss
 
 
 def ed_convlstm(input_shape,
@@ -41,7 +41,7 @@ def ed_convlstm(input_shape,
 
     model.compile(optimizer=Adam(lr=learning_rate), loss=MaskMSELoss(mask))
     model.summary()
-
+    return model
 
 def convlstm1(input_shape,
               mask,

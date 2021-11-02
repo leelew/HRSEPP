@@ -1,0 +1,910 @@
+Model: "model"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            [(None, 224, 224, 8) 0
+__________________________________________________________________________________________________
+conv2d (Conv2D)                 (None, 224, 224, 64) 4672        input_1[0][0]
+__________________________________________________________________________________________________
+conv2d_1 (Conv2D)               (None, 224, 224, 64) 36928       conv2d[0][0]
+__________________________________________________________________________________________________
+batch_normalization (BatchNorma (None, 224, 224, 64) 256         conv2d_1[0][0]
+__________________________________________________________________________________________________
+max_pooling2d (MaxPooling2D)    (None, 112, 112, 64) 0           batch_normalization[0][0]
+__________________________________________________________________________________________________
+conv2d_2 (Conv2D)               (None, 112, 112, 128 73856       max_pooling2d[0][0]
+__________________________________________________________________________________________________
+conv2d_3 (Conv2D)               (None, 112, 112, 128 147584      conv2d_2[0][0]
+__________________________________________________________________________________________________
+batch_normalization_1 (BatchNor (None, 112, 112, 128 512         conv2d_3[0][0]
+__________________________________________________________________________________________________
+max_pooling2d_1 (MaxPooling2D)  (None, 56, 56, 128)  0           batch_normalization_1[0][0]
+__________________________________________________________________________________________________
+conv2d_4 (Conv2D)               (None, 56, 56, 256)  295168      max_pooling2d_1[0][0]
+__________________________________________________________________________________________________
+conv2d_5 (Conv2D)               (None, 56, 56, 256)  590080      conv2d_4[0][0]
+__________________________________________________________________________________________________
+batch_normalization_2 (BatchNor (None, 56, 56, 256)  1024        conv2d_5[0][0]
+__________________________________________________________________________________________________
+max_pooling2d_2 (MaxPooling2D)  (None, 28, 28, 256)  0           batch_normalization_2[0][0]
+__________________________________________________________________________________________________
+conv2d_6 (Conv2D)               (None, 28, 28, 256)  590080      max_pooling2d_2[0][0]
+__________________________________________________________________________________________________
+conv2d_7 (Conv2D)               (None, 28, 28, 256)  590080      conv2d_6[0][0]
+__________________________________________________________________________________________________
+batch_normalization_3 (BatchNor (None, 28, 28, 256)  1024        conv2d_7[0][0]
+__________________________________________________________________________________________________
+max_pooling2d_3 (MaxPooling2D)  (None, 14, 14, 256)  0           batch_normalization_3[0][0]
+__________________________________________________________________________________________________
+conv2d_8 (Conv2D)               (None, 14, 14, 512)  1180160     max_pooling2d_3[0][0]
+__________________________________________________________________________________________________
+conv2d_9 (Conv2D)               (None, 14, 14, 512)  2359808     conv2d_8[0][0]
+__________________________________________________________________________________________________
+batch_normalization_4 (BatchNor (None, 14, 14, 512)  2048        conv2d_9[0][0]
+__________________________________________________________________________________________________
+up_sampling2d (UpSampling2D)    (None, 28, 28, 512)  0           batch_normalization_4[0][0]
+__________________________________________________________________________________________________
+conv2d_10 (Conv2D)              (None, 28, 28, 256)  524544      up_sampling2d[0][0]
+__________________________________________________________________________________________________
+concatenate (Concatenate)       (None, 28, 28, 512)  0           batch_normalization_3[0][0]
+                                                                 conv2d_10[0][0]
+__________________________________________________________________________________________________
+conv2d_11 (Conv2D)              (None, 28, 28, 256)  1179904     concatenate[0][0]
+__________________________________________________________________________________________________
+conv2d_12 (Conv2D)              (None, 28, 28, 256)  590080      conv2d_11[0][0]
+__________________________________________________________________________________________________
+batch_normalization_5 (BatchNor (None, 28, 28, 256)  1024        conv2d_12[0][0]
+__________________________________________________________________________________________________
+up_sampling2d_1 (UpSampling2D)  (None, 56, 56, 256)  0           batch_normalization_5[0][0]
+__________________________________________________________________________________________________
+conv2d_13 (Conv2D)              (None, 56, 56, 256)  262400      up_sampling2d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 56, 56, 512)  0           batch_normalization_2[0][0]
+                                                                 conv2d_13[0][0]
+__________________________________________________________________________________________________
+conv2d_14 (Conv2D)              (None, 56, 56, 256)  1179904     concatenate_1[0][0]
+__________________________________________________________________________________________________
+conv2d_15 (Conv2D)              (None, 56, 56, 256)  590080      conv2d_14[0][0]
+__________________________________________________________________________________________________
+batch_normalization_6 (BatchNor (None, 56, 56, 256)  1024        conv2d_15[0][0]
+__________________________________________________________________________________________________
+up_sampling2d_2 (UpSampling2D)  (None, 112, 112, 256 0           batch_normalization_6[0][0]
+__________________________________________________________________________________________________
+conv2d_16 (Conv2D)              (None, 112, 112, 128 131200      up_sampling2d_2[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 112, 112, 256 0           batch_normalization_1[0][0]
+                                                                 conv2d_16[0][0]
+__________________________________________________________________________________________________
+conv2d_17 (Conv2D)              (None, 112, 112, 128 295040      concatenate_2[0][0]
+__________________________________________________________________________________________________
+conv2d_18 (Conv2D)              (None, 112, 112, 128 147584      conv2d_17[0][0]
+__________________________________________________________________________________________________
+batch_normalization_7 (BatchNor (None, 112, 112, 128 512         conv2d_18[0][0]
+__________________________________________________________________________________________________
+up_sampling2d_3 (UpSampling2D)  (None, 224, 224, 128 0           batch_normalization_7[0][0]
+__________________________________________________________________________________________________
+conv2d_19 (Conv2D)              (None, 224, 224, 64) 32832       up_sampling2d_3[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 224, 224, 128 0           conv2d_1[0][0]
+                                                                 conv2d_19[0][0]
+__________________________________________________________________________________________________
+conv2d_20 (Conv2D)              (None, 224, 224, 64) 73792       concatenate_3[0][0]
+__________________________________________________________________________________________________
+conv2d_21 (Conv2D)              (None, 224, 224, 64) 36928       conv2d_20[0][0]
+__________________________________________________________________________________________________
+conv2d_22 (Conv2D)              (None, 224, 224, 64) 36928       conv2d_21[0][0]
+__________________________________________________________________________________________________
+conv2d_23 (Conv2D)              (None, 224, 224, 1)  65          conv2d_22[0][0]
+__________________________________________________________________________________________________
+tf.stack (TFOpLambda)           (None, 1, 224, 224,  0           conv2d_23[0][0]
+==================================================================================================
+Total params: 10,957,121
+Trainable params: 10,953,409
+Non-trainable params: 3,712
+__________________________________________________________________________________________________
+2021-11-02 20:24:55.909332: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-11-02 20:24:55.909978: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
+2021-11-02 20:24:55.959845: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties:
+pciBusID: 0000:02:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-02 20:24:55.960302: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties:
+pciBusID: 0000:65:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-02 20:24:55.960328: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-11-02 20:24:55.962113: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-11-02 20:24:55.962192: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-11-02 20:24:55.962847: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2021-11-02 20:24:55.963028: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2021-11-02 20:24:55.964678: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2021-11-02 20:24:55.965074: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2021-11-02 20:24:55.965187: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-11-02 20:24:55.966815: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
+2021-11-02 20:24:55.967199: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-11-02 20:24:55.968392: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-11-02 20:24:56.265490: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties:
+pciBusID: 0000:02:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-02 20:24:56.265928: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties:
+pciBusID: 0000:65:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-02 20:24:56.265955: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-11-02 20:24:56.265990: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-11-02 20:24:56.265999: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-11-02 20:24:56.266008: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2021-11-02 20:24:56.266017: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2021-11-02 20:24:56.266026: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2021-11-02 20:24:56.266035: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2021-11-02 20:24:56.266045: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-11-02 20:24:56.267547: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
+2021-11-02 20:24:56.267576: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-11-02 20:24:56.929864: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1261] Device interconnect StreamExecutor with strength 1 edge matrix:
+2021-11-02 20:24:56.929905: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1267]      0 1
+2021-11-02 20:24:56.929914: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 0:   N N
+2021-11-02 20:24:56.929919: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 1:   N N
+2021-11-02 20:24:56.931615: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10071 MB memory) -> physical GPU (device: 0, name: GeForce RTX 2080 Ti, pci bus id: 0000:02:00.0, compute capability: 7.5)
+2021-11-02 20:24:56.932839: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10020 MB memory) -> physical GPU (device: 1, name: GeForce RTX 2080 Ti, pci bus id: 0000:65:00.0, compute capability: 7.5)
+Epoch 1/50
+2021-11-02 20:25:01.280751: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:116] None of the MLIR optimization passes are enabled (registered 2)
+2021-11-02 20:25:01.300436: I tensorflow/core/platform/profile_utils/cpu_utils.cc:112] CPU Frequency: 3699850000 Hz
+2021-11-02 20:25:02.382620: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-11-02 20:25:03.703888: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-11-02 20:25:04.060853: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-11-02 20:25:08.262670: W tensorflow/core/common_runtime/bfc_allocator.cc:248] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.08GiB with freed_by_count=0. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2021-11-02 20:25:08.262733: W tensorflow/core/common_runtime/bfc_allocator.cc:248] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.08GiB with freed_by_count=0. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2021-11-02 20:25:08.530421: W tensorflow/core/common_runtime/bfc_allocator.cc:248] Allocator (GPU_0_bfc) ran out of memory trying to allocate 2.60GiB with freed_by_count=0. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2021-11-02 20:25:08.530461: W tensorflow/core/common_runtime/bfc_allocator.cc:248] Allocator (GPU_0_bfc) ran out of memory trying to allocate 2.60GiB with freed_by_count=0. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2021-11-02 20:25:08.614437: W tensorflow/core/common_runtime/bfc_allocator.cc:248] Allocator (GPU_0_bfc) ran out of memory trying to allocate 1.02GiB with freed_by_count=0. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2021-11-02 20:25:08.614474: W tensorflow/core/common_runtime/bfc_allocator.cc:248] Allocator (GPU_0_bfc) ran out of memory trying to allocate 1.02GiB with freed_by_count=0. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2021-11-02 20:25:08.703052: W tensorflow/core/common_runtime/bfc_allocator.cc:248] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.04GiB with freed_by_count=0. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2021-11-02 20:25:08.703092: W tensorflow/core/common_runtime/bfc_allocator.cc:248] Allocator (GPU_0_bfc) ran out of memory trying to allocate 3.04GiB with freed_by_count=0. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2021-11-02 20:25:08.739591: W tensorflow/core/common_runtime/bfc_allocator.cc:248] Allocator (GPU_0_bfc) ran out of memory trying to allocate 1.74GiB with freed_by_count=0. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+2021-11-02 20:25:08.739623: W tensorflow/core/common_runtime/bfc_allocator.cc:248] Allocator (GPU_0_bfc) ran out of memory trying to allocate 1.74GiB with freed_by_count=0. The caller indicates that this is not a failure, but may mean that there could be performance gains if more memory were available.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 47s 794ms/step - loss: 0.0994 - val_loss: 0.0417
+Epoch 2/50
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 604ms/step - loss: 0.0024 - val_loss: 0.0031
+Epoch 3/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 608ms/step - loss: 0.0019 - val_loss: 0.0025
+Epoch 4/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 610ms/step - loss: 0.0017 - val_loss: 0.0020
+Epoch 5/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 613ms/step - loss: 0.0015 - val_loss: 0.0033
+Epoch 6/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 615ms/step - loss: 0.0017 - val_loss: 0.0015
+Epoch 7/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 616ms/step - loss: 0.0012 - val_loss: 0.0015
+Epoch 8/50
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 617ms/step - loss: 0.0013 - val_loss: 0.0013
+Epoch 9/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 618ms/step - loss: 0.0012 - val_loss: 0.0012
+Epoch 10/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 618ms/step - loss: 0.0010 - val_loss: 9.4878e-04
+Epoch 11/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 619ms/step - loss: 9.8504e-04 - val_loss: 0.0012
+Epoch 12/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 619ms/step - loss: 9.8108e-04 - val_loss: 9.2913e-04
+Epoch 13/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 619ms/step - loss: 8.9764e-04 - val_loss: 8.0605e-04
+Epoch 14/50
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 619ms/step - loss: 8.8528e-04 - val_loss: 0.0013
+Epoch 15/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 620ms/step - loss: 8.6800e-04 - val_loss: 8.8015e-04
+Epoch 16/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 620ms/step - loss: 9.1742e-04 - val_loss: 7.2468e-04
+Epoch 17/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 620ms/step - loss: 7.6431e-04 - val_loss: 0.0013
+Epoch 18/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 620ms/step - loss: 8.3385e-04 - val_loss: 6.7782e-04
+Epoch 19/50
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 619ms/step - loss: 7.6803e-04 - val_loss: 0.0011
+Epoch 20/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 8.0969e-04 - val_loss: 7.9031e-04
+Epoch 21/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 6.9065e-04 - val_loss: 6.4710e-04
+Epoch 22/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 622ms/step - loss: 6.7290e-04 - val_loss: 7.5015e-04
+Epoch 23/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 6.9853e-04 - val_loss: 6.8525e-04
+Epoch 24/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 6.4667e-04 - val_loss: 6.4611e-04
+Epoch 25/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 7.0258e-04 - val_loss: 6.4394e-04
+Epoch 26/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 6.5103e-04 - val_loss: 5.9104e-04
+Epoch 27/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 620ms/step - loss: 5.9438e-04 - val_loss: 6.2005e-04
+Epoch 28/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 6.1554e-04 - val_loss: 6.4995e-04
+Epoch 29/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 6.3093e-04 - val_loss: 8.4511e-04
+Epoch 30/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 6.0817e-04 - val_loss: 6.0023e-04
+Epoch 31/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 6.2130e-04 - val_loss: 6.0168e-04
+Epoch 32/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 6.2200e-04 - val_loss: 6.9007e-04
+Epoch 33/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 5.8363e-04 - val_loss: 7.5729e-04
+Epoch 34/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 5.8842e-04 - val_loss: 7.1625e-04
+Epoch 35/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 622ms/step - loss: 5.9173e-04 - val_loss: 6.4227e-04
+Epoch 36/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 28s 620ms/step - loss: 5.6761e-04 - val_loss: 6.4518e-04
+Epoch 37/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 622ms/step - loss: 5.2842e-04 - val_loss: 6.4058e-04
+Epoch 38/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 622ms/step - loss: 5.5224e-04 - val_loss: 6.7596e-04
+Epoch 39/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 4.8463e-04 - val_loss: 6.2399e-04
+Epoch 40/50
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 4.9564e-04 - val_loss: 6.3735e-04
+Epoch 41/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 5.1519e-04 - val_loss: 6.9486e-04
+Epoch 42/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 5.3446e-04 - val_loss: 7.1565e-04
+Epoch 43/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 620ms/step - loss: 4.7094e-04 - val_loss: 6.1900e-04
+Epoch 44/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 4.6160e-04 - val_loss: 6.8778e-04
+Epoch 45/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 4.8066e-04 - val_loss: 5.9137e-04
+Epoch 46/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 4.7323e-04 - val_loss: 6.4676e-04
+Epoch 47/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 6.8985e-04 - val_loss: 6.4810e-04
+Epoch 48/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 5.1018e-04 - val_loss: 6.1234e-04
+Epoch 49/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 621ms/step - loss: 4.7138e-04 - val_loss: 8.3736e-04
+Epoch 50/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+46/46 [==============================] - 29s 622ms/step - loss: 4.6119e-04 - val_loss: 5.9581e-04
+2021-11-02 20:49:03.266101: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 2928672768 exceeds 10% of free system memory.
+2021-11-02 20:49:20.696014: W tensorflow/python/util/util.cc:348] Sets are not currently considered sequences, but this may change in the future, so consider avoiding using them.

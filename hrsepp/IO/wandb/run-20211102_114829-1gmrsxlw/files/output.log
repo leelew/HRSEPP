@@ -1,0 +1,1301 @@
+Model: "model"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to
+==================================================================================================
+input_1 (InputLayer)            [(None, 224, 224, 8) 0
+__________________________________________________________________________________________________
+conv2d (Conv2D)                 (None, 224, 224, 71) 5183        input_1[0][0]
+__________________________________________________________________________________________________
+conv2d_1 (Conv2D)               (None, 224, 224, 71) 45440       conv2d[0][0]
+__________________________________________________________________________________________________
+batch_normalization (BatchNorma (None, 224, 224, 71) 284         conv2d_1[0][0]
+__________________________________________________________________________________________________
+max_pooling2d (MaxPooling2D)    (None, 112, 112, 71) 0           batch_normalization[0][0]
+__________________________________________________________________________________________________
+conv2d_2 (Conv2D)               (None, 112, 112, 142 90880       max_pooling2d[0][0]
+__________________________________________________________________________________________________
+conv2d_3 (Conv2D)               (None, 112, 112, 142 181618      conv2d_2[0][0]
+__________________________________________________________________________________________________
+batch_normalization_1 (BatchNor (None, 112, 112, 142 568         conv2d_3[0][0]
+__________________________________________________________________________________________________
+max_pooling2d_1 (MaxPooling2D)  (None, 56, 56, 142)  0           batch_normalization_1[0][0]
+__________________________________________________________________________________________________
+conv2d_4 (Conv2D)               (None, 56, 56, 284)  363236      max_pooling2d_1[0][0]
+__________________________________________________________________________________________________
+conv2d_5 (Conv2D)               (None, 56, 56, 284)  726188      conv2d_4[0][0]
+__________________________________________________________________________________________________
+batch_normalization_2 (BatchNor (None, 56, 56, 284)  1136        conv2d_5[0][0]
+__________________________________________________________________________________________________
+max_pooling2d_2 (MaxPooling2D)  (None, 28, 28, 284)  0           batch_normalization_2[0][0]
+__________________________________________________________________________________________________
+conv2d_6 (Conv2D)               (None, 28, 28, 284)  726188      max_pooling2d_2[0][0]
+__________________________________________________________________________________________________
+conv2d_7 (Conv2D)               (None, 28, 28, 284)  726188      conv2d_6[0][0]
+__________________________________________________________________________________________________
+batch_normalization_3 (BatchNor (None, 28, 28, 284)  1136        conv2d_7[0][0]
+__________________________________________________________________________________________________
+max_pooling2d_3 (MaxPooling2D)  (None, 14, 14, 284)  0           batch_normalization_3[0][0]
+__________________________________________________________________________________________________
+conv2d_8 (Conv2D)               (None, 14, 14, 568)  1452376     max_pooling2d_3[0][0]
+__________________________________________________________________________________________________
+conv2d_9 (Conv2D)               (None, 14, 14, 568)  2904184     conv2d_8[0][0]
+__________________________________________________________________________________________________
+batch_normalization_4 (BatchNor (None, 14, 14, 568)  2272        conv2d_9[0][0]
+__________________________________________________________________________________________________
+up_sampling2d (UpSampling2D)    (None, 28, 28, 568)  0           batch_normalization_4[0][0]
+__________________________________________________________________________________________________
+conv2d_10 (Conv2D)              (None, 28, 28, 284)  645532      up_sampling2d[0][0]
+__________________________________________________________________________________________________
+concatenate (Concatenate)       (None, 28, 28, 568)  0           batch_normalization_3[0][0]
+                                                                 conv2d_10[0][0]
+__________________________________________________________________________________________________
+conv2d_11 (Conv2D)              (None, 28, 28, 284)  1452092     concatenate[0][0]
+__________________________________________________________________________________________________
+conv2d_12 (Conv2D)              (None, 28, 28, 284)  726188      conv2d_11[0][0]
+__________________________________________________________________________________________________
+batch_normalization_5 (BatchNor (None, 28, 28, 284)  1136        conv2d_12[0][0]
+__________________________________________________________________________________________________
+up_sampling2d_1 (UpSampling2D)  (None, 56, 56, 284)  0           batch_normalization_5[0][0]
+__________________________________________________________________________________________________
+conv2d_13 (Conv2D)              (None, 56, 56, 284)  322908      up_sampling2d_1[0][0]
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 56, 56, 568)  0           batch_normalization_2[0][0]
+                                                                 conv2d_13[0][0]
+__________________________________________________________________________________________________
+conv2d_14 (Conv2D)              (None, 56, 56, 284)  1452092     concatenate_1[0][0]
+__________________________________________________________________________________________________
+conv2d_15 (Conv2D)              (None, 56, 56, 284)  726188      conv2d_14[0][0]
+__________________________________________________________________________________________________
+batch_normalization_6 (BatchNor (None, 56, 56, 284)  1136        conv2d_15[0][0]
+__________________________________________________________________________________________________
+up_sampling2d_2 (UpSampling2D)  (None, 112, 112, 284 0           batch_normalization_6[0][0]
+__________________________________________________________________________________________________
+conv2d_16 (Conv2D)              (None, 112, 112, 142 161454      up_sampling2d_2[0][0]
+__________________________________________________________________________________________________
+concatenate_2 (Concatenate)     (None, 112, 112, 284 0           batch_normalization_1[0][0]
+                                                                 conv2d_16[0][0]
+__________________________________________________________________________________________________
+conv2d_17 (Conv2D)              (None, 112, 112, 142 363094      concatenate_2[0][0]
+__________________________________________________________________________________________________
+conv2d_18 (Conv2D)              (None, 112, 112, 142 181618      conv2d_17[0][0]
+__________________________________________________________________________________________________
+batch_normalization_7 (BatchNor (None, 112, 112, 142 568         conv2d_18[0][0]
+__________________________________________________________________________________________________
+up_sampling2d_3 (UpSampling2D)  (None, 224, 224, 142 0           batch_normalization_7[0][0]
+__________________________________________________________________________________________________
+conv2d_19 (Conv2D)              (None, 224, 224, 71) 40399       up_sampling2d_3[0][0]
+__________________________________________________________________________________________________
+concatenate_3 (Concatenate)     (None, 224, 224, 142 0           conv2d_1[0][0]
+                                                                 conv2d_19[0][0]
+__________________________________________________________________________________________________
+conv2d_20 (Conv2D)              (None, 224, 224, 71) 90809       concatenate_3[0][0]
+__________________________________________________________________________________________________
+conv2d_21 (Conv2D)              (None, 224, 224, 71) 45440       conv2d_20[0][0]
+__________________________________________________________________________________________________
+conv2d_22 (Conv2D)              (None, 224, 224, 71) 45440       conv2d_21[0][0]
+__________________________________________________________________________________________________
+conv2d_23 (Conv2D)              (None, 224, 224, 1)  72          conv2d_22[0][0]
+__________________________________________________________________________________________________
+conv2d_24 (Conv2D)              (None, 224, 224, 1)  72          conv2d_22[0][0]
+__________________________________________________________________________________________________
+conv2d_25 (Conv2D)              (None, 224, 224, 1)  72          conv2d_22[0][0]
+__________________________________________________________________________________________________
+conv2d_26 (Conv2D)              (None, 224, 224, 1)  72          conv2d_22[0][0]
+__________________________________________________________________________________________________
+conv2d_27 (Conv2D)              (None, 224, 224, 1)  72          conv2d_22[0][0]
+__________________________________________________________________________________________________
+conv2d_28 (Conv2D)              (None, 224, 224, 1)  72          conv2d_22[0][0]
+__________________________________________________________________________________________________
+conv2d_29 (Conv2D)              (None, 224, 224, 1)  72          conv2d_22[0][0]
+__________________________________________________________________________________________________
+tf.stack (TFOpLambda)           (None, 7, 224, 224,  0           conv2d_23[0][0]
+                                                                 conv2d_24[0][0]
+                                                                 conv2d_25[0][0]
+                                                                 conv2d_26[0][0]
+                                                                 conv2d_27[0][0]
+                                                                 conv2d_28[0][0]
+                                                                 conv2d_29[0][0]
+==================================================================================================
+Total params: 13,483,475
+Trainable params: 13,479,357
+Non-trainable params: 4,118
+__________________________________________________________________________________________________
+2021-11-02 11:48:36.226951: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-11-02 11:48:36.227696: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
+2021-11-02 11:48:36.277728: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties:
+pciBusID: 0000:02:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-02 11:48:36.278175: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties:
+pciBusID: 0000:65:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-02 11:48:36.278198: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-11-02 11:48:36.286165: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-11-02 11:48:36.286240: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-11-02 11:48:36.291456: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2021-11-02 11:48:36.293511: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2021-11-02 11:48:36.300193: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2021-11-02 11:48:36.302265: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2021-11-02 11:48:36.303002: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-11-02 11:48:36.305530: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
+2021-11-02 11:48:36.305999: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-11-02 11:48:36.307459: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-11-02 11:48:36.608262: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties:
+pciBusID: 0000:02:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-02 11:48:36.608686: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties:
+pciBusID: 0000:65:00.0 name: GeForce RTX 2080 Ti computeCapability: 7.5
+coreClock: 1.62GHz coreCount: 68 deviceMemorySize: 10.76GiB deviceMemoryBandwidth: 573.69GiB/s
+2021-11-02 11:48:36.608712: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-11-02 11:48:36.608745: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-11-02 11:48:36.608755: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-11-02 11:48:36.608764: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2021-11-02 11:48:36.608773: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2021-11-02 11:48:36.608781: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2021-11-02 11:48:36.608790: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.11
+2021-11-02 11:48:36.608800: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-11-02 11:48:36.610214: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1
+2021-11-02 11:48:36.610242: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-11-02 11:48:37.267761: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1261] Device interconnect StreamExecutor with strength 1 edge matrix:
+2021-11-02 11:48:37.267798: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1267]      0 1
+2021-11-02 11:48:37.267805: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 0:   N N
+2021-11-02 11:48:37.267808: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 1:   N N
+2021-11-02 11:48:37.269564: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10071 MB memory) -> physical GPU (device: 0, name: GeForce RTX 2080 Ti, pci bus id: 0000:02:00.0, compute capability: 7.5)
+2021-11-02 11:48:37.270662: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10020 MB memory) -> physical GPU (device: 1, name: GeForce RTX 2080 Ti, pci bus id: 0000:65:00.0, compute capability: 7.5)
+2021-11-02 11:48:38.710763: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 2336194560 exceeds 10% of free system memory.
+Epoch 1/50
+2021-11-02 11:48:41.094755: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 2044170240 exceeds 10% of free system memory.
+2021-11-02 11:48:42.070767: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:116] None of the MLIR optimization passes are enabled (registered 2)
+2021-11-02 11:48:42.088467: I tensorflow/core/platform/profile_utils/cpu_utils.cc:112] CPU Frequency: 3699850000 Hz
+2021-11-02 11:48:43.452161: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-11-02 11:48:45.415646: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-11-02 11:48:45.983539: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 62s 573ms/step - loss: 149.2500 - val_loss: 0.1074
+Epoch 2/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 42s 464ms/step - loss: 0.0043 - val_loss: 0.0053
+Epoch 3/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 468ms/step - loss: 0.0042 - val_loss: 0.0050
+Epoch 4/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 470ms/step - loss: 0.0042 - val_loss: 0.0049
+Epoch 5/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 471ms/step - loss: 0.0042 - val_loss: 0.0049
+Epoch 6/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 472ms/step - loss: 0.0041 - val_loss: 0.0048
+Epoch 7/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0041 - val_loss: 0.0048
+Epoch 8/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0042 - val_loss: 0.0047
+Epoch 9/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0041 - val_loss: 0.0047
+Epoch 10/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0041 - val_loss: 0.0047
+Epoch 11/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0040 - val_loss: 0.0047
+Epoch 12/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0040 - val_loss: 0.0046
+Epoch 13/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0037 - val_loss: 0.0042
+Epoch 14/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0037 - val_loss: 0.0049
+Epoch 15/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0042 - val_loss: 0.0049
+Epoch 16/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0042 - val_loss: 0.0049
+Epoch 17/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0042 - val_loss: 0.0049
+Epoch 18/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0042 - val_loss: 0.0049
+Epoch 19/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0042 - val_loss: 0.0049
+Epoch 20/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0041 - val_loss: 0.0049
+Epoch 21/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0042 - val_loss: 0.0048
+Epoch 22/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0042 - val_loss: 0.0049
+Epoch 23/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0041 - val_loss: 0.0048
+Epoch 24/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0041 - val_loss: 0.0049
+Epoch 25/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0042 - val_loss: 0.0048
+Epoch 26/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0041 - val_loss: 0.0048
+Epoch 27/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0041 - val_loss: 0.0044
+Epoch 28/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0035 - val_loss: 0.0037
+Epoch 29/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0024 - val_loss: 0.0028
+Epoch 30/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0023 - val_loss: 0.0027
+Epoch 31/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0022 - val_loss: 0.0024
+Epoch 32/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0022 - val_loss: 0.0024
+Epoch 33/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0021 - val_loss: 0.0023
+Epoch 34/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0020 - val_loss: 0.0022
+Epoch 35/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0020 - val_loss: 0.0900
+Epoch 36/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0020 - val_loss: 0.0022
+Epoch 37/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0019 - val_loss: 0.0021
+Epoch 38/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0019 - val_loss: 0.1985
+Epoch 39/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0019 - val_loss: 0.0023
+Epoch 40/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0019 - val_loss: 0.0021
+Epoch 41/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0018 - val_loss: 0.0018
+Epoch 42/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0016 - val_loss: 0.0021
+Epoch 43/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0017 - val_loss: 8.7056
+Epoch 44/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0015 - val_loss: 0.0030
+Epoch 45/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 475ms/step - loss: 0.0017 - val_loss: 0.0024
+Epoch 46/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 77s 846ms/step - loss: 0.0015 - val_loss: 0.0254
+Epoch 47/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 468ms/step - loss: 0.0013 - val_loss: 3250.2847
+Epoch 48/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 472ms/step - loss: 0.0013 - val_loss: 3124.9189
+Epoch 49/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0013 - val_loss: 0.0017
+Epoch 50/50
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+91/91 [==============================] - ETA: 0s - loss: 0.0039
+Traceback (most recent call last):
+  File "train.py", line 113, in <module>
+    save_path='/hard/lilu/SMAP_L4/model/unet/')
+  File "train.py", line 67, in train
+    y_train_pred = model.predict(x_train)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/training.py", line 1603, in predict
+    steps_per_execution=self._steps_per_execution)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/data_adapter.py", line 1112, in __init__
+    model=model)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/data_adapter.py", line 263, in __init__
+    x, y, sample_weights = _process_tensorlike((x, y, sample_weights))
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/data_adapter.py", line 1016, in _process_tensorlike
+    inputs = nest.map_structure(_convert_numpy_and_scipy, inputs)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/util/nest.py", line 659, in map_structure
+    structure[0], [func(*x) for x in entries],
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/util/nest.py", line 659, in <listcomp>
+    structure[0], [func(*x) for x in entries],
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/data_adapter.py", line 1011, in _convert_numpy_and_scipy
+    return ops.convert_to_tensor_v2_with_dispatch(x, dtype=dtype)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/util/dispatch.py", line 201, in wrapper
+    return target(*args, **kwargs)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/framework/ops.py", line 1405, in convert_to_tensor_v2_with_dispatch
+    value, dtype=dtype, dtype_hint=dtype_hint, name=name)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/framework/ops.py", line 1415, in convert_to_tensor_v2
+    as_ref=False)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/profiler/trace.py", line 163, in wrapped
+    return func(*args, **kwargs)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/framework/ops.py", line 1540, in convert_to_tensor
+    ret = conversion_func(value, dtype=dtype, name=name, as_ref=as_ref)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/framework/tensor_conversion_registry.py", line 52, in _default_conversion_function
+    return constant_op.constant(value, dtype, name=name)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/framework/constant_op.py", line 265, in constant
+    allow_broadcast=True)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/framework/constant_op.py", line 276, in _constant_impl
+    return _constant_eager_impl(ctx, value, dtype, shape, verify_shape)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/framework/constant_op.py", line 301, in _constant_eager_impl
+    t = convert_to_eager_tensor(value, ctx, dtype)
+  File "/root/anaconda3/lib/python3.7/site-packages/tensorflow/python/framework/constant_op.py", line 98, in convert_to_eager_tensor
+    return ops.EagerTensor(value, ctx.device_name, dtype)
+
+91/91 [==============================] - 43s 474ms/step - loss: 0.0040 - val_loss: 0.0055
