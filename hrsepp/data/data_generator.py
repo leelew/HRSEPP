@@ -2,17 +2,22 @@ import sys
 
 sys.path.append('../../hrsepp/')
 
-from data.ops.init import AuxManager
-from data.ops.preprocesser import XPreprocesser, RawSMAPPreprocesser, yPreprocesser
-from data.ops.readers import NCReader
 import json
+
 import numpy as np
+
+from data.ops.init import AuxManager
+from data.ops.preprocesser import (RawSMAPPreprocesser, XPreprocesser,
+                                   yPreprocesser)
+from data.ops.readers import NCReader
 
 
 class DataGenerator():
-    """generate comtemporary data of X, y. shape as [(t, f, lat, lon), (t, 1, lat, lon)]
+    """generate comtemporary data of X, y. 
+       shape as [(t, f, lat, lon), (t, 1, lat, lon)]
     """
     def __init__(self,
+                 ID,
                  raw_data_path,
                  auxiliary_data_path,
                  save_x_path,
@@ -42,8 +47,8 @@ class DataGenerator():
         self.auxiliary_data_path = auxiliary_data_path
         self.save_x_path = save_x_path + mode + '/'
         self.save_y_path = save_y_path + mode + '/'
-        self.save_px_path = save_px_path + mode + '/'
-        self.save_py_path = save_py_path + mode + '/'
+        self.save_px_path = save_px_path + mode + '/' + str(ID) + '/'
+        self.save_py_path = save_py_path + mode + '/' + str(ID) + '/'
 
         self.lat_lower = lat_lower
         self.lat_upper = lat_upper
@@ -63,7 +68,7 @@ class DataGenerator():
 
         self.use_lag_y = use_lag_y
 
-    def __call__(self, ID):
+    def __call__(self):
         if self.mode == 'train':
             # init auxiliary data
             AuxManager().init(raw_data_path=self.raw_data_path,
@@ -76,9 +81,6 @@ class DataGenerator():
         # load auxiliary data
         with open(self.auxiliary_data_path + 'auxiliary.json') as f:
             aux = json.load(f)
-
-        b = [0, 224, 448, 0, 224, 448]
-        a = [0, 0, 0, 224, 224, 224]
 
         # read soil moisture from SMAP
         RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
@@ -94,7 +96,6 @@ class DataGenerator():
                             lon_right=self.lon_right,
                             save=self.save)()
 
-        print('1')
         # read forcing from SMAP
         RawSMAPPreprocesser(raw_data_path=self.raw_data_path,
                             aux=aux,
@@ -108,51 +109,53 @@ class DataGenerator():
                             lon_left=self.lon_left,
                             lon_right=self.lon_right,
                             save=self.save)()
-        print('2')
+
+        lat_id_low = aux['lat_low'][self.ID - 1]
+        lon_id_left = aux['lon_left'][self.ID - 1]
 
         X = NCReader(path=self.save_x_path,
                      aux=aux,
                      var_list=self.x_var_list,
                      var_name=self.x_var_name,
                      begin_date=self.begin_date,
-                     end_date=self.end_date)()[:, :, a[ID - 1]:a[ID - 1] + 224,
-                                               b[ID - 1]:b[ID - 1] + 224]
-
-        print('3')
+                     end_date=self.end_date)()[:, :,
+                                               lat_id_low:lat_id_low + 224,
+                                               lon_id_left:lon_id_left + 224]
 
         # preprocess forcing
         X = XPreprocesser(X,
+                          ID=self.ID,
                           save_path=self.save_px_path,
                           auxiliary_path=self.auxiliary_data_path,
                           begin_date=self.begin_date,
                           end_date=self.end_date,
                           mode=self.mode,
                           save=self.save,
-                          var_name=self.x_var_name)(ID=ID)
+                          var_name=self.x_var_name)()
 
-        print('4')
-
-        np.save('x_{}_{}.npy'.format(self.mode, ID), X)
+        np.save('/hard/lilu/x_{}_{}.npy'.format(self.mode, self.ID), X)
 
         y = NCReader(path=self.save_y_path,
                      aux=aux,
                      var_list=self.y_var_list,
                      var_name=self.y_var_name,
                      begin_date=self.begin_date,
-                     end_date=self.end_date)()[:, :, a[ID - 1]:a[ID - 1] + 224,
-                                               b[ID - 1]:b[ID - 1] + 224]
+                     end_date=self.end_date)()[:, :,
+                                               lat_id_low:lat_id_low + 224,
+                                               lon_id_left:lon_id_left + 224]
 
         y = yPreprocesser(y,
+                          ID=self.ID,
                           save_path=self.save_py_path,
                           auxiliary_path=self.auxiliary_data_path,
                           begin_date=self.begin_date,
                           end_date=self.end_date,
                           mode=self.mode,
                           save=self.save,
-                          var_name=self.y_var_name)(ID=ID)
+                          var_name=self.y_var_name)()
 
         #
-        np.save('y_{}_{}.npy'.format(self.mode, ID), y)
+        np.save('/hard/lilu/y_{}_{}.npy'.format(self.mode, self.ID), y)
 
         return X, y
 

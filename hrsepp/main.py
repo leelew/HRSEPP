@@ -7,142 +7,167 @@
 # TODO: split train/test/inference data, give a parameter
 # to control restart train or test or inference
 
+import json
 import os
 
 import numpy as np
 import tensorflow as tf
-from sklearn.metrics import r2_score
 
-from data.make_inference_xy import make_inference_data
-from data.make_test_xy import make_test_data
-from data.make_train_xy import make_train_data
-#from IO.train import keras_train, load_model
-from model.lstm import lstm
-from model.convlstm import convlstm
 from utils.config import parse_args
 
-"""GPU setting module
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
-
-for gpu in gpus:
-    tf.config.experimental.set_visible_devices(
-        devices=gpus[1], device_type='GPU')
-    tf.config.experimental.set_memory_growth(
-        device=gpu, enable=True)
-"""
+from data.data_generator import DataGenerator
+from data.data_loader import DataLoader
+from IO.train import train
 
 
-def main(mode):
+def main(id):
+    """Main process for no backbone model."""
+    config = parse_args
 
-    config = parse_args()
+    # make train, validate and test data
+    DataGenerator(ID=id,
+                  raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+                  auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
+                  save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
+                  save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
+                  save_px_path='/hard/lilu/SMAP_L4/test/px/',
+                  save_py_path='/hard/lilu/SMAP_L4/test/py/',
+                  lat_lower=14.7,
+                  lat_upper=53.5,
+                  lon_left=72.3,
+                  lon_right=135,
+                  begin_date='2015-05-31',
+                  end_date='2019-05-31',
+                  x_var_name='forcing',
+                  x_var_list=[
+                      'precipitation_total_surface_flux',
+                      'radiation_longwave_absorbed_flux',
+                      'radiation_shortwave_downward_flux',
+                      'specific_humidity_lowatmmodlay', 'surface_pressure',
+                      'surface_temp', 'windspeed_lowatmmodlay'
+                  ],
+                  y_var_name='SSM',
+                  y_var_list=['sm_surface'],
+                  mode='train',
+                  save=True)()
 
-    if mode == 'train':
-        # ----------------------------------------------------------------------
-        # 1. train mode (re-train once a month)
-        # ----------------------------------------------------------------------
-        X, y = make_train_data(
-            raw_X_path=os.path.join(
-                config.ROOT, config.x_path, config.raw_x_path),
-            raw_y_path=os.path.join(
-                config.ROOT, config.y_path, config.raw_y_path),
-            daily_X_path=os.path.join(
-                config.ROOT, config.x_path, config.daily_x_path),
-            daily_y_path=os.path.join(
-                config.ROOT, config.y_path, config.daily_y_path),
-            begin_date=config.begin_train_date,
-            end_date=config.end_train_date,
-            lat_lower=config.lat_lower,
-            lat_upper=config.lat_upper,
-            lon_left=config.lon_left,
-            lon_right=config.lon_right,
+    DataGenerator(ID=id,
+                  raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+                  auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
+                  save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
+                  save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
+                  save_px_path='/hard/lilu/SMAP_L4/test/px/',
+                  save_py_path='/hard/lilu/SMAP_L4/test/py/',
+                  lat_lower=14.7,
+                  lat_upper=53.5,
+                  lon_left=72.3,
+                  lon_right=135,
+                  begin_date='2019-05-31',
+                  end_date='2020-05-31',
+                  x_var_name='forcing',
+                  x_var_list=[
+                      'precipitation_total_surface_flux',
+                      'radiation_longwave_absorbed_flux',
+                      'radiation_shortwave_downward_flux',
+                      'specific_humidity_lowatmmodlay', 'surface_pressure',
+                      'surface_temp', 'windspeed_lowatmmodlay'
+                  ],
+                  y_var_name='SSM',
+                  y_var_list=['sm_surface'],
+                  mode='valid',
+                  save=True)()
 
-            len_input=config.len_input,
-            len_output=config.len_output,
-            window_size=config.window_size,
-            use_lag_y=config.use_lag_y)
+    DataGenerator(ID=id,
+                  raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+                  auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
+                  save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
+                  save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
+                  save_px_path='/hard/lilu/SMAP_L4/test/px/',
+                  save_py_path='/hard/lilu/SMAP_L4/test/py/',
+                  lat_lower=14.7,
+                  lat_upper=53.5,
+                  lon_left=72.3,
+                  lon_right=135,
+                  begin_date='2020-05-31',
+                  end_date='2021-10-29',
+                  x_var_name='forcing',
+                  x_var_list=[
+                      'precipitation_total_surface_flux',
+                      'radiation_longwave_absorbed_flux',
+                      'radiation_shortwave_downward_flux',
+                      'specific_humidity_lowatmmodlay', 'surface_pressure',
+                      'surface_temp', 'windspeed_lowatmmodlay'
+                  ],
+                  y_var_name='SSM',
+                  y_var_list=['sm_surface'],
+                  mode='test',
+                  save=True)()
 
-        import numpy as np
-        np.save('x_train.npy', X)
-        np.save('y_train.npy', y)
-        #model = lstm(
-        #    n_feature=X.shape[-1],
-        #    input_len=config.len_input)
-        # model = convlstm(
-        #    n_feature=X.shape[-1],
-        #    input_len=config.len_input,
-        #    n_lat=X.shape[-2],
-        #    n_lon=X.shape[-3])
+    # make inputs shape as [(s, t_in, lat, lon, f), (s, t_out, lat, lon, 1)]
+    x_train = np.load('/hard/lilu/x_train_{}.npy'.format(id))
+    y_train = np.load('/hard/lilu/y_train_{}.npy'.format(id))
 
-        #keras_train(model,
-        #            X, y,
-        #            batch_size=config.batch_size,
-        #            epochs=config.epoch,
-        #            save_folder=os.path.join(config.ROOT, config.saved_model_path))
-        #TODO:Save nd.array, postprocess EASE to WGS84 projection.
-    elif mode == 'test':
-        # ----------------------------------------------------------------------
-        # 2. test mode (optional)
-        # ----------------------------------------------------------------------
-        X, y = make_test_data(
-            raw_X_path=os.path.join(
-                config.ROOT, config.x_path, config.raw_x_path),
-            raw_y_path=os.path.join(
-                config.ROOT, config.y_path, config.raw_y_path),
-            daily_X_path=os.path.join(
-                config.ROOT, config.x_path, config.daily_x_path),
-            daily_y_path=os.path.join(
-                config.ROOT, config.y_path, config.daily_y_path),
-            begin_date=config.begin_test_date,
-            end_date=config.end_test_date,
-            lat_lower=config.lat_lower,
-            lat_upper=config.lat_upper,
-            lon_left=config.lon_left,
-            lon_right=config.lon_right,
+    x_valid = np.load('/hard/lilu/x_valid_{}.npy'.format(id))
+    y_valid = np.load('/hard/lilu/y_valid_{}.npy'.format(id))
 
-            len_input=config.len_input,
-            len_output=config.len_output,
-            window_size=config.window_size,
-            use_lag_y=config.use_lag_y)
+    x_test = np.load('/hard/lilu/x_test_{}.npy'.format(id))
+    y_test = np.load('/hard/lilu/y_test_{}.npy'.format(id))
 
-        import numpy as np
-        np.save('x_valid.npy', X)
-        np.save('y_valid.npy', y)
-        #model = load_model(os.path.join(config.ROOT, config.saved_model_path))
+    x_train, y_train = DataLoader(len_input=1,
+                                  len_output=1,
+                                  window_size=2,
+                                  use_lag_y=True,
+                                  mode='train')(x_train, y_train)
 
-        #for i in range(X.shape[2]):
-        #    for j in range(X.shape[3]):
+    x_valid, y_valid = DataLoader(len_input=1,
+                                  len_output=1,
+                                  window_size=2,
+                                  use_lag_y=True,
+                                  mode='valid')(x_valid, y_valid)
 
-        #        y_pred = model.predict(X[:, :, i, j, :])
-        #        print(r2_score(np.squeeze(y[:, :, i, j, :]), y_pred))
-        #TODO:Postprocess EASE to WGS84 and save the images
-    elif mode == 'inference':
-        # ----------------------------------------------------------------------
-        # 3. inference mode (once a day)
-        # ----------------------------------------------------------------------
-        X = make_inference_data(
-            raw_X_path=os.path.join(
-                config.ROOT, config.x_path, config.raw_x_path),
-            raw_y_path=os.path.join(
-                config.ROOT, config.y_path, config.raw_y_path),
-            daily_X_path=os.path.join(
-                config.ROOT, config.x_path, config.daily_x_path),
-            daily_y_path=os.path.join(
-                config.ROOT, config.y_path, config.daily_y_path),
-            begin_date=config.begin_inference_date,
-            end_date=config.end_inference_date,
-            lat_lower=config.lat_lower,
-            lat_upper=config.lat_upper,
-            lon_left=config.lon_left,
-            lon_right=config.lon_right,
+    x_test, y_test = DataLoader(len_input=1,
+                                len_output=1,
+                                window_size=2,
+                                use_lag_y=True,
+                                mode='valid')(x_test, y_test)
 
-            len_input=config.len_input,
-            len_output=config.len_output,
-            window_size=config.window_size,
-            use_lag_y=config.use_lag_y)
+    # train
+    with open('/hard/lilu/SMAP_L4/test/auxiliary.json') as f:
+        aux = json.load(f)
 
-        print(X.shape)
+    lat_id_low = aux['lat_low'][id - 1]
+    lon_id_left = aux['lon_left'][id - 1]
+
+    mask = np.array(aux['mask'])[lon_id_left:lon_id_left + 224,
+                                 lat_id_low:lat_id_low + 224]
+
+    train(x_train,
+          y_train,
+          x_valid,
+          y_valid,
+          mask,
+          ID=id,
+          input_shape=(224, 224, 8),
+          learning_rate=0.001,
+          n_filters_factor=1,
+          filter_size=3,
+          batch_size=16,
+          epochs=50,
+          n_forecast_months=1,
+          n_output_classes=1,
+          model_name='ed_convlstm',
+          save_path='/hard/lilu/SMAP_L4/model/')
 
 
 if __name__ == '__main__':
     main(mode='test')
+    """GPU setting module
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+    gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
+
+    for gpu in gpus:
+        tf.config.experimental.set_visible_devices(
+            devices=gpus[1], device_type='GPU')
+        tf.config.experimental.set_memory_growth(
+            device=gpu, enable=True)
+    """

@@ -30,7 +30,9 @@ class AuxManager():
             'Nlon': lon.shape[1],
             'mask': mask.tolist(),
             'lat_2d': lat.tolist(),
-            'lon_2d': lon.tolist()
+            'lon_2d': lon.tolist(),
+            'lon_left': [0, 224, 448, 0, 224, 448],
+            'lat_low': [0, 0, 0, 224, 224, 224]
         }
 
         full_path = os.path.join(auxiliary_data_path, 'auxiliary.json')

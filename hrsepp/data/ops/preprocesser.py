@@ -50,168 +50,55 @@ class RawSMAPPreprocesser():
         # read and save file (after integrate spatial/temporal dimension)
         data = np.full((len(dates), len(
             self.var_list), self.aux['Nlat'], self.aux['Nlon']), np.nan)
-        
 
         for t, date in enumerate(dates):
 
             # save to nc files
             filename = 'SMAP_L4_{var_name}_{year}{month:02}{day:02}.nc'.format(
-              var_name=self.var_name, year=date.year, month=date.month, day=date.day)
+                var_name=self.var_name,
+                year=date.year,
+                month=date.month,
+                day=date.day)
 
             # judge already exist file
             if not os.path.exists(self.save_path + filename):
-                
 
                 # folder name
-                foldername = '{year}.{month:02}.{day:02}/'.format(year=date.year,
-                                                              month=date.month,
-                                                              day=date.day)
+                foldername = '{year}.{month:02}.{day:02}/'.format(
+                    year=date.year, month=date.month, day=date.day)
                 # file list in each folder
                 l = glob.glob(self.raw_data_path + foldername + 'SMAP*.h5',
-                          recursive=True)
+                              recursive=True)
 
-                assert len(l) == 8, '[HRSEPP][error]lack data of {}'.format(date)
+                assert len(l) == 8, '[HRSEPP][error]lack data of {}'.format(
+                    date)
 
                 # integrate from 3-hour to daily #NOTE:Only suite for SMAP
                 tmp = np.full((len(l), len(
-                     self.var_list), self.aux['Nlat'], self.aux['Nlon']), np.nan)
+                    self.var_list), self.aux['Nlat'], self.aux['Nlon']),
+                              np.nan)
 
                 for i, one_file_path in enumerate(l):
 
                     tmp[i, :, :, :], _, _ = self.raw_smap_reader(
-                         one_file_path, self.var_list)
+                        one_file_path, self.var_list)
 
                 data[t] = np.nanmean(tmp, axis=0)
 
                 nc_saver(save_path=self.save_path,
-                     X=np.nanmean(tmp, axis=0),
-                     var_name=self.var_name,
-                     date=date,
-                     lat_2d=self.aux['lat_2d'],
-                     lon_2d=self.aux['lon_2d'])
+                         X=np.nanmean(tmp, axis=0),
+                         var_name=self.var_name,
+                         date=date,
+                         lat_2d=self.aux['lat_2d'],
+                         lon_2d=self.aux['lon_2d'])
 
         return data
 
 
-class Preprocesser():
-    def __init__(self,
-                 X,
-                 save_path,
-                 auxiliary_path,
-                 begin_date,
-                 end_date,
-                 mode='train',
-                 save=True,
-                 var_name='SSM'):
-
-        # get shape
-        self.Nt, self.Nf, self.Nlat, self.Nlon = X.shape
-        self.begin_date = begin_date
-        self.end_date = end_date
-        self.auxiliary_path = auxiliary_path
-        with open(auxiliary_path + 'auxiliary.json', 'r') as f:
-            self.aux = json.load(f)
-        self.save_path = save_path
-        self.mode = mode
-        self.save = save
-        self.X = X
-        self.var_name = var_name
-
-    def __call__(self):
-        if self.mode == 'train':
-            X, min_scale, max_scale = self._train_preprocesser(self.X)
-            AuxManager().update(self.auxiliary_path, 'min_scale',
-                                min_scale.tolist())
-            AuxManager().update(self.auxiliary_path, 'max_scale',
-                                max_scale.tolist())
-
-        else:
-            X = self._test_preprocesser(self.X)
-
-        if self.save:
-            # get dates array according to begin/end dates
-            dates = TimeManager().get_date_array(self.begin_date,
-                                                 self.end_date)
-
-            for i, date in enumerate(dates):
-                nc_saver(self.save_path, 'p_' + self.var_name, date,
-                         self.aux['lon_2d'], self.aux['lat_2d'], X[i])
-
-        return X
-
-    def _train_preprocesser(self, inputs):
-
-        # interplot and scale for each feature on each grid
-        min_scale = np.full((self.Nf, self.Nlat, self.Nlon), np.nan)
-        max_scale = np.full((self.Nf, self.Nlat, self.Nlon), np.nan)
-
-        # interplot on time dimension.
-        for i in range(self.Nlat):
-            for j in range(self.Nlon):
-
-                try:
-                    # interplot
-                    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-                    inputs[:, :, i, j] = imp.fit_transform(inputs[:, :, i, j])
-
-                    # min max scaler
-                    scaler = MinMaxScaler()
-                    inputs[:, :, i, j] = scaler.fit_transform(inputs[:, :, i,
-                                                                     j])
-                    min_scale[:, i, j] = scaler.data_min_
-                    max_scale[:, i, j] = scaler.data_max_
-                except:  # all missing data along time dimension
-                    pass
-
-        # interplot on spatial dimension, in order to fill gaps of images.
-        for m in range(self.Nt):
-            for n in range(self.Nf):
-
-                # interplot
-                tmp = inputs[m, n, :, :]
-                tmp[np.isnan(tmp)] = np.nanmean(tmp)
-                inputs[m, n, :, :] = tmp
-
-        return inputs, min_scale, max_scale
-
-    def _test_preprocesser(self, inputs):
-
-        try:
-            min_scale = np.array(self.aux['min_scale'])
-            max_scale = np.array(self.aux['max_scale'])
-
-            # preprocess according normalized parameters
-            for i in range(self.Nlat):
-                for j in range(self.Nlon):
-
-                    # interplot
-                    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-
-                    inputs[:, :, i, j] = imp.fit_transform(inputs[:, :, i, j])
-
-                    # min max scaler
-                    for m in np.arange(self.Nf):
-                        inputs[:, m, i, j] = \
-                            (inputs[:, m, i, j]-min_scale[m, i, j]) / \
-                            (max_scale[m, i, j]-min_scale[m, i, j])
-
-            # interplot on spatial dimension, in order to fill gaps of images.
-            for m in range(self.Nt):
-                for n in range(self.Nf):
-
-                    # interplot
-                    tmp = inputs[m, n, :, :]
-                    tmp[np.isnan(tmp)] = np.nanmean(tmp)
-                    inputs[m, n, :, :] = tmp
-
-        except:
-            raise IOError('preprocess train data before preprocess test data!')
-
-        return inputs
-
 class XPreprocesser():
     def __init__(self,
                  X,
+                 ID,
                  save_path,
                  auxiliary_path,
                  begin_date,
@@ -233,9 +120,18 @@ class XPreprocesser():
         self.X = X
         self.var_name = var_name
 
-    def __call__(self, ID):
-        b = [0, 224, 448, 0, 224, 448]
-        a = [0, 0, 0, 224, 224, 224]
+        self.lat_id_low = self.aux['lat_low'][ID - 1]
+        self.lon_id_left = self.aux['lon_left'][ID - 1]
+
+        self.lon_id = np.array(
+            self.aux['lon_2d'])[self.lon_id_left:self.lon_id_left + 224,
+                                self.lat_id_low:self.lat_id_low + 224]
+        self.lat_id = np.array(
+            self.aux['lat_2d'])[self.lon_id_left:self.lon_id_left + 224,
+                                self.lat_id_low:self.lat_id_low + 224]
+
+    def __call__(self):
+
         if self.mode == 'train':
             #TODO:Add ID for min, max scale in aux dict.
             X, min_scale, max_scale = self._train_preprocesser(self.X)
@@ -254,8 +150,7 @@ class XPreprocesser():
 
             for i, date in enumerate(dates):
                 nc_saver(self.save_path, 'p_' + self.var_name, date,
-                         np.array(self.aux['lon_2d'])[a[ID-1]:a[ID-1]+224, b[ID-1]:b[ID-1]+224], 
-                         np.array(self.aux['lat_2d'])[a[ID-1]:a[ID-1]+224, b[ID-1]:b[ID-1]+224], X[i])
+                         self.lon_id, self.lat_id, X[i])
 
         return X
 
@@ -305,9 +200,11 @@ class XPreprocesser():
                 for j in range(inputs.shape[-1]):
                     try:
                         # interplot
-                        imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+                        imp = SimpleImputer(missing_values=np.nan,
+                                            strategy='mean')
                         print(inputs.shape)
-                        inputs[:, :, i, j] = imp.fit_transform(inputs[:, :, i, j])
+                        inputs[:, :, i, j] = imp.fit_transform(inputs[:, :, i,
+                                                                      j])
                     except:
                         pass
 
@@ -329,14 +226,13 @@ class XPreprocesser():
                 tmp[np.isnan(tmp)] = np.nanmean(tmp)
                 inputs[m, n, :, :] = tmp
 
-
-
         return inputs
 
 
 class yPreprocesser():
     def __init__(self,
                  y,
+                 ID,
                  save_path,
                  auxiliary_path,
                  begin_date,
@@ -357,10 +253,20 @@ class yPreprocesser():
         self.save = save
         self.y = y
         self.var_name = var_name
+        self.ID = ID
 
-    def __call__(self, ID):
-        b = [0, 224, 448, 0, 224, 448]
-        a = [0, 0, 0, 224, 224, 224]
+        self.lat_id_low = self.aux['lat_low'][ID - 1]
+        self.lon_id_left = self.aux['lon_left'][ID - 1]
+
+        self.lon_id = np.array(
+            self.aux['lon_2d'])[self.lon_id_left:self.lon_id_left + 224,
+                                self.lat_id_low:self.lat_id_low + 224]
+        self.lat_id = np.array(
+            self.aux['lat_2d'])[self.lon_id_left:self.lon_id_left + 224,
+                                self.lat_id_low:self.lat_id_low + 224]
+
+    def __call__(self):
+
         # interplot on time dimension.
         for i in range(self.y.shape[-2]):
             for j in range(self.y.shape[-1]):
@@ -385,11 +291,12 @@ class yPreprocesser():
         dates = TimeManager().get_date_array(self.begin_date, self.end_date)
 
         for i, date in enumerate(dates):
-            nc_saver(self.save_path, 'p_' + self.var_name, date,
-                     np.array(self.aux['lon_2d'])[a[ID-1]:a[ID-1]+224, b[ID-1]:b[ID-1]+224],
-                         np.array(self.aux['lat_2d'])[a[ID-1]:a[ID-1]+224, b[ID-1]:b[ID-1]+224],  self.y[i])
+            nc_saver(self.save_path, 'p_' + self.var_name, date, self.lon_id,
+                     self.lat_id, self.y[i])
 
         return self.y
+
+
 if __name__ == '__main__':
 
     AuxManager().init(raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
@@ -440,13 +347,3 @@ if __name__ == '__main__':
                                save=True)()
 
     print(data.shape)
-
-    data = Preprocesser(data,
-                        save_path='/hard/lilu/SMAP_L4/test/preprocess/',
-                        auxiliary_path='/hard/lilu/SMAP_L4/test/',
-                        begin_date='2015-05-31',
-                        end_date='2015-06-31',
-                        mode='train',
-                        save=True,
-                        var_name='forcing')()
-    print(np.isnan(data).any())
