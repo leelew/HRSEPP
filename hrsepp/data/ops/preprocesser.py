@@ -119,7 +119,7 @@ class XPreprocesser():
         self.save = save
         self.X = X
         self.var_name = var_name
-
+        self.ID = ID
         self.lat_id_low = self.aux['lat_low'][ID - 1]
         self.lon_id_left = self.aux['lon_left'][ID - 1]
 
@@ -149,7 +149,8 @@ class XPreprocesser():
                                                  self.end_date)
 
             for i, date in enumerate(dates):
-                nc_saver(self.save_path, 'p_' + self.var_name, date,
+                nc_saver(self.save_path,
+                         'p_' + self.var_name + '_{}'.format(self.ID), date,
                          self.lon_id, self.lat_id, X[i])
 
         return X
@@ -291,8 +292,9 @@ class yPreprocesser():
         dates = TimeManager().get_date_array(self.begin_date, self.end_date)
 
         for i, date in enumerate(dates):
-            nc_saver(self.save_path, 'p_' + self.var_name, date, self.lon_id,
-                     self.lat_id, self.y[i])
+            nc_saver(self.save_path,
+                     'p_' + self.var_name + '_{}'.format(self.ID), date,
+                     self.lon_id, self.lat_id, self.y[i])
 
         return self.y
 
