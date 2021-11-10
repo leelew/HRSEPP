@@ -158,26 +158,39 @@ class XPreprocesser():
     def _train_preprocesser(self, inputs):
 
         # interplot and scale for each feature on each grid
-        min_scale = np.full((self.Nf, self.Nlat, self.Nlon), np.nan)
-        max_scale = np.full((self.Nf, self.Nlat, self.Nlon), np.nan)
-
+        #min_scale = np.full((self.Nf, self.Nlat, self.Nlon), np.nan)
+        #max_scale = np.full((self.Nf, self.Nlat, self.Nlon), np.nan)
+        """
         # interplot on time dimension.
         for i in range(self.Nlat):
             for j in range(self.Nlon):
 
                 try:
-                    # interplot
+                    # interplot along time dimension
                     imp = SimpleImputer(missing_values=np.nan, strategy='mean')
                     inputs[:, :, i, j] = imp.fit_transform(inputs[:, :, i, j])
 
                     # min max scaler
+                    #FIXME:Change to MinMax for each channel.
+                    
                     scaler = MinMaxScaler()
                     inputs[:, :, i, j] = scaler.fit_transform(inputs[:, :, i,
                                                                      j])
                     min_scale[:, i, j] = scaler.data_min_
                     max_scale[:, i, j] = scaler.data_max_
+                    
                 except:  # all missing data along time dimension
                     pass
+        """
+        min_scale = np.full((self.Nf, ), np.nan)
+        max_scale = np.full((self.Nf, ), np.nan)
+
+        for i in range(self.Nf):
+            max_scale[i] = np.nanmax(inputs[:, i])
+            min_scale[i] = np.nanmax(inputs[:, i])
+
+            inputs[:, i] = (inputs[:, i] - min_scale[i]) / (max_scale[i] -
+                                                            min_scale[i])
 
         # interplot on spatial dimension, in order to fill gaps of images.
         for m in range(self.Nt):
@@ -196,6 +209,7 @@ class XPreprocesser():
             min_scale = np.array(self.aux['min_scale'])
             max_scale = np.array(self.aux['max_scale'])
             print(inputs.shape)
+            """
             # preprocess according normalized parameters
             for i in range(inputs.shape[-2]):
                 for j in range(inputs.shape[-1]):
@@ -208,12 +222,11 @@ class XPreprocesser():
                                                                       j])
                     except:
                         pass
-
-                    # min max scaler
-                    for m in np.arange(self.Nf):
-                        inputs[:, m, i, j] = \
-                            (inputs[:, m, i, j]-min_scale[m, i, j]) / \
-                            (max_scale[m, i, j]-min_scale[m, i, j])
+            """
+            # min max scaler
+            for m in np.arange(self.Nf):
+                inputs[:, m] = (inputs[:, m] - min_scale[m]) / (max_scale[m] -
+                                                                min_scale[m])
 
         except:
             raise IOError('preprocess train data before preprocess test data!')
@@ -267,17 +280,20 @@ class yPreprocesser():
                                 self.lat_id_low:self.lat_id_low + 224]
 
     def __call__(self):
-
+        """
         # interplot on time dimension.
         for i in range(self.y.shape[-2]):
             for j in range(self.y.shape[-1]):
 
                 try:
                     # interplot
-                    imp = SimpleImputer(missing_values=np.nan, strategy='constant', fill_value=0)
+                    imp = SimpleImputer(missing_values=np.nan,
+                                        strategy='constant',
+                                        fill_value=0)
                     self.y[:, :, i, j] = imp.fit_transform(self.y[:, :, i, j])
                 except:  # all missing data along time dimension
                     pass
+        """
 
         # interplot on spatial dimension, in order to fill gaps of images.
         for m in range(self.Nt):
