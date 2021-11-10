@@ -47,14 +47,15 @@ class DataGenerator():
         self.auxiliary_data_path = auxiliary_data_path
         self.save_x_path = save_x_path + mode + '/'
         self.save_y_path = save_y_path + mode + '/'
-        self.save_px_path = save_px_path + mode + '/' + str(ID) + '/'
-        self.save_py_path = save_py_path + mode + '/' + str(ID) + '/'
+        #FIXME:auto make dir if no corresponding folder
+        self.save_px_path = save_px_path + mode + '/' 
+        self.save_py_path = save_py_path + mode + '/'
 
         self.lat_lower = lat_lower
         self.lat_upper = lat_upper
         self.lon_left = lon_left
         self.lon_right = lon_right
-
+        self.ID = ID
         self.begin_date = begin_date
         self.end_date = end_date
 

@@ -23,9 +23,11 @@ from IO.train import train
 def main(id):
     """Main process for no backbone model."""
     config = parse_args
+    if not os.path.exists('/hard/lilu/x_train_{}.npy'.format(id)):
 
-    # make train, validate and test data
-    DataGenerator(ID=id,
+
+        # make train, validate and test data
+        DataGenerator(ID=id,
                   raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
                   auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
                   save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
@@ -37,7 +39,7 @@ def main(id):
                   lon_left=72.3,
                   lon_right=135,
                   begin_date='2015-05-31',
-                  end_date='2019-05-31',
+                  end_date='2020-05-31',
                   x_var_name='forcing',
                   x_var_list=[
                       'precipitation_total_surface_flux',
@@ -50,8 +52,8 @@ def main(id):
                   y_var_list=['sm_surface'],
                   mode='train',
                   save=True)()
-
-    DataGenerator(ID=id,
+        """
+        DataGenerator(ID=id,
                   raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
                   auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
                   save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
@@ -76,8 +78,8 @@ def main(id):
                   y_var_list=['sm_surface'],
                   mode='valid',
                   save=True)()
-
-    DataGenerator(ID=id,
+        """
+        DataGenerator(ID=id,
                   raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
                   auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
                   save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
@@ -89,7 +91,7 @@ def main(id):
                   lon_left=72.3,
                   lon_right=135,
                   begin_date='2020-05-31',
-                  end_date='2021-10-29',
+                  end_date='2021-10-28',
                   x_var_name='forcing',
                   x_var_list=[
                       'precipitation_total_surface_flux',
@@ -130,7 +132,7 @@ def main(id):
                                 window_size=2,
                                 use_lag_y=True,
                                 mode='valid')(x_test, y_test)
-
+ 
     # train
     with open('/hard/lilu/SMAP_L4/test/auxiliary.json') as f:
         aux = json.load(f)
@@ -138,16 +140,18 @@ def main(id):
     lat_id_low = aux['lat_low'][id - 1]
     lon_id_left = aux['lon_left'][id - 1]
 
-    mask = np.array(aux['mask'])[lon_id_left:lon_id_left + 224,
+    mask = np.squeeze(np.array(aux['mask']))[lon_id_left:lon_id_left + 224,
                                  lat_id_low:lat_id_low + 224]
 
     train(x_train,
           y_train,
           x_valid,
           y_valid,
+          x_test,
+          y_test,
           mask,
           ID=id,
-          input_shape=(224, 224, 8),
+          input_shape=(1, 224, 224, 8),
           learning_rate=0.001,
           n_filters_factor=1,
           filter_size=3,
@@ -155,12 +159,12 @@ def main(id):
           epochs=50,
           n_forecast_months=1,
           n_output_classes=1,
-          model_name='ed_convlstm',
+          model_name='convlstm',
           save_path='/hard/lilu/SMAP_L4/model/')
 
 
 if __name__ == '__main__':
-    main(mode='test')
+    main(id=1)
     """GPU setting module
     os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
     gpus = tf.config.experimental.list_physical_devices(device_type='GPU')

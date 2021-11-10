@@ -274,7 +274,7 @@ class yPreprocesser():
 
                 try:
                     # interplot
-                    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+                    imp = SimpleImputer(missing_values=np.nan, strategy='constant', fill_value=0)
                     self.y[:, :, i, j] = imp.fit_transform(self.y[:, :, i, j])
                 except:  # all missing data along time dimension
                     pass

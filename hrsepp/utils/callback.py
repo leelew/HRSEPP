@@ -6,17 +6,16 @@ from wandb.keras import WandbCallback
 
 
 class CallBacks():
-    callbacks = []
 
     def __init__(
             self,
             # Metric to monitor for model checkpointing
             mcMonitor='val_acc_mean',
-            mcMode='max',
+            mcMode='min',
             esPatience=10,
             # Metric to monitor for early stopping
-            esMonitor='val_acc_mean',
-            esMode='max',
+            esMonitor='val_loss',
+            esMode='min',
             network_path='/hard/lilu/Checkpoints/') -> None:
         self.mcMonitor = mcMonitor
         self.mcMode = mcMode
@@ -26,10 +25,10 @@ class CallBacks():
         self.network_path = network_path
 
     def __call__(self):
-
+        self.callbacks = []
         self.callbacks.append(
             ModelCheckpoint(self.network_path,
-                            monitor=self.mcMonitor,
+                            monitor='val_loss',
                             mode=self.mcMode,
                             verbose=1,
                             save_best_only=True))
@@ -53,6 +52,7 @@ class CallBacks():
                     start_epoch=3,  # Start reducing LR after 3 epochs
                     end_epoch=np.inf,
                 )))
+        return self.callbacks
 
     @staticmethod
     def make_exp_decay_lr_schedule(rate,

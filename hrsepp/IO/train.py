@@ -22,6 +22,8 @@ def train(x_train,
           y_train,
           x_valid,
           y_valid,
+          x_test,
+          y_test,
           mask,
           ID,
           input_shape,
@@ -35,7 +37,7 @@ def train(x_train,
           model_name,
           save_path,
           wanda_mode=False):
-
+    print('mask shape is {}'.format(mask.shape))
     # wandb setting
     default = dict(learning_rate=learning_rate,
                    n_filters_factor=n_filters_factor,
@@ -52,29 +54,55 @@ def train(x_train,
     #                    learning_rate=wandb.config.learning_rate,
     #                    filter_size=wandb.config.filter_size,
     #                    n_filters_factor=wandb.config.n_filters_factor)
-
-    model = unet9(input_shape=input_shape,
+    if model_name == 'convlstm':
+        model = convlstm1(input_shape=input_shape,
+                      mask=mask,                  
+                  learning_rate=wandb.config.learning_rate,
+                  filter_size=wandb.config.filter_size,
+                  n_filters_factor=wandb.config.n_filters_factor)
+    else:
+        model = unet9(input_shape=input_shape,
                   mask=mask,
                   learning_rate=wandb.config.learning_rate,
                   filter_size=wandb.config.filter_size,
                   n_filters_factor=wandb.config.n_filters_factor,
                   n_forecast_months=n_forecast_months,
                   n_output_classes=n_output_classes)
+    if model_name == 'cnn':
+       x_train = x_train[:, 0]
+       x_valid = x_valid[:, 0]
+       y_train = y_train[:, 0]
+       y_valid = y_valid[:, 0]
+       x_test = x_test[:, 0]
+    
+    np.save('/hard/lilu/y_train_obs_{}.npy'.format(ID), y_train)
+    np.save('/hard/lilu/y_valid_obs_{}.npy'.format(ID), y_valid)
+    np.save('/hard/lilu/y_test_obs_{}.npy'.format(ID), y_test)
+    np.save('/hard/lilu/x_train_obs_{}.npy'.format(ID), x_train)
+    np.save('/hard/lilu/x_valid_obs_{}.npy'.format(ID), x_valid)
+    np.save('/hard/lilu/x_test_obs_{}.npy'.format(ID), x_test)
+
 
     model.fit(x_train,
               y_train,
               batch_size=wandb.config.batch_size,
               epochs=wandb.config.epochs,
               callbacks=CallBacks()(),
-              validation_data=[x_valid, y_valid])
-
+              #validation_split=0.2)
+              validation_data=(x_valid, y_valid))
+    
     y_train_pred = model.predict(x_train)
     np.save('/hard/lilu/y_train_pred_{}'.format(ID), y_train_pred)
     del y_train_pred, x_train
 
-    y_test_pred = model.predict(x_valid)
+    y_valid_pred = model.predict(x_valid)
+    np.save('/hard/lilu/y_valid_pred_{}'.format(ID), y_valid_pred)
+    del x_valid, y_valid_pred
+
+    y_test_pred = model.predict(x_test)
     np.save('/hard/lilu/y_test_pred_{}'.format(ID), y_test_pred)
-    del x_valid, y_test_pred
+    del x_test, y_test_pred
+
 
     model.save(save_path)
 
