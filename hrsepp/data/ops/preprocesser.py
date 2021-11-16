@@ -124,11 +124,11 @@ class XPreprocesser():
         self.lon_id_left = self.aux['lon_left'][ID - 1]
 
         self.lon_id = np.array(
-            self.aux['lon_2d'])[self.lon_id_left:self.lon_id_left + 224,
-                                self.lat_id_low:self.lat_id_low + 224]
+            self.aux['lon_2d'])[self.lon_id_left:self.lon_id_left + 112,
+                                self.lat_id_low:self.lat_id_low + 112]
         self.lat_id = np.array(
-            self.aux['lat_2d'])[self.lon_id_left:self.lon_id_left + 224,
-                                self.lat_id_low:self.lat_id_low + 224]
+            self.aux['lat_2d'])[self.lon_id_left:self.lon_id_left + 112,
+                                self.lat_id_low:self.lat_id_low + 112]
 
     def __call__(self):
 
@@ -187,8 +187,9 @@ class XPreprocesser():
 
         for i in range(self.Nf):
             max_scale[i] = np.nanmax(inputs[:, i])
-            min_scale[i] = np.nanmax(inputs[:, i])
-
+            min_scale[i] = np.nanmin(inputs[:, i])
+            print(i)
+            print(max_scale[i], min_scale[i])
             inputs[:, i] = (inputs[:, i] - min_scale[i]) / (max_scale[i] -
                                                             min_scale[i])
 
@@ -273,11 +274,11 @@ class yPreprocesser():
         self.lon_id_left = self.aux['lon_left'][ID - 1]
 
         self.lon_id = np.array(
-            self.aux['lon_2d'])[self.lon_id_left:self.lon_id_left + 224,
-                                self.lat_id_low:self.lat_id_low + 224]
+            self.aux['lon_2d'])[self.lon_id_left:self.lon_id_left + 112,
+                                self.lat_id_low:self.lat_id_low + 112]
         self.lat_id = np.array(
-            self.aux['lat_2d'])[self.lon_id_left:self.lon_id_left + 224,
-                                self.lat_id_low:self.lat_id_low + 224]
+            self.aux['lat_2d'])[self.lon_id_left:self.lon_id_left + 112,
+                                self.lat_id_low:self.lat_id_low + 112]
 
     def __call__(self):
         """

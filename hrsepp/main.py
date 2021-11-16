@@ -52,7 +52,7 @@ def main(id):
                   y_var_list=['sm_surface'],
                   mode='train',
                   save=True)()
-        """
+        
         DataGenerator(ID=id,
                   raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
                   auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
@@ -78,7 +78,7 @@ def main(id):
                   y_var_list=['sm_surface'],
                   mode='valid',
                   save=True)()
-        """
+       
         DataGenerator(ID=id,
                   raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
                   auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
@@ -140,8 +140,8 @@ def main(id):
     lat_id_low = aux['lat_low'][id - 1]
     lon_id_left = aux['lon_left'][id - 1]
 
-    mask = np.squeeze(np.array(aux['mask']))[lon_id_left:lon_id_left + 224,
-                                 lat_id_low:lat_id_low + 224]
+    mask = np.squeeze(np.array(aux['mask']))[lon_id_left:lon_id_left + 112,
+                                 lat_id_low:lat_id_low + 112]
 
     train(x_train,
           y_train,
@@ -151,11 +151,11 @@ def main(id):
           y_test,
           mask,
           ID=id,
-          input_shape=(1, 224, 224, 8),
-          learning_rate=0.001,
-          n_filters_factor=1,
-          filter_size=3,
-          batch_size=16,
+          input_shape=(1, 112, 112, 8),
+          learning_rate=0.006051,
+          n_filters_factor=1.051,
+          filter_size=5,
+          batch_size=2,
           epochs=50,
           n_forecast_months=1,
           n_output_classes=1,

@@ -82,14 +82,15 @@ def train(x_train,
     np.save('/hard/lilu/x_valid_obs_{}.npy'.format(ID), x_valid)
     np.save('/hard/lilu/x_test_obs_{}.npy'.format(ID), x_test)
 
+    from IO.mixup import augment
 
-    model.fit(x_train,
-              y_train,
-              batch_size=wandb.config.batch_size,
+    train_ds, val_ds = augment(x_train, y_train, x_valid, y_valid, BATCH_SIZE=wandb.config.batch_size)
+    model.fit(train_ds,
+              #batch_size=wandb.config.batch_size,
               epochs=wandb.config.epochs,
               callbacks=CallBacks()(),
               #validation_split=0.2)
-              validation_data=(x_valid, y_valid))
+              validation_data=val_ds)
     
     y_train_pred = model.predict(x_train)
     np.save('/hard/lilu/y_train_pred_{}'.format(ID), y_train_pred)

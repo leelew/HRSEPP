@@ -1,4 +1,4 @@
-program: train.py
+program: main.py
 project: HRSEPP
 name: bayes_sweep
 method: bayes
@@ -18,7 +18,7 @@ parameters:
     max: 0.693
   batch_size:
     distribution: categorical
-    values: [1, 2, 4]
+    values: [2, 4]
   filter_size:
     distribution: categorical
     values: [3, 5]

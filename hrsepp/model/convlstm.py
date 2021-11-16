@@ -2,13 +2,12 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import (BatchNormalization, Conv2D, ConvLSTM2D,
                                      Dense, Input, MaxPooling2D, UpSampling2D,
-                                     concatenate, Lambda)
+                                     Dropout, concatenate, Reshape,Lambda, ReLU, GlobalAveragePooling2D, multiply)
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
-from tensorflow.python.keras.layers.core import Dense
 from tensorflow.keras import backend
 from utils.loss import MaskMSELoss, MaskSSIMLoss
-
+from model.saconvlstm import SaConvLSTM2D
 
 def ed_convlstm(input_shape,
                 len_output,
@@ -21,11 +20,11 @@ def ed_convlstm(input_shape,
     c = ConvLSTM2D(np.int(16 * n_filters_factor),
                    filter_size,
                    return_sequences=False,
-                   activation='relu',
+                   #activation='relu',
                    padding='same',
                    kernel_initializer='he_normal')(inputs)
     c = BatchNormalization(axis=-1)(c)
-
+    c = ReLU(c)
     c = Lambda(lambda x: backend.concatenate([x[:, np.newaxis]] * len_output,
                                              axis=1))(c)
 
@@ -43,22 +42,65 @@ def ed_convlstm(input_shape,
     model.summary()
     return model
 
+
+class se_5d(tf.keras.layers.Layer):
+    def __init__(self, input_shape):
+        super().__init__()
+        self.dense1 = Dense(input_shape[-1]//8)
+                   #activation='relu',
+                   #kernel_initializer='he_normal',
+                   #use_bias=True,
+                   #bias_initializer='zeros')
+        self.dense2 = Dense(input_shape[-1])
+                   #activation='relu',
+                   #kernel_initializer='he_normal',
+                   #use_bias=True,
+                   #bias_initializer='zeros')
+
+        self.gap = GlobalAveragePooling2D()#(keepdims=True)
+    def call(self, inputs, input_shape):
+        t, lat, lon, c = input_shape
+        print((t, lat, lon, c))
+        a = Reshape((lat, lon, c*t))(inputs)
+        print(a.shape)
+        se = self.gap(a) # tf version > 2.6.0
+        se = Reshape((1,1, c*t))(se)
+        print(se.shape)
+        se = self.dense1(se)
+        print(se.shape)
+        se = self.dense2(se)
+        print(se.shape)
+        a = multiply([a, se])
+        print(a.shape)
+        inputs = Reshape((t, lat, lon, c))(a)
+
+        return inputs
+
+
 def convlstm1(input_shape,
               mask,
               learning_rate=1e-4,
               filter_size=3,
               n_filters_factor=1):
     inputs = Input(shape=input_shape)
+    #c1 = BatchNormalization(axis=-1)(inputs)
+    #c1 = Dropout(0.05)(c1)
+    #x = se_5d(input_shape)(inputs, input_shape)
 
+    #x = Dense(2)(inputs)
+    #x = Dense(input_shape[-1])(x)
+    x = inputs
     c1 = ConvLSTM2D(np.int(16 * n_filters_factor),
                     filter_size,
                     return_sequences=True,
-                    activation='relu',
+                    #activation='relu',
+                    #activation='linear', adopt 'tanh'.
                     padding='same',
-                    kernel_initializer='he_normal')(inputs)
+                    #use_bias=False, # remove bias before BN could increase perform
+                    kernel_initializer='he_normal')(x)
     bn1 = BatchNormalization(axis=-1)(c1)
-
-    out = Dense(1, activation=None)(bn1)
+    bn1 = tf.nn.relu(bn1) # BN before ReLU. advised by Jinjing Pan according to ResNet setting.
+    out = Dense(1, activation=None)(c1)
 
     model = Model(inputs, out)
 

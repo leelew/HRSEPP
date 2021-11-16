@@ -120,8 +120,8 @@ class DataGenerator():
                      var_name=self.x_var_name,
                      begin_date=self.begin_date,
                      end_date=self.end_date)()[:, :,
-                                               lat_id_low:lat_id_low + 224,
-                                               lon_id_left:lon_id_left + 224]
+                                               lat_id_low:lat_id_low + 112,
+                                               lon_id_left:lon_id_left + 112]
 
         # preprocess forcing
         X = XPreprocesser(X,
@@ -142,8 +142,8 @@ class DataGenerator():
                      var_name=self.y_var_name,
                      begin_date=self.begin_date,
                      end_date=self.end_date)()[:, :,
-                                               lat_id_low:lat_id_low + 224,
-                                               lon_id_left:lon_id_left + 224]
+                                               lat_id_low:lat_id_low + 112,
+                                               lon_id_left:lon_id_left + 112]
 
         y = yPreprocesser(y,
                           ID=self.ID,
