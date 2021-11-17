@@ -7,7 +7,7 @@ import json
 import numpy as np
 import tensorflow as tf
 from data.data_loader import DataLoader
-from model.convlstm import convlstm1, convlstm3, ed_convlstm
+from model.convlstm import convlstm1, convlstm3, ed_convlstm, seq2seq_convlstm
 from model.unet import unet5, unet9
 from sklearn.metrics import r2_score
 from tensorflow.keras import backend as K
@@ -56,25 +56,34 @@ def train(x_train,
     #                    n_filters_factor=wandb.config.n_filters_factor)
     if model_name == 'convlstm':
         model = convlstm1(input_shape=input_shape,
-                      mask=mask,                  
-                  learning_rate=wandb.config.learning_rate,
-                  filter_size=wandb.config.filter_size,
-                  n_filters_factor=wandb.config.n_filters_factor)
+                          mask=mask,
+                          learning_rate=wandb.config.learning_rate,
+                          filter_size=wandb.config.filter_size,
+                          n_filters_factor=wandb.config.n_filters_factor)
+    elif model_name == 'seq2seq':
+        model = seq2seq_convlstm(
+            input_shape=input_shape,
+            len_output=7,
+            mask=mask,
+            learning_rate=wandb.config.learning_rate,
+            filter_size=wandb.config.filter_size,
+            n_filters_factor=wandb.config.n_filters_factor)
     else:
         model = unet9(input_shape=input_shape,
-                  mask=mask,
-                  learning_rate=wandb.config.learning_rate,
-                  filter_size=wandb.config.filter_size,
-                  n_filters_factor=wandb.config.n_filters_factor,
-                  n_forecast_months=n_forecast_months,
-                  n_output_classes=n_output_classes)
+                      mask=mask,
+                      learning_rate=wandb.config.learning_rate,
+                      filter_size=wandb.config.filter_size,
+                      n_filters_factor=wandb.config.n_filters_factor,
+                      n_forecast_months=n_forecast_months,
+                      n_output_classes=n_output_classes)
+
     if model_name == 'cnn':
-       x_train = x_train[:, 0]
-       x_valid = x_valid[:, 0]
-       y_train = y_train[:, 0]
-       y_valid = y_valid[:, 0]
-       x_test = x_test[:, 0]
-    
+        x_train = x_train[:, 0]
+        x_valid = x_valid[:, 0]
+        y_train = y_train[:, 0]
+        y_valid = y_valid[:, 0]
+        x_test = x_test[:, 0]
+
     np.save('/hard/lilu/y_train_obs_{}.npy'.format(ID), y_train)
     np.save('/hard/lilu/y_valid_obs_{}.npy'.format(ID), y_valid)
     np.save('/hard/lilu/y_test_obs_{}.npy'.format(ID), y_test)
@@ -84,14 +93,19 @@ def train(x_train,
 
     from IO.mixup import augment
 
-    train_ds, val_ds = augment(x_train, y_train, x_valid, y_valid, BATCH_SIZE=wandb.config.batch_size)
-    model.fit(train_ds,
-              #batch_size=wandb.config.batch_size,
-              epochs=wandb.config.epochs,
-              callbacks=CallBacks()(),
-              #validation_split=0.2)
-              validation_data=val_ds)
-    
+    train_ds, val_ds = augment(x_train,
+                               y_train,
+                               x_valid,
+                               y_valid,
+                               BATCH_SIZE=wandb.config.batch_size)
+    model.fit(
+        train_ds,
+        #batch_size=wandb.config.batch_size,
+        epochs=wandb.config.epochs,
+        callbacks=CallBacks()(),
+        #validation_split=0.2)
+        validation_data=val_ds)
+
     y_train_pred = model.predict(x_train)
     np.save('/hard/lilu/y_train_pred_{}'.format(ID), y_train_pred)
     del y_train_pred, x_train
@@ -103,7 +117,6 @@ def train(x_train,
     y_test_pred = model.predict(x_test)
     np.save('/hard/lilu/y_test_pred_{}'.format(ID), y_test_pred)
     del x_test, y_test_pred
-
 
     model.save(save_path)
 

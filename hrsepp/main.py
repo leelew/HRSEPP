@@ -25,85 +25,84 @@ def main(id):
     config = parse_args
     if not os.path.exists('/hard/lilu/x_train_{}.npy'.format(id)):
 
-
         # make train, validate and test data
         DataGenerator(ID=id,
-                  raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
-                  auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
-                  save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
-                  save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
-                  save_px_path='/hard/lilu/SMAP_L4/test/px/',
-                  save_py_path='/hard/lilu/SMAP_L4/test/py/',
-                  lat_lower=14.7,
-                  lat_upper=53.5,
-                  lon_left=72.3,
-                  lon_right=135,
-                  begin_date='2015-05-31',
-                  end_date='2020-05-31',
-                  x_var_name='forcing',
-                  x_var_list=[
-                      'precipitation_total_surface_flux',
-                      'radiation_longwave_absorbed_flux',
-                      'radiation_shortwave_downward_flux',
-                      'specific_humidity_lowatmmodlay', 'surface_pressure',
-                      'surface_temp', 'windspeed_lowatmmodlay'
-                  ],
-                  y_var_name='SSM',
-                  y_var_list=['sm_surface'],
-                  mode='train',
-                  save=True)()
-        
+                      raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+                      auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
+                      save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
+                      save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
+                      save_px_path='/hard/lilu/SMAP_L4/test/px/',
+                      save_py_path='/hard/lilu/SMAP_L4/test/py/',
+                      lat_lower=14.7,
+                      lat_upper=53.5,
+                      lon_left=72.3,
+                      lon_right=135,
+                      begin_date='2015-05-31',
+                      end_date='2020-05-31',
+                      x_var_name='forcing',
+                      x_var_list=[
+                          'precipitation_total_surface_flux',
+                          'radiation_longwave_absorbed_flux',
+                          'radiation_shortwave_downward_flux',
+                          'specific_humidity_lowatmmodlay', 'surface_pressure',
+                          'surface_temp', 'windspeed_lowatmmodlay'
+                      ],
+                      y_var_name='SSM',
+                      y_var_list=['sm_surface'],
+                      mode='train',
+                      save=True)()
+
         DataGenerator(ID=id,
-                  raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
-                  auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
-                  save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
-                  save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
-                  save_px_path='/hard/lilu/SMAP_L4/test/px/',
-                  save_py_path='/hard/lilu/SMAP_L4/test/py/',
-                  lat_lower=14.7,
-                  lat_upper=53.5,
-                  lon_left=72.3,
-                  lon_right=135,
-                  begin_date='2019-05-31',
-                  end_date='2020-05-31',
-                  x_var_name='forcing',
-                  x_var_list=[
-                      'precipitation_total_surface_flux',
-                      'radiation_longwave_absorbed_flux',
-                      'radiation_shortwave_downward_flux',
-                      'specific_humidity_lowatmmodlay', 'surface_pressure',
-                      'surface_temp', 'windspeed_lowatmmodlay'
-                  ],
-                  y_var_name='SSM',
-                  y_var_list=['sm_surface'],
-                  mode='valid',
-                  save=True)()
-       
+                      raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+                      auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
+                      save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
+                      save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
+                      save_px_path='/hard/lilu/SMAP_L4/test/px/',
+                      save_py_path='/hard/lilu/SMAP_L4/test/py/',
+                      lat_lower=14.7,
+                      lat_upper=53.5,
+                      lon_left=72.3,
+                      lon_right=135,
+                      begin_date='2019-05-31',
+                      end_date='2020-05-31',
+                      x_var_name='forcing',
+                      x_var_list=[
+                          'precipitation_total_surface_flux',
+                          'radiation_longwave_absorbed_flux',
+                          'radiation_shortwave_downward_flux',
+                          'specific_humidity_lowatmmodlay', 'surface_pressure',
+                          'surface_temp', 'windspeed_lowatmmodlay'
+                      ],
+                      y_var_name='SSM',
+                      y_var_list=['sm_surface'],
+                      mode='valid',
+                      save=True)()
+
         DataGenerator(ID=id,
-                  raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
-                  auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
-                  save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
-                  save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
-                  save_px_path='/hard/lilu/SMAP_L4/test/px/',
-                  save_py_path='/hard/lilu/SMAP_L4/test/py/',
-                  lat_lower=14.7,
-                  lat_upper=53.5,
-                  lon_left=72.3,
-                  lon_right=135,
-                  begin_date='2020-05-31',
-                  end_date='2021-10-28',
-                  x_var_name='forcing',
-                  x_var_list=[
-                      'precipitation_total_surface_flux',
-                      'radiation_longwave_absorbed_flux',
-                      'radiation_shortwave_downward_flux',
-                      'specific_humidity_lowatmmodlay', 'surface_pressure',
-                      'surface_temp', 'windspeed_lowatmmodlay'
-                  ],
-                  y_var_name='SSM',
-                  y_var_list=['sm_surface'],
-                  mode='test',
-                  save=True)()
+                      raw_data_path='/hard/lilu/SMAP_L4/SMAP_L4/',
+                      auxiliary_data_path='/hard/lilu/SMAP_L4/test/',
+                      save_x_path='/hard/lilu/SMAP_L4/test/forcing/',
+                      save_y_path='/hard/lilu/SMAP_L4/test/SSM/',
+                      save_px_path='/hard/lilu/SMAP_L4/test/px/',
+                      save_py_path='/hard/lilu/SMAP_L4/test/py/',
+                      lat_lower=14.7,
+                      lat_upper=53.5,
+                      lon_left=72.3,
+                      lon_right=135,
+                      begin_date='2020-05-31',
+                      end_date='2021-10-28',
+                      x_var_name='forcing',
+                      x_var_list=[
+                          'precipitation_total_surface_flux',
+                          'radiation_longwave_absorbed_flux',
+                          'radiation_shortwave_downward_flux',
+                          'specific_humidity_lowatmmodlay', 'surface_pressure',
+                          'surface_temp', 'windspeed_lowatmmodlay'
+                      ],
+                      y_var_name='SSM',
+                      y_var_list=['sm_surface'],
+                      mode='test',
+                      save=True)()
 
     # make inputs shape as [(s, t_in, lat, lon, f), (s, t_out, lat, lon, 1)]
     x_train = np.load('/hard/lilu/x_train_{}.npy'.format(id))
@@ -116,23 +115,23 @@ def main(id):
     y_test = np.load('/hard/lilu/y_test_{}.npy'.format(id))
 
     x_train, y_train = DataLoader(len_input=1,
-                                  len_output=1,
-                                  window_size=2,
+                                  len_output=7,
+                                  window_size=0,
                                   use_lag_y=True,
                                   mode='train')(x_train, y_train)
 
     x_valid, y_valid = DataLoader(len_input=1,
-                                  len_output=1,
-                                  window_size=2,
+                                  len_output=7,
+                                  window_size=0,
                                   use_lag_y=True,
                                   mode='valid')(x_valid, y_valid)
 
     x_test, y_test = DataLoader(len_input=1,
-                                len_output=1,
-                                window_size=2,
+                                len_output=7,
+                                window_size=0,
                                 use_lag_y=True,
                                 mode='valid')(x_test, y_test)
- 
+
     # train
     with open('/hard/lilu/SMAP_L4/test/auxiliary.json') as f:
         aux = json.load(f)
@@ -141,7 +140,7 @@ def main(id):
     lon_id_left = aux['lon_left'][id - 1]
 
     mask = np.squeeze(np.array(aux['mask']))[lon_id_left:lon_id_left + 112,
-                                 lat_id_low:lat_id_low + 112]
+                                             lat_id_low:lat_id_low + 112]
 
     train(x_train,
           y_train,
