@@ -10,6 +10,7 @@ from data.ops.init import AuxManager
 from data.ops.preprocesser import (RawSMAPPreprocesser, XPreprocesser,
                                    yPreprocesser)
 from data.ops.readers import NCReader
+from data.ops.time import TimeManager
 
 
 class DataGenerator():
@@ -48,7 +49,7 @@ class DataGenerator():
         self.save_x_path = save_x_path + mode + '/'
         self.save_y_path = save_y_path + mode + '/'
         #FIXME:auto make dir if no corresponding folder
-        self.save_px_path = save_px_path + mode + '/' 
+        self.save_px_path = save_px_path + mode + '/'
         self.save_py_path = save_py_path + mode + '/'
 
         self.lat_lower = lat_lower
@@ -154,6 +155,28 @@ class DataGenerator():
                           mode=self.mode,
                           save=self.save,
                           var_name=self.y_var_name)()
+
+        # get jd index
+        jd_idx = TimeManager().jd(self.begin_date, self.end_date)
+
+        #
+        a = np.full((366, 1, 112, 112, 5), np.nan)
+        for i in range(366):  # for a year
+            idx = jd_idx == i
+            tmp = y[idx]
+
+            tmp_vec = np.concatenate([
+                np.nanmean(tmp, axis=0),
+                np.nanstd(tmp, axis=0),
+                np.nanmax(tmp, axis=0),
+                np.nanmin(tmp, axis=0),
+                np.nanmedian(tmp, axis=0)
+            ],
+                                     axis=-1)
+
+            a[i] = tmp_vec
+
+        np.save('/hard/lilu/z_{}_{}.npy'.format(self.mode, self.ID), a)
 
         #
         np.save('/hard/lilu/y_{}_{}.npy'.format(self.mode, self.ID), y)

@@ -1,14 +1,30 @@
-import tensorflow as tf
-from tensorflow.keras import layers, Model
+# ==============================================================================
+# ConvLSTM in seq2seq mode
+#
+# (1) simple:
+# (2) teacher forcing:
+#
+# author: Lu Li
+# email: lilu83@mail.sysu.edu.cn
+# ==============================================================================
+
 import numpy as np
+import tensorflow as tf
+from tensorflow.keras import Model, layers
 from tensorflow.python.keras.layers.convolutional_recurrent import ConvLSTM2DCell
 
 
-class SimpleSeq2seqConvLSTM(layers):
-    def __init__(self, n_filters_factor, filter_size, dec_len, *args,
+class Seq2seqConvLSTM(layers):
+    def __init__(self,
+                 n_filters_factor,
+                 filter_size,
+                 dec_len,
+                 train_mode=None,
+                 *args,
                  **kwargs):
         super().__init__(*args, **kwargs)
         self.dec_len = dec_len
+        self.train_mode = None
 
         # encode convlstm
         self.enc_convlstm = layers.ConvLSTM2D(np.int(16 * n_filters_factor),
@@ -33,9 +49,16 @@ class SimpleSeq2seqConvLSTM(layers):
                                                 padding='same',
                                                 kernel_initializer='he_normal')
 
-    def call(self, x_encoder, training=None, mask=None):
+    def call(self, x_encoder, x_decoder=None, training=None, mask=None):
+
         enc_out, state = self.encoder(x_encoder=x_encoder)
-        dec_out = self.decoder(enc_out[:, -1], initial_state=state)
+
+        if self.train_mode == 'teacher':
+            if x_decoder:
+                raise KeyError('teacher forcing training needs decoder inputs')
+            dec_out = self.decoder(x_decoder, initial_state=state)
+        else:
+            dec_out = self.decoder(enc_out[:, -1], initial_state=state)
         return dec_out
 
     def encoder(self, x_encoder):
