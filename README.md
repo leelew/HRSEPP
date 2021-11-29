@@ -1,2 +1,2 @@
 # HRSEPP
-High Resolution Soil Environmentt Prediction Platform
+High Resolution Soil Environment Prediction Platform
