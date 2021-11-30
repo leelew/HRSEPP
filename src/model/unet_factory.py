@@ -3,9 +3,6 @@ import tensorflow as tf
 from tensorflow.keras.layers import (BatchNormalization, Conv2D, Input,
                                      MaxPooling2D, UpSampling2D, concatenate)
 from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import Adam
-
-from utils.loss import MaskMSELoss, MaskSSIMLoss
 
 
 def unet5(input_shape,

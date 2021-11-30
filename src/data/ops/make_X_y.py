@@ -11,14 +11,11 @@ import numpy as np
 def make_Xy(
         inputs,  #(t, f, lat, lon)
         outputs,
-        z,
         len_input,
         len_output,
         window_size,
         use_lag_y=True):
-    print(inputs.shape)
-    print(outputs.shape)
-    if use_lag_y:
+    if use_lag_y and outputs is not None:
         inputs = np.concatenate([inputs, outputs], axis=1)
     Nt, Nf, Nlat, Nlon = inputs.shape
     """Generate inputs and outputs for LSTM."""
@@ -34,23 +31,22 @@ def make_Xy(
     # generate inputs
     input_batch_idx = [(range(i, i + len_input)) for i in batch_start_idx]
     inputs = np.take(inputs, input_batch_idx,
-                     axis=0).reshape(batch_size, len_input, Nf, Nlat, Nlon)
-    # 判断两种reshape方式的输入的区别？看看是不是有明显区别。没有的话看只预报一天的结果。
-
-    # generate outputs
-    output_batch_idx = [(range(i + len_input + window_size,
-                               i + len_input + window_size + len_output))
-                        for i in batch_start_idx]
-    outputs = np.take(outputs, output_batch_idx, axis=0). \
-        reshape(batch_size,  len_output,  1, Nlat, Nlon)
-
-
-    # generate outputs
-    z = np.take(z, output_batch_idx, axis=0). \
-        reshape(batch_size,  len_output,  z.shape[-1], Nlat, Nlon)
+                    axis=0).reshape(batch_size, len_input, Nf, Nlat, Nlon)
 
     inputs = np.transpose(inputs, [0, 1, 3, 4, 2])
-    outputs = np.transpose(outputs, [0, 1, 3, 4, 2])
-    z = np.transpose(z,[0,1,3,4,2])
-    return inputs, outputs, z
+
+    # 判断两种reshape方式的输入的区别？看看是不是有明显区别。没有的话看只预报一天的结果。
+    if outputs is not None:
+
+        # generate outputs
+        output_batch_idx = [(range(i + len_input + window_size,
+                                i + len_input + window_size + len_output))
+                            for i in batch_start_idx]
+        outputs = np.take(outputs, output_batch_idx, axis=0). \
+            reshape(batch_size,  len_output,  1, Nlat, Nlon)
+        outputs = np.transpose(outputs, [0, 1, 3, 4, 2])
+
+    else:
+        outputs=None
+    return inputs, outputs
 

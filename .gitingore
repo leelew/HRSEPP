@@ -8,3 +8,5 @@ test/*
 *npy
 *nc
 *pickle
+.gitingore
+*wandb

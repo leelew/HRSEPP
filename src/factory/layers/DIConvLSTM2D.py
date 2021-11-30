@@ -33,8 +33,6 @@ class DIConvLSTM(layers.Layer):
         h0 = tf.zeros_like(inputs[:,0])
         h = tf.tile(h0, [1, 1, 1, self.filters])
         c = tf.tile(h0, [1, 1, 1, self.filters])
-        print(h.shape)
-        print(c.shape)
 
         h_all = []
         for i in range(self.t):   
@@ -45,8 +43,12 @@ class DIConvLSTM(layers.Layer):
                 #FIXME: Don't know how to replace NaN with predict 
                 #       value in tensorflow. Thus use mean value for 
                 #       obs and predict images.
-                m = tf.stack([x, out], axis=0)
-                x = tf.experimental.numpy.nanmean(m, axis=0)
+                #m = tf.stack([x, out], axis=0)
+                #x = tf.experimental.numpy.nanmean(m, axis=0)
+
+                a = tf.convert_to_tensor(x)
+                b = tf.convert_to_tensor(out)
+                x = tf.where(tf.math.is_nan(a), b, a)
                 #mask = tf.where(tf.math.is_nan(x))
                 #mask = x == x
                 #print(mask)
@@ -54,9 +56,7 @@ class DIConvLSTM(layers.Layer):
                 #x[mask] = a[mask]
 
             out, [h, c] = self.convlstm[i](x, [h, c])
-            print(out.shape)
             out = self.dense(out)
-            print(out.shape)
             h_all.append(h)
         
         return tf.stack(h_all, axis=1)
@@ -64,7 +64,27 @@ class DIConvLSTM(layers.Layer):
 
 if __name__ == '__main__':
 
-    x = Input((7, 112, 112, 1))
-    out = DIConvLSTM(16, 3)(x)
-    mdl = Model(x, out)
+    # inputs 
+    in_l3 = Input(shape=(7, 112, 112, 1))
+    in_l4 = Input(shape=(7, 112, 112, 8))
+    
+    # preprocess l3
+    out_l3 = DIConvLSTM(filters=8, kernel_size=5)(in_l3)
+    out_l3 = tf.keras.layers.BatchNormalization()(out_l3)
+    out_l3 = tf.keras.layers.ReLU()(out_l3)
+    print(out_l3.shape)
+
+    # preprocess l4
+    out_l4 = tf.keras.layers.ConvLSTM2D(8, 5, 
+                        return_sequences=True, 
+                        padding='same', 
+                        kernel_initializer='he_normal')(in_l4)
+    out_l4 = tf.keras.layers.BatchNormalization()(out_l4)
+    out_l4 = tf.keras.layers.ReLU()(out_l4)
+    print(out_l4.shape)
+
+    out = tf.keras.layers.Add()([out_l3, out_l4, in_l4])
+    out = tf.keras.layers.Dense(1)(out)
+
+    mdl = Model([in_l3, in_l4], out)
     mdl.summary()

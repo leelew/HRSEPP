@@ -7,11 +7,11 @@ import json
 import numpy as np
 
 from data.ops.init import AuxManager
+from data.ops.make_X_y import make_Xy
 from data.ops.preprocesser import (RawSMAPPreprocesser, XPreprocesser,
                                    yPreprocesser)
 from data.ops.readers import NCReader
 from data.ops.time import TimeManager
-from data.ops.make_X_y import make_Xy
 
 
 # generate train/valid/test data for each subregion
@@ -137,7 +137,7 @@ class DataGenerator():
                           save=self.save,
                           var_name=self.x_var_name)()
 
-        np.save('/hard/lilu/x_{}_{}.npy'.format(self.mode, self.ID), X)
+        np.save('/hard/lilu/inputs/SMAP_L4/X_{}_l4_{}.npy'.format(self.mode, self.ID), X)
 
         y = NCReader(path=self.save_y_path,
                      aux=aux,
@@ -179,16 +179,17 @@ class DataGenerator():
                                          axis=-1)
 
                 a[i-1] = tmp_vec
-            np.save('/hard/lilu/z_{}.npy'.format(self.ID), a)
-        a = np.load('/hard/lilu/z_{}.npy'.format(self.ID))
+            np.save('/hard/lilu/inputs/SMAP_L4/z_{}.npy'.format(self.ID), a)
+        a = np.load('/hard/lilu/inputs/SMAP_L4/z_{}.npy'.format(self.ID))
         m = a[jd_idx-1]
         print(m.shape)
-        np.save('/hard/lilu/z_{}_{}.npy'.format(self.mode, self.ID), m)
+        np.save('/hard/lilu/inputs/SMAP_L4/z_{}_{}.npy'.format(self.mode, self.ID), m)
 
         #
-        np.save('/hard/lilu/y_{}_{}.npy'.format(self.mode, self.ID), y)
+        np.save('/hard/lilu/inputs/SMAP_L4/y_{}_l4_{}.npy'.format(self.mode, self.ID), y)
 
         return X, y
+
 
 
 class DataLoader():
@@ -205,14 +206,27 @@ class DataLoader():
         self.window_size = window_size
         self.use_lag_y = use_lag_y
 
-    def __call__(self, X, y, z=None):
+    def __call__(self, X, y):
+        """[summary]
+
+        Args:
+            X ([type]): (samples, timestep, height, width, features)
+            y ([type]): (samples, timestep, height, width, 1)
+            z ([type], optional): [description]. Defaults to None.
+
+        Returns:
+            [type]: [description]
+        """
         # generate inputs
-        X, y, z = make_Xy(X, y, z,self.len_input, self.len_output, self.window_size,
-                       self.use_lag_y)
-
-        #TODO:Add choice for different case
-
-        return X, y, z
+        for i in range(len(X)):
+            _x, _y = make_Xy(X[i], y[i],
+                             self.len_input, 
+                             self.len_output, 
+                             self.window_size,
+                             self.use_lag_y)
+            X[i], y[i] = _x, _y
+            print(_x.shape)
+        return X, y
 
 if __name__ == '__main__':
 
@@ -265,3 +279,8 @@ if __name__ == '__main__':
                   y_var_list=['sm_surface'],
                   mode='test',
                   save=True)(ID=2)
+
+
+# 获取3天前-13天前的起止日期。
+#    begin_date = date - datetime.timedelta(days = 12)
+#    end_date = date - datetime.timedelta(days = 3)  
