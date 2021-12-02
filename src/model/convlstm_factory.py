@@ -44,9 +44,9 @@ def SMNet():
     out = tf.keras.layers.Add()([out_l3, out_l4, in_l4])
 
     states = ConvLSTM2D(16, 3, padding='same', return_sequences=True)(out)
-    states = tf.keras.layers.Permute((4, 2, 3, 1))(states)
+    states = tf.transpose(states, [0, 4, 2, 3, 1])
     states = Dense(1)(states)
-    states = tf.keras.layers.Permute((4, 2, 3, 1))(states)
+    states = tf.transpose(states, [0, 4, 2, 3, 1])
 
     out = Lambda(lambda x: backend.concatenate([x] * 7, axis=1))(states)
     out = ConvLSTM2D(16, 3, padding='same', return_sequences=True)(out)

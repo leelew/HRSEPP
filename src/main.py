@@ -14,6 +14,7 @@ import numpy as np
 import tensorflow as tf
 
 from config import parse_args
+from tensorflow.python.keras.layers.core import Flatten
 from data.data_generator import DataGenerator, DataLoader
 from trainer import train
 
@@ -140,7 +141,7 @@ def main(id):
     print(len(X_l4))
     print(len(y))
 
-
+    """
     if config.do_transfer_learning:
         #load era5
         x_train = np.load('/hard/lilu/inputs/ERA5/X_train_era5_{}.npy'.format(id))
@@ -154,7 +155,7 @@ def main(id):
         X, y = X[0], y[0]
 
         # pretrain model
-        
+    """ 
 
 
 
@@ -163,12 +164,13 @@ def main(id):
     train(X_l3, X_l4, y,
           land_mask,
           id,
-          model_name='smnet',
+          model_name='gan', #'smnet',
           learning_rate=0.006051,
           n_filters_factor=1.051,
           filter_size=5,
           batch_size=2,
-          epochs=50)
+          epochs=50,
+          do_transfer_learning=False)
 
 
 if __name__ == '__main__':

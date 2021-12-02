@@ -15,7 +15,7 @@ from data.data_generator import DataLoader
 from factory.callback import CallBacks
 from model.convlstm_factory import SMNet
 from factory.loss import MaskMSELoss, MaskSSIMLoss
-
+from model.gan_factory import GAN
 
 def train(X_l3,
           X_l4,
@@ -39,22 +39,30 @@ def train(X_l3,
 
 
     # model
-    if model_name == 'smnet':
+    if model_name == 'smnet': 
         model = SMNet()
+        # compile
+        model.compile(optimizer=Adam(wandb.config.learning_rate), loss=MaskMSELoss(land_mask))
 
-    # compile
-    model.compile(optimizer=Adam(wandb.config.learning_rate), loss=MaskMSELoss(land_mask))
+    elif model_name == 'gan': model = GAN()
+
 
     # fit
     x_train_l3, x_valid_l3, x_test_l3 = X_l3
     x_train_l4, x_valid_l4, x_test_l4 = X_l4
     y_train, y_valid, y_test = y
 
-    model.fit([x_train_l3, x_train_l4], y_train,
-              batch_size=wandb.config.batch_size,
-              epochs=wandb.config.epochs,
-              callbacks=CallBacks()(),
-              validation_data=([x_valid_l3, x_valid_l4], y_valid))
+    #FIXME: Reframe the model, compile, fit process
+    if model_name == 'gan':
+        model.fit((x_train_l3, x_train_l4), y_train,
+                   batch_size=wandb.config.batch_size,
+                   epochs=wandb.config.epochs)
+    else:
+        model.fit([x_train_l3, x_train_l4], y_train,
+                batch_size=wandb.config.batch_size,
+                epochs=wandb.config.epochs,
+                callbacks=CallBacks()(),
+                validation_data=([x_valid_l3, x_valid_l4], y_valid))
     
     # predict
     model.load_weights('/hard/lilu/Checkpoints/') 
